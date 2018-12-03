@@ -1,0 +1,253 @@
+package lpsddz;
+option java_package = "protobuf.clazz.lpsddz";
+option java_outer_classname = "lpsDdzRsp";
+import "basic/protocol.proto";
+/////测试
+//用户出牌
+message OutCardData_lps{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	repeated int32 change_cards_data = 3;  //变换之后的数据
+	optional int32  cards_count = 4;//出牌数量
+	optional int32 card_type = 5;	//出牌类型
+	optional int32 cur_player = 6;//当前玩家
+	optional int32 cur_player_ya_pai = 7;//0不能压牌，1能压牌
+	repeated int32 pr_cards_data = 8;  //上一玩家出牌数据
+	repeated int32 pr_change_cards_data = 9;  //变换之后的数据
+	optional int32 pr_cards_count = 10;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 11;//出牌类型
+	optional int32 is_first_out = 12;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 13; //显示时间
+	repeated string difen_bomb_des = 14; //玩法说明
+	repeated int32 user_card_count = 15; //扑克数目
+	repeated Int32ArrayResponse user_cards_data = 16; //扑克列表
+
+}
+//结算
+message PukeGameEndDdz_lps{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 boom_card_num = 6;//数量
+	repeated int32 end_score = 7;//结算分数
+	optional int32 player_num = 8;//游戏人数
+	optional int32 banker_player = 9;//庄家
+	optional int32 reason = 10;//结束类型
+	repeated int32 chun_tian_player = 11;//春天玩家
+	repeated bool is_add_time = 20;//是否加倍
+
+	optional int32 cell_score = 18;//叫分倍数
+	optional int32 times = 19;//总倍数
+	optional int32 boom_num = 21;//数
+	optional int32 qiang_time = 22;//抢地主倍数
+	optional int32 chuntian_time = 23;//春天倍数
+	optional int32 dipai_time = 25;//底牌倍数
+
+	//总结算
+	repeated int32 all_boom_card_num = 12;//总炸弹数量
+	repeated int32 all_end_score = 13;//结算总积分
+	repeated int32 end_score_max = 14;//单句最高得分
+	repeated int32 win_num = 15;//赢句数
+	repeated int32 lose_num = 16;//输句数
+	repeated RoomPlayerResponse players = 17;
+	repeated int32 all_banker_num = 24;//总叫地主数量
+}
+
+message TableResponseDDZ_lps {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated Int32ArrayResponse change_cards_data = 6;  //变换之后的数据
+	repeated int32  out_cards_count = 7;			//本轮牌数量
+	repeated int32  player_pass = 8;			//本轮不出数据
+	repeated int32 card_type = 9;	//出牌类型
+
+
+	optional int32 pr_out_card_player=10;//上一出牌玩家
+	repeated int32 pr_change_cards_data = 11;  //变换之后的数据
+	repeated int32 pr_cards_data = 12;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 13;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 14;//出牌类型
+	optional int32 magic_card = 15;//癞子牌
+
+	optional int32 is_first_out = 16;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 17; //显示时间
+
+	repeated int32 card_count = 18; //扑克数目
+	repeated Int32ArrayResponse cards_data = 19; //扑克列表
+	optional RoomInfo room_info = 20;
+	repeated RoomPlayerResponse players = 21;
+	repeated int32 qiang_banker = 22;
+	repeated int32 call_banker = 23;
+	optional int32 call_type = 24;//叫庄类型:1:叫地主 2：叫分 3：抢地主
+	repeated int32 call_action = 25;
+	repeated int32 qiang_action = 26;
+	repeated int32 add_times = 27 ; //0：不加倍，1：加倍,-1:还未进行操作
+	optional int32 di_card_count = 28; //底牌扑克数目
+	repeated int32 di_cards_data = 29; //底牌扑克列表
+	optional int32 di_cards_type = 30; //底牌类型
+	repeated string difen_bomb_des = 31; //玩法说明
+	optional int32 cur_player_ya_pai = 32;//0不能压牌，1能压牌
+	repeated int32 piao = 33 ; //飘分
+    repeated int32 is_piao = 34; //是否飘过 -1没飘  1飘过
+    repeated bool can_select = 35; //当前还可以选择的堆true为该位置已经被选了，不能再选，false为可选位置
+    repeated bool select_user = 36; //已经选过的玩家为true，没有选的玩家为false
+    optional int32  all_rang_pai = 37 ; //让牌总数
+    optional int32 curr_add_player = 38;//当前加倍者，-1为自由加倍，非-1为当前加倍者
+
+}
+message GameStartDDZ_lps{
+	optional RoomInfo room_info = 1;
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	repeated string difen_bomb_des = 4; //玩法说明
+	repeated RoomPlayerResponse players = 5;
+	optional int32 di_pai_card_count = 6; //底牌扑克数目
+	optional int32 magic_card = 7;//癞子牌
+}
+
+message ReDispath_lps{
+	optional int32 send_card_type = 1;//发牌类型
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 magic_card = 4;//癞子牌
+	repeated int32 send_cards = 5;//2人模式下的所有牌
+	optional int32 first_sendchair = 6;//2人模式下 从谁开始先发
+	optional int32 ming_card = 7;//2人模式下 发牌时亮着的牌
+}
+
+//叫庄结果
+message CallBankerResult_lps{
+	optional int32 qiang_player = 1; //抢地主的用户
+	optional int32 call_player = 2; //叫地主用户 叫地主和叫分玩家
+	optional int32 qiang_action = 3; //操作动作 0:不抢 1：抢
+	optional int32 call_action = 4; //操作动作 叫地主：0：不叫，1：叫 叫分：0不叫，1：一分，2二分，3：3分
+	repeated string difen_bomb_des = 5; //玩法说明
+	optional int32 banker_player = 6;//地主
+	optional int32 card_count = 7; //底牌扑克数目
+	repeated int32 cards_data = 8; //底牌扑克列表
+	optional int32 cards_type = 9; //底牌类型
+	repeated int32 user_card_count = 10; //扑克数目
+	repeated Int32ArrayResponse user_cards_data = 11; //扑克列表
+	optional int32  all_rang_pai = 12 ; //让牌总数 = 12
+	optional int32 call_type = 13;//叫庄类型:1:叫地主 2：叫分 3：抢地主
+}
+//用户叫庄
+message CallBankerDDZ_lps {
+	optional int32 qiang_current_player = 1; //抢地主的用户
+	optional int32 call_current_player = 2; //叫地主用户
+	repeated int32 qiang_current_action = 3; //当前操作用户操作动作 0:不抢 1：抢
+	repeated int32 call_current_action = 4; //当前操作用户操作动作 叫地主：0：不叫，1：叫 叫分：0不叫，1：一分，2二分，3：3分
+	optional int32 call_type = 5;//叫庄类型:1:叫地主 2：叫分 3：抢地主
+	optional int32 display_time = 6; //显示时间
+	optional int32 fei_pai_card = 7; //飞牌
+}
+message AddTimesDDZ_lps{
+	repeated int32 addtimesaction = 1;//0不加， 1：加倍
+	optional int32 display_time = 6; //显示时间
+	optional int32 current_player = 7;//当前玩家
+}
+message AddTimesDDZResult_lps{
+	optional int32 addtimesaction = 1;//0不加， 1：加倍
+	optional int32 opreate_player = 2;//操作玩家
+	repeated string difen_bomb_des = 3; //玩法说明
+}
+message Effect_Action_lps{
+	repeated int32 smile_status = 1;//笑状态
+	repeated int32 cry_status = 2;//哭状态
+}
+message Call_Banker_Request_lps{
+	optional int32 select_call_banker = 1 ;
+	optional int32 select_qiang_banker = 2;//抢地主
+}
+message Add_Times_Request_lps{
+	optional int32 add_times = 1 ; //0：不加倍，1：加倍
+}
+
+//分摞s2c
+message Fen_Luo_Send_lps{
+	optional int32 cur_player = 1 ; //当前分摞的玩家
+	repeated bool can_select = 2; //当前还可以选择的堆true为该位置已经被选了，不能再选，false为可选位置
+	repeated bool select_user = 3; //已经选过的玩家为true，没有选的玩家为false
+	optional int32 display_time = 4 ; //操作时间
+}
+
+//分摞请求c2s
+message Fen_Luo_Request_lps{
+	optional int32 luo_index = 1; //选的是第几摞
+}
+
+//分摞结果s2c
+message Fen_Luo_Result_lps{
+	optional int32 control_player = 1;//操作的玩家
+	optional int32 user_card_count = 2; //扑克数目
+	optional Int32ArrayResponse user_cards_data = 3; //扑克列表
+	optional bool choose_isfinish = 4 ; //所有玩家是不是都操作完
+	optional int32 luo_index = 5; //选的是第几摞
+}
+
+//换三张s2c
+message Swap_Card_lps{
+	repeated bool swap_state = 1; //true已经选好，false没有选好
+}
+
+//换三张请求c2s
+message Swap_Card_Request_lps{
+	repeated int32 swap_card = 1; //选出来要换的牌
+}
+
+//换三张结果s2c
+message Swap_Card_Result_lps{
+	optional int32 cur_player = 1 ; //操作的玩家
+	optional bool swap_isfinish = 2 ; //所有玩家是不是都操作完
+	optional int32 swap_seq = 3 ; //交换顺序
+	repeated Int32ArrayResponse swap_cards = 4; //交换后的牌
+	optional int32 user_card_count = 5; //扑克数目
+	optional Int32ArrayResponse user_cards_data = 6; //扑克列表
+	repeated int32 change_outCard = 7;//换出去的牌
+}
+
+//发底牌
+message Send_Last_Card_lps{
+	optional int32 card_count = 1; //底牌扑克数目
+	repeated int32 cards_data = 2; //底牌扑克列表
+	optional int32 cards_type = 3; //底牌类型
+	optional int32 cards_times = 4; //底牌倍数
+	optional int32 rangpai_count = 5; //让牌数量
+	optional int32 game_times = 6; //游戏倍数
+	optional bool show_rangpai_tips = 7;//是不是显示地主让多少张提示
+	optional bool show_dipai_action = 8;//播放底牌动画
+}
+
+//记牌器s2c
+message Record_Cards_lps{
+	repeated int32 record_cards = 1; //记牌器
+}
+
+//让牌s2c
+message Rang_Pai_lps{
+	optional int32 cur_player= 1;//需要操作的玩家
+	repeated int32 rang_action = 2; //操作动作
+	optional int32 display_time = 3 ; //操作时间
+}
+
+//让牌请求c2s
+message Rang_Pai_Request_lps{
+	optional int32 rang_pai = 1 ; //0：不让，1：让两张，2：让三张，3：让四张
+}
+
+//让牌结果s2c
+message Rang_Pai_Result_lps{
+	optional int32 cur_player= 1;//操作的玩家
+	optional int32  rang_pai = 2 ; //0：不让，1：让两张，2：让三张，3：让四张
+	optional int32  all_rang_pai = 3 ; //让牌总数
+}
+
+

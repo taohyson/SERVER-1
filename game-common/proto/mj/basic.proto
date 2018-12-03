@@ -1,0 +1,89 @@
+package mj;
+
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "Basic";
+import "basic/protocol.proto";
+message MJ_Game_End_Basic {
+	repeated bool is_ting_when_finish = 1; // 戏结束时，是否是听牌状态
+	repeated int32 who_provided = 2; // 胡牌的提供者是谁，-1表示没胡，0本人（表示自摸），1上家，2对家，3下家
+	repeated int32 finally_fan_shu = 3; // 玩家最后的番数或分数
+	repeated ScoreRow allScoreDetails = 4; // 流水明显
+	repeated PaiXingList allPaiXingList = 5; // 所有玩家的所有牌型的统计列表
+	repeated int32 pao = 33; // 跑分
+	repeated int32 piao = 34; // 飘分
+	repeated int32 qiang = 35; // 呛分
+	repeated int32 nao = 36; // 闹分
+	repeated int32 pao_tou = 37; // 跑头
+	repeated int32 pao_kou = 38; // 跑扣
+	repeated int32 bian_yan = 39; // 表演
+}
+
+message ScoreRow {
+	optional int32 type = 1; // 条目名称
+	optional int32 pScore1 = 2; // 玩家1的分
+	optional int32 pScore2 = 3; // 玩家2的分
+	optional int32 pScore3 = 4; // 玩家3的分
+	optional int32 pScore4 = 5; // 玩家4的分
+}
+
+//麻将结算消息扩展
+message MJ_GAME_END_INFO_EXT {
+	repeated int32 hu_score = 1; //胡牌牌型分
+	repeated int32 niao_score = 2; //鸟牌分数
+	repeated int32 ming_gang_score = 3; //明杠分数
+	repeated int32 an_gang_score = 4; //暗杠分数
+	repeated int32 hu_type = 5; //胡牌类型
+	repeated int32 piao = 6; //玩家飘分
+	repeated int32 zhi_gang_score = 7; //直杠分
+}
+
+
+message PaiXingList {
+	repeated PaiXing pai_xing_list = 1; // 一个玩家所有的牌型类型的统计结果
+}
+
+message PaiXing {
+	optional int32 type = 1; // 牌型CHR的整型值
+	optional int32 count = 2; // 牌型次数统计
+}
+
+message RoundHuCards {
+	repeated HuCardList all_hu_cards_list = 1; // 所有玩家的所有胡的牌
+}
+
+message HuCardList {
+	repeated HuCard hu_cards = 1; // 单个玩家所有胡的牌
+	repeated int32 zi_mo_men_hu_cards = 2; // 单个玩家自摸闷胡的牌
+}
+
+message HuCard {
+	optional int32 card = 1; // 胡的牌
+	optional int32 provider_index = 2; // 胡的提供者的座位号
+}
+
+message PlayerMenHu {
+	repeated MenHuList playerMenHu = 1; // 所有玩家的闷胡列表
+}
+
+message MenHuList {
+	repeated MenHu menHuList = 1; // 单个玩家的闷胡列表
+}
+
+message MenHu {
+	optional int32 type = 1; // 1：自摸；2：接炮:3：放炮；
+	optional int32 pai_xing = 2; // 1：平胡；2：大对子；3：七对:4：清一色；5：龙七对；6：清大对；7：清七对；8：清龙背
+	optional int32 score = 3; // 分数
+}
+
+
+
+//结算信息
+message GameEndInfoBasic {
+	repeated DataInfoBasic gameEndInfoDa = 1; // 小结算胡牌信息
+}
+
+//结算信息
+message DataInfoBasic {
+	repeated int32 title = 1; // 局数
+	repeated int32 score = 2; //分值
+}

@@ -1,0 +1,27 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "MjRsp";
+import "basic/protocol.proto";
+/////测试
+message Request_message_chat{
+	optional string char_message = 1;//聊天信息
+}
+
+//江苏麻将结算明细
+message JS_Mj_Game_End_Detail{
+	optional int32 score_type = 1; //赢分类型
+	optional int32 seat_index = 2; //赢分玩家
+	optional int32 score = 3;	//赢取分数
+	optional string detail = 4;//其他信息
+}
+
+message USER_MJ_Game_end{
+	repeated JS_Mj_Game_End_Detail game_end_detail = 1;//明细
+}
+message Mj_Game_End{
+	repeated USER_MJ_Game_end user_game_end = 1;
+}
+message Respone_Message_Chat{
+	optional int32 seat_index = 1; //操作玩家
+	optional string char_message = 2;//聊天信息
+}

@@ -1,0 +1,27 @@
+option java_package = "protobuf.clazz";
+option java_outer_classname = "BaseS2S";
+import "basic/protocol.proto";
+
+// 同一个包
+message SendToClientsProto2{
+    repeated int64 accountId = 1; //
+	optional Response rsp = 2; //
+	optional bool sendAll = 3; //是否广播整个代理服的人
+}
+
+// 每个人不同的包
+message SendToClientsProto{
+    repeated SendToClientProto clients = 1;
+}
+
+message SendToClientProto{
+	optional int64 accountId = 1; //
+	optional Response rsp = 2; //
+}
+
+//通知加载配置
+message SendLoadConfigs{
+	optional int32 configType = 1; //配置类型   0比赛场  1金币场
+	optional bool isToAll = 2; //是否发生给所有人
+	repeated int64 accountIds = 3; //玩家ID
+}

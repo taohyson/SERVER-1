@@ -1,0 +1,101 @@
+package s2s;
+
+option java_package = "protobuf.clazz.s2s";
+option java_outer_classname = "ClubServerProto";
+import "basic/club.proto";
+import "basic/protocol.proto";
+import "basic/common.proto";
+message ClubGameRecordProto {
+	required RecordProtoType type = 1;
+	optional ClubKouDouProto kouDou = 2;
+	optional ClubGameOverProto gameOver = 3;
+
+	enum RecordProtoType{
+		CLUB_KOU_DOU = 1;
+		CLUB_GAME_OVER = 2;
+	}
+
+	message ClubKouDouProto {
+		required int32 club_id = 1;
+		required int32 gold = 2;
+		optional int64 create_time = 3;
+		optional int32 wealthCategory = 4; //gold的类型,@see com.cai.common.define.EWealthCategory
+	}
+
+	message ClubGameOverProto {
+		repeated int32 win_order = 1;
+		repeated GamePlayerProto players = 2;
+		optional int32 club_id = 3;
+		message GamePlayerProto {
+			optional int64 account_id = 1;
+			optional int32 score = 2;
+		}
+		optional int32 curRound = 4; // 进行的局数
+		optional int32 gameRound = 5; // 总局数
+		optional int32 gameId = 6;
+		optional int32 ruleId = 7;
+		optional int32 roomId = 8;
+		optional int64 clubMatchId = 9;
+	}
+}
+
+message ProxyClubRq {
+	required int64 clientSessionId = 1; // 用户Id
+	required ClubRequest clubRq = 2; // 用户数据
+	optional string accountIp = 3;
+	optional LogicRoomAccountItemRequest requestAccountProto = 4; //请求者信息详情 ，在创建和加入俱乐部时才需要填这个字段
+}
+
+//直接发给客户端的协议
+message ClubToClientRsp {
+	required int64 clientSessionId = 1; // 用户Id
+	required Response rsp = 2; //
+}
+
+message ClubCreateRoom {
+	required int64 clientSessionId = 1;
+	required int32 clubId = 2;
+	optional ClubRuleProto clubRule = 3;
+	required int32 roomId = 4;
+	required int32 logicId = 5;
+	required int64 clubOwnerId = 6;
+	optional string clubName = 7;
+	optional int32 joinId = 8;
+	optional int32 clubMemberSize = 9; //俱乐部成员数量
+}
+
+//逻辑服到俱乐部服状态推送
+message ClubRoomStatusProto{
+	required int32 type = 1; //@see ERoomStatus
+	optional int32 clubId = 2;
+	optional int32 ruleId = 3;
+	optional int32 roomId = 4;
+	optional int32 roomStatus = 5;
+	optional int32 tableIndex = 6;
+	optional int32 roomCurRound = 7;
+	optional ClubTablePlayerProto player = 8;
+	optional int32 roomSetStatus = 9;
+	repeated ClubTablePlayerProto players = 10;
+	optional int32 minPlayerCount = 11; //最小人数
+	optional int64 brandId = 12; //此房间生成的牌局id，快照推
+	optional int64 clubMatchId = 13; //亲友圈自建赛Id
+	optional int32 createTime = 14; // 牌局开始时间
+}
+
+message ClubActivityTransfort{
+	required int64 accountId = 1;
+	optional ClubActivityProto activityProto = 2;
+	optional int32 status = 3; //0不存在,1未开始,2进行中,3结束
+}
+
+//俱乐部创建房间新方式，club<->logic直连方式
+message ClubCreateRoomNewProto{
+	optional LogicRoomRequest logicRoomRequest = 1;
+	optional int32 proxyServerId = 2;
+	optional int32 category = 3; //类别 ，默认普通俱乐部开放，1俱乐部比赛场
+}
+
+message RoomGameOverProto {
+	repeated int64 accountId = 1;
+	optional int32 roomId = 2;
+}

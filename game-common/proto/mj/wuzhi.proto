@@ -1,0 +1,57 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "Wuzhi";
+import "basic/protocol.proto";
+
+/**
+ * 游戏开始时或断线重连时，会放到RoomResponse的commResponse里边，保存所有玩家的亮四打一的牌数据。
+ * 正常打牌时或断线重连时，所有玩家已经胡了的牌数据，自摸的牌只能自己看到，接炮或抢杠的牌所有人都能看到。
+ */
+message LsdyCards {
+    repeated int32 cardsCount = 1; // 每个玩家亮四打一的牌有几张 一维
+ 	repeated IntegerArray cardsData = 2; // 每个玩家亮四打一的牌数据 二维
+
+ 	repeated IntegerArray ziMoCards = 3; // 每个玩家自摸胡的牌数据 二维
+ 	repeated IntegerArray shangJiaProvidedCards = 4; // 每个玩家上家提供的牌数据 二维
+ 	repeated IntegerArray duiJiaProvidedCards = 5; // 每个玩家对家提供的牌数据 二维
+ 	repeated IntegerArray xiaJiaProviedCards = 6; // 每个玩家下家提供的牌数据 二维
+
+ 	repeated AllWinDetails winDetailList = 7; // 所有玩家的胡牌得分详情 二维
+}
+
+/**
+ * 刷新手牌时，单独的一个玩家的亮四打一的牌数据，会放到RoomResponse的commResponse里边。
+ * 如果亮四打一的四张牌都消耗完了，RoomResponse的commResponse为null。
+ */
+message IntegerArray {
+	repeated int32 card = 1; // 每个玩家亮四打一的牌数据 一维
+}
+
+/**
+ * 每个玩家所有胡牌明细
+ */
+message AllWinDetails {
+	repeated WinDetail winDetails = 1; // 所有的单条胡牌明细 一维
+}
+
+/**
+ * 单条胡牌明细
+ */
+message WinDetail {
+	/**
+	 * 明细类型：1.自摸；2.被自摸；3.接炮；4.点炮；5.接杠；6.点杠；7.暗杠；8.被暗杠
+	 */
+	optional int32 type = 1;
+	/**
+	 * 明细对应的牌数据
+	 */
+	optional int32 card = 2;
+	/**
+	 * 提供者：0.本人（不用显示出来）；1.上家；2.对家；3.下家
+	 */
+	optional int32 provider = 3;
+	/**
+	 * 分
+	 */
+	optional int32 score = 4;
+}

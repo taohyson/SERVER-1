@@ -1,0 +1,11 @@
+package xpbh;
+option java_package = "protobuf.clazz.xpbh";
+option java_outer_classname = "xpbhRsp";
+import "basic/protocol.proto";
+
+
+//请求
+message Opreate_Xpbh_Request{
+	repeated WeaveItemResponse weaveItem = 1;
+
+}

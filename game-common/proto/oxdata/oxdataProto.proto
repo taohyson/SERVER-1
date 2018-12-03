@@ -1,0 +1,22 @@
+package oxdata;
+option java_package = "protobuf.clazz.oxdata";
+option java_outer_classname = "oxdataRsp";
+import "basic/protocol.proto";
+
+//战绩
+message RecordList{
+	optional int32 cur_round = 1;          //局数
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	repeated int32 jetton_player = 3; //用户下注
+	repeated int32 end_score = 4;//结算分数
+	repeated int32 area_status = 5; //区域输赢
+	optional int32 banker_seat = 6; //庄家位置
+	repeated int32 call_banker = 7; //抢庄数据
+	repeated int32 card_type = 8;  //牌型
+	repeated int32 card_times = 9; //倍数
+	repeated int32 buy_jetton_value = 10; //买码数据
+	repeated int32 buy_jetton_area = 11; //买码区域
+	repeated bool player_status = 12;   //用户状态
+	repeated RoomPlayerResponse players = 13;
+
+}

@@ -1,0 +1,151 @@
+package xndg;
+option java_package = "protobuf.clazz.xndg";
+option java_outer_classname = "XndgRsp";
+import "basic/protocol.proto";
+
+
+//刷新用户抓分
+message RefreshScore_xndg{
+	repeated int32 user_get_score = 1;//抓分
+	optional int32 table_score = 2;//桌面分
+	repeated int32 xian_qian_score = 3;//喜钱分
+}
+//亮牌开始
+message LiangPai_Begin_xndg{
+	optional int32 cur_player = 1;//当前玩家
+}
+//亮牌回复
+message LiangPai_Result_xndg{
+	optional int32 opreate_player = 1;//操作玩家
+	optional int32 card_data = 2;//操作扑克
+}
+//用户出牌
+message OutCardDataWsk_xndg{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_can_out_data = 11;  //出牌数据
+	optional int32 user_can_out_count = 12;//出牌数量
+	repeated int32 user_get_score = 13;//玩家抓分
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 is_current_first_out = 17;//当前操作玩家是否首出
+	optional int32 is_have_not_card = 18;//当前玩家是否没牌
+	optional int32 is_bao_jing = 19;
+}
+message PaiFenData_xndg{
+	repeated Int32ArrayResponse cards_data = 1;  //牌分数据
+	repeated int32 cards_count = 2;//牌分数量
+	optional int32 yu_score = 3;//余分
+}
+
+
+//结算
+message PukeGameEndWsk_xndg{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 boom_card_num = 6;//炸弹数量
+	repeated int32 end_score = 7;//总分
+	repeated int32 reward_score = 8;//奖分
+	optional int32 player_num = 10;//游戏人数
+	optional int32 banker_player = 11;//庄家
+	optional int32 reason = 12;//结束类型
+	repeated int32 dang_ju_score = 16;//得分
+	repeated int32 zhua_fen = 17;//抓分
+	repeated int32 win_order = 18;//输赢排序
+	repeated int32 ban_long = 19;//半笼
+	repeated int32 du_pai = 20; //独牌
+	repeated int32 xian_qian_score = 21;//彩头
+	repeated int32 hei_long = 27;//黑笼
+	repeated int32 game_cell = 28;//底分
+	repeated int32 long = 29;//笼
+	repeated int32 friend = 30;//1:一对 2：一对
+	repeated int32 draw = 31;//平局
+	//总结算
+	repeated int32 all_end_score = 13;//结算总积分
+	repeated int32 end_score_zhua = 14;//单句最高抓分
+	repeated RoomPlayerResponse players = 15;
+	repeated int32 banker_times = 22;//独牌次数
+	repeated int32 tou_you_times = 23;//头游次数
+	repeated int32 qi_xi_times = 24;//七喜次数
+	repeated int32 ba_xi_times = 25;//八喜次数
+	repeated int32 tian_zha_times = 26;//天炸次数
+	repeated int32 four_king_times = 32;//
+	repeated int32 win_lose_score = 33;//输赢分数
+	repeated int32 five_ten_K_times = 34;//510K喜分
+}
+message TableResponse_xndg {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 user_can_out_data = 19;  //出牌数据
+	optional int32 user_can_out_count = 20;//出牌数量
+	repeated int32 user_get_score = 21;//玩家抓分
+	repeated int32 win_order = 22;//输赢排序
+	optional bool is_yi_da_san = 23;//是否一打三
+	optional int32 jiao_card_data = 24;//叫牌数值
+	repeated int32 call_banker = 25;//玩家是否一打三
+}
+message GameStart_Wsk_xndg{
+	optional RoomInfo room_info = 5;
+	repeated RoomPlayerResponse players = 7;
+	optional int32  cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 display_time = 4; //显示时间
+}
+
+
+//叫庄结果
+message CallBankerResponse_xndg{
+	optional int32 opreate_action = 1; //0:不叫 1：叫
+	optional int32 call_player = 2;//操作玩家 -1：通知第一次叫庄
+	optional int32 current_player= 3;//当前玩家 -1：叫庄结束
+	optional int32 banker_player = 4;//-1：表示庄家未确定
+	optional int32 display_time = 5; //显示时间
+	optional RoomInfo room_info = 6;//
+}
+
+message RefreshCardData_xndg{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+}
+message RefreshMingPai{
+	optional int32 card_data = 1;//牌值
+	optional int32 seat_index = 2;//位置
+}
+//请求
+message Opreate_RequestWsk_xndg{
+	optional int32 opreate_type = 1;//1：亮牌 2:叫庄 3不叫 4:理牌排序 5:数量排序
+	optional int32 card_data = 2;//亮牌牌值
+	repeated int32 sort_card = 3;//排序牌值
+}

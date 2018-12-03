@@ -1,0 +1,129 @@
+package shidianban;
+option java_package = "protobuf.clazz.shidianban";
+option java_outer_classname = "shidianbanRsp";
+import "basic/protocol.proto";
+
+//房间的玩家
+message RoomPlayerResponseSdb {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+}
+//用户结束
+message PlayerResultSdb{
+	 repeated   int32   player_score = 6;    //总成绩
+}
+//结算
+message PukeGameEndSdb{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	repeated int32 card_type  = 5; //牛牛牌型
+	repeated int32 end_score = 6;//结算分数
+	optional int32 player_num = 7;//游戏人数
+	optional int32 reason = 8;//结束类型
+	repeated RoomPlayerResponseSdb players = 9;
+	//总结算
+	optional PlayerResultSdb player_result = 10;
+
+	optional int32 winner = 11;//赢家s
+	repeated string str_ox_value = 12;//牛几
+	optional int32 display_time = 13;  // 显示牌
+	optional int32 banker_carry_score=14; //庄家携带分数
+	optional bool is_cancle_banker = 15; //true 显示下庄，false 不显示
+	optional int32 cur_banker = 16; //庄家ID
+}
+
+message TableResponseSdb {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional RoomInfo room_info = 2;
+	repeated RoomPlayerResponseSdb players = 3;
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	repeated int32 jetton_score = 5;//玩家下注
+	optional int32 scene_status = 6;  //场景状态
+	repeated int32 ox_value = 7;  //牌型
+	repeated int32 times = 8;  //倍数
+	repeated int32 call_button = 9;//叫庄数据
+	repeated int32 shai_zi = 10; // 色子值
+	optional int32 operate_index = 11; //操作用户
+}
+
+message ButtonOperateSdb{
+    optional int32 opreate_type = 1;//按钮显示类型 --0是抢庄 1是下注2开牌 3选择庄家分数
+	repeated int32 button = 2;//玩家按钮
+	optional int32 display_time = 3; //下注时间
+	optional int32 min_score = 4;//最小下注
+	optional int32 max_score = 5; //最大下注
+	optional int32 seat_index = 6; //操作用户
+}
+message GameStartSdb{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponseSdb players = 3;
+	optional int32 cur_banker = 4; // 庄家
+}
+
+message JettonResultSdb{
+	optional int32 jetton_seat = 1; // 下注用户的位置
+	optional int32 jetton_score = 2; //下注用户的分数
+	repeated RoomPlayerResponseSdb players = 3;
+}
+message ShaiziResultSdb{
+	repeated int32 shai_zi = 1; // 色子值
+	optional int32 operate_index = 2; //操作用户
+
+}
+message SelectdBankerSdb{
+	optional int32 banker_seat = 1; // 抢庄用户的位置
+	optional int32 banker_score = 2; //抢庄用户的倍数
+}
+
+message SelectdBankerResultSdb{
+	optional int32 banker_seat = 1; // 抢庄用户的位置
+	optional int32 banker_score = 2; //抢庄用户的倍数
+}
+message CarryBankerScoreResultSdb{
+	optional int32 banker_score = 2; //庄家的携带分数
+	repeated RoomPlayerResponseSdb players = 9;
+}
+message SendCardSdb{
+    optional int32 opreate_type = 1;//0:抢庄前 1:抢庄后
+	repeated Int32ArrayResponse send_card = 2; // 发牌
+	optional int32 display_time = 3;  // 显示牌
+	optional int32 ox_value = 4;  //点数
+	optional int32 times = 5;  //倍数
+}
+message YaoCardResutlSdb{
+	optional int32 seat_index = 1; //操作用户
+	repeated int32 cards = 2; //所操作的牌
+	optional bool is_stop = 3; //true 停牌，  false 继续操作
+	optional int32 sdb_value = 4;  //点数
+}
+message OpenCardSdb{
+	optional bool open_card = 1;
+	optional int32 seat_index = 2;
+	repeated int32 cards  = 3;
+	optional int32 ox_value = 4;  //牛几
+	optional int32 times = 5;  //倍数
+
+}
+
+//请求
+message Opreate_Sdb_Request{
+	optional int32  opreate_type = 1;//1:r抢庄 2：下注  3：要牌， 和 停牌 4:选择庄家分数5:下庄
+	optional int32 add_jetton_score = 2;//加注筹码数量 //下注下标  如果下注 下标为负数-1 (下标 1： 要牌，0:停牌)
+	optional int32 jetton_score = 3; //下注分数
+
+}

@@ -1,0 +1,152 @@
+package redpacket;
+option java_package = "protobuf.clazz.activity";
+option java_outer_classname = "ActivityTurntableProto";
+
+message TurntableReq {
+	optional int32 cmd = 1; // 二级协议
+	optional int32 id = 2; // 活动Id
+	optional bytes protos = 3;
+}
+
+message TurntableRsp {
+	optional int32 cmd = 1;// 二级协议
+	optional int32 id = 2; // 活动Id
+	optional bytes protos = 3; //
+}
+
+// 空 不需要数据的时候用这个
+message TurntableEmpty{
+
+}
+
+//加载正在生效的转盘活动
+message TurntableListResponse {
+	//获取正在生效的转盘活动ID
+	repeated TurntableHallProto turntable = 1;
+}
+
+//转盘活动大厅加载
+message TurntableHallProto {
+	optional int32 activityId = 1;
+	optional int32 activityType = 2;
+	optional string activityName = 3;
+	//活动截止时间
+	optional int32 endTime = 4;
+	//领奖截止时间
+	optional int32 awardEndTime = 5;
+	optional int32 targetGame = 6;	//转盘针对某个游戏
+}
+
+// 抽奖结果
+message TurnTableAwardResponse{
+	optional int32 prizeId = 1; // 奖励Id
+	optional TurntablePlyerResponse playerData = 2; // 数据Id
+	optional bool isSuccess = 3; // 是否成功
+	optional string msg = 4; // 错误消息
+}
+
+
+//	转盘领取奖励
+message TurnTableTakeRewardRequest {
+	optional int32 activityId = 1;
+	optional int32 missionId = 2;
+}
+
+message TurntablePlyerResponse {
+	optional int32 count = 1; //今日剩余抽奖次数
+	repeated TurnTableWordProto word = 2;// 每个字的数量
+	optional int64 accountId = 3;
+	repeated TurnTableMissionProto mission = 4;// 活动任务
+	optional int32 activityType = 5;	//活动类型 1.集字活动，2任务转盘
+}
+
+// 集字任务进度
+message TurnTableWordProto{
+	optional int32 type = 1; // 闲逸贺喜 对应0123
+	optional int32 count = 2;
+	optional bool dailyFinish = 3; //单日是否已完成
+	optional int32 curCondition = 4; // 当前完成进度
+	optional int32 maxCondition = 5; // 总进度
+}
+
+// 活动完成任务进度
+message TurnTableMissionProto {
+	optional int32 missionId = 1; // 任务类型
+	optional int32 curCount = 2; // 当前完成进度
+	optional int32 maxCount = 3; // 总完成进度
+	optional bool isFinish = 4;	//是否完成
+	optional bool isTaken = 5;	//是否领取奖励
+	optional string missionName = 6;	//任务名称
+	optional int32 activityId = 7;	//对应的活动ID
+	optional int32 gameId = 8;	//对应的游戏ID
+	optional int32 drawCount = 9;	//获得奖励的抽奖券个数
+	optional int32 missionType = 10;
+	optional LinkTarget linkTarget = 11;
+}
+
+message LinkTarget{
+	optional int32 linktype = 1;//跳转类型
+	optional LinkTargetData linkdata = 2;//预留字段
+}
+message LinkTargetData {
+	optional string data = 1;//跳转参数json格式
+}
+
+//转盘任务完成通知
+message TurnTableMissionNotify {
+	optional TurnTableMissionProto mission = 1;
+}
+
+message TurntableLogsResponse{
+	repeated TurntableLogProto logs = 1;
+}
+
+message TurntableLogProto{
+	optional int64 accountId = 1;
+	optional string nickName = 2;
+	optional TurntablePrizeConfigProto prizes = 3;
+	optional int64 create_time = 4;
+}
+
+// 活动配置
+message TurntableConfigProto{
+	// 活动Id
+	optional int32 id = 1;
+	optional string name = 2;
+	optional int64 startTime = 3;
+	optional int64 endTime = 4;
+	repeated TurntablePrizeConfigProto prizes = 5;
+	optional string prizeUrl = 6; // 奖品图片
+	optional string bgUrl = 7; // 背景图片
+	optional string desc = 8;//描述
+}
+
+message RedPointResponse{
+	optional int32 type = 1; // 获得哪个字
+}
+
+// 活动配置
+message TurntablePrizeConfigProto{
+	optional int32 id = 1; //唯一Id
+	optional int32 type = 6; // 类型 1.金币 2豆 3.道具4.实物
+	optional string name = 3; //
+	optional int32 count = 2;
+	optional string icon = 4;
+	optional int32 pos = 5; // 奖品位置
+}
+
+//领取活动任务奖励 请求
+message TurntableMissionPrizeRequest {
+	optional int32 activityId = 1;
+	optional int32 missionId = 2;
+}
+
+//领取活动任务奖励 响应
+message TurntableMissionPrizeResponse {
+	//当前的抽奖次数
+	optional int32 drawCount = 1;
+	//最终的任务情况，可能触发任务需要再次完成
+	optional TurnTableMissionProto mission = 2;
+	optional bool isSuccess = 3; // 是否成功
+	optional string msg = 4; // 错误消息
+}

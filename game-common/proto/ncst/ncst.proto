@@ -1,0 +1,132 @@
+package nvst;
+option java_package = "protobuf.clazz.dmz";
+option java_outer_classname = "NcstProto";
+import "basic/protocol.proto";
+
+//房间信息
+message RoomInfo {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional string game_rule_des = 3; //玩法说明
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 _banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+}
+
+//房间的玩家
+message RoomPlayerResponse {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+}
+
+//刷新用户抓分
+message RefreshScore{
+	repeated int32 user_get_score = 1;//
+	optional int32 table_score = 2;//
+}
+//
+message AnimationSeat{
+	optional int32 card_value = 1;//牌值
+	optional int32 seat_index = 2;//位置
+}
+//用户出牌
+message OutCardData{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_can_out_data = 11;  //出牌数据
+	optional int32 user_can_out_count = 12;//出牌数量
+	repeated int32 user_get_score = 13;//玩家抓分
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 is_current_first_out = 17;//当前操作玩家是否首出
+	optional int32 is_have_not_card = 18;//当前玩家是否没牌
+	optional Int32ArrayResponse friend_hand_cards_data = 19; //朋友扑克列表
+	optional int32 is_bao_jing = 20;
+	repeated int32 is_ming_pai = 21;
+}
+
+message TableResponse {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 user_can_out_data = 19;  //出牌数据
+	optional int32 user_can_out_count = 20;//出牌数量
+	repeated int32 user_get_score = 21;//玩家抓分
+	repeated int32 ming_pai_status = 22;//明牌状态 -1:正常状态，0：等待状态，1：明牌状态
+	optional string ming_pai_str = 23;//等待明牌弹框信息
+	repeated int32 win_order = 24;//输赢排序
+	optional Int32ArrayResponse friend_cards_data = 25; //朋友扑克列表
+}
+
+message GameStart{
+	optional RoomInfo room_info = 5;
+	repeated RoomPlayerResponse players = 7;
+	optional int32  cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 display_time = 4; //显示时间
+}
+
+message LinagPai_Anser{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	optional string opreate_str = 2;//消息
+}
+message Communicate_Anser{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	optional int32 music_index = 2;//选择的语音次序
+}
+message liang_Pai_Result{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	optional int32 is_agree = 3;//是否同意 1:同意，0：不同意
+	optional string opreate_str = 2;
+}
+//请求
+message Opreate_Liang_Pai_Request{
+	optional int32 opreate_type = 1;//1:请求明牌 2:同意明牌 3：拒绝明牌 4：语音 5:请求投降 6：同意投降 7：拒绝投降
+	optional int32 music_index = 2;//选择的语音次序
+}

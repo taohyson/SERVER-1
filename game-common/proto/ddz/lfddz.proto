@@ -1,0 +1,151 @@
+package ddz_lf;
+option java_package = "protobuf.clazz.ddz_lf";
+option java_outer_classname = "ddz_lfRsp";
+import "basic/protocol.proto";
+
+//1001
+message GameStartDDZ_LF{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+}
+
+//刷新用户扑克 1002
+message RefreshCards_DDZ_LF{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+}
+
+//用户出牌 1003
+message OutCardData_DDZ_LF{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	repeated int32 change_cards_data = 3;  //变换之后的数据
+	optional int32  cards_count = 4;//出牌数量
+	optional int32 card_type = 5;	//出牌类型
+	optional int32 cur_player = 6;//当前玩家
+	repeated int32 pr_cards_data = 7;  //上一玩家出牌数据
+	repeated int32 pr_change_cards_data = 8;  //变换之后的数据
+	optional int32 pr_cards_count = 9;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 10;//出牌类型
+	optional int32 display_time = 11; //显示时间
+	optional int32 user_card_count = 12; //扑克数目
+	repeated int32 user_cards_data = 13; //扑克列表
+	optional int32 is_first_out = 14;//是否首出
+	optional int32 is_ya_pai = 15;//是否能压牌
+}
+
+//结算 1004
+message PukeGameEnd_DDZ_LF{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 boom_card_num = 6;//炸弹数量
+	repeated int32 end_score = 7;//结算分数
+	optional int32 player_num = 8;//游戏人数
+	optional int32 banker_player = 9;//庄家
+	optional int32 reason = 10;//结束类型
+	repeated int32 chun_tian_player = 11;//春天玩家
+	//总结算
+	repeated int32 all_boom_card_num = 12;//总炸弹数量
+	repeated int32 all_end_score = 13;//结算总积分
+	repeated int32 end_score_max = 14;//单句最高得分
+	repeated int32 win_num = 15;//赢句数
+	repeated int32 lose_num = 16;//输句数
+	repeated RoomPlayerResponse players = 17;
+
+	repeated int32 cell_score = 18;
+	repeated int32 times = 19;
+}
+
+//1005
+message TableResponse_DDZ_LF {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated Int32ArrayResponse change_cards_data = 6;  //变换之后的数据
+	repeated int32  out_cards_count = 7;			//本轮牌数量
+	repeated int32  player_pass = 8;			//本轮不出数据
+	repeated int32 card_type = 9;	//出牌类型
+
+	optional int32 pr_out_card_player=10;//上一出牌玩家
+	repeated int32 pr_change_cards_data = 11;  //变换之后的数据
+	repeated int32 pr_cards_data = 12;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 13;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 14;//出牌类型
+	optional int32 display_time = 15; //显示时间
+
+	repeated int32 card_count = 16; //扑克数目
+	repeated Int32ArrayResponse cards_data = 17; //扑克列表
+	optional int32 user_card_count = 18; //扑克数目
+	repeated int32 user_cards_data = 19; //扑克列表
+	optional int32 is_ya_pai = 20;//是否能压牌
+	optional RoomInfo room_info = 21;
+	repeated RoomPlayerResponse players = 22;
+	optional int32 is_first_out = 23;//是否首出
+}
+
+//1006
+message Send_Card_DDZ_LF{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	optional int32 type = 3;//0：第一次发牌  1：重新发牌
+}
+
+//1007
+//用户操作
+message PlayerControl_DDZ_LF{
+	optional int32 type = 1;//操作类型 1:叫地主 2提 3：回提
+	optional int32 prv_type = 8;//上一个操作类型
+	optional int32 call_player = 2;//上一个操作玩家
+	optional int32 call_action = 3;//具体操作  0都为否
+	optional int32 current_player = 4;//当前玩家
+	repeated int32 all_call_action = 5;//所有的玩家操作 -1：未操作 0：不提 1：提 2：回提
+	repeated int32 current_player_call_action = 6;//当前玩家操作按钮
+	optional int32 display_time = 7; //显示时间
+
+}
+
+//叫庄结果 1008
+message CallBankerResult_DDZ_LF {
+	optional int32 banker_player = 1; //庄家玩家
+}
+
+//发底牌 1009
+message Send_Last_Card_DDZ_LF{
+	optional int32 card_count = 1; //底牌扑克数目
+	repeated int32 cards_data = 2; //底牌扑克列表
+	optional int32 cards_type = 3; //底牌类型
+	optional int32 cards_times = 4; //底牌倍数
+	optional int32 game_times = 5; //游戏倍数
+	optional bool show_dipai_action = 6;//播放底牌动画
+}
+
+//首出牌 或者 赖子牌动画等 1010
+message Send_SpecialCard_DDZ_LF{
+	optional int32 card_count = 1; //扑克数目
+	repeated int32 cards_data = 2; //扑克列表
+	optional int32 action_type = 3; //1 先叫 2 赖子
+	optional int32 action_chair = 4;//
+}
+//特效 1011
+message effect_type_DDZ_LF{
+	optional int32 type = 1;//1流局
+	optional int32 target_seat = 2;//目标位置
+}
+//请求 1072
+message Opreate_RequestDdz_LF{
+	optional int32 opreate_type = 1;//1：叫地主 2：踢
+	optional int32 action = 2;//动作
+
+}
+
+
+
+

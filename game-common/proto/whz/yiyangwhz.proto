@@ -1,0 +1,49 @@
+package whz_yiyang;
+option java_package = "protobuf.clazz.whz";
+option java_outer_classname = "WhzRsp";
+import "basic/protocol.proto";
+//房间信息
+message RoomInfoWhz {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional string game_rule_des = 3; //玩法说明
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 _banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+}
+
+//房间的玩家
+message RoomPlayerResponseWhz {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+}
+//神牌确认
+message make_sure_shen_card{
+	optional int32 shen_pai_value = 1;//神牌的值
+	optional int32 is_animation = 2;//是否动画
+}
+
+//神腰
+message shen_yao_card{
+	optional int32 shen_yao_value = 1;//伸腰
+	optional int32 has_shen = 2;//有神
+}
+

@@ -1,0 +1,78 @@
+package redpacket;
+option java_package = "protobuf.clazz.activity";
+option java_outer_classname = "InviteRedpacketProto";
+
+//cmd: 59邀请新用户送红包活动请求
+message InviteRedpacketReq{
+	//数据类型  1: 我的红包  2： 排行榜 3:邀请记录   4:红包活动，包括奖品展示、规则说明
+	required int32 paramType = 1;
+	optional int32 cur_page = 2;   //当前页
+	optional int32 page_size = 3;   //条数
+
+}
+
+//cmd：  邀请人数排行榜数据
+message RankListInviteRedpacketResp{
+	repeated RankData rankDataList = 1;
+}
+
+//排行榜数据
+message RankData{
+	optional int32 ranking = 1;   //名次
+	optional string nickName = 2; //昵称
+	optional int32 invitePersons = 3; //邀请人数
+}
+
+//cmd：  我的红包
+message GetInviteRedpacketResp{
+	optional GetRedPackData getData = 1;
+	optional int32 state = 2;//用户状态,1未成功邀请绑定任何人,2已成功邀请绑定但绑定人未完成局数时,3已成功邀请绑定且已获得奖励时状态,4已成功绑定但未完成时状态
+}
+//我的红包获数据
+message GetRedPackData{
+	optional int32 invitePersons = 1;   //邀请人数
+	optional int32 receiveMoney = 2; //获利金额，分为单位
+	optional string lastInviteHeadPic = 3;//最近邀请人头像
+	optional string lastInviteNick = 4;//最近邀请人昵称
+	optional int32 effectiveCount = 5;//有效邀请人数
+	optional int32 rank = 6;//排名
+}
+
+
+//cmd：  邀请记录
+message InviteRecordResp{
+	repeated InviteRecordData inviteRecordDataList = 1;
+	optional int32 totalInvite = 2;//总邀请人数
+	optional int32 curPage = 3;//当前页码
+}
+
+// 邀请记录
+message InviteRecordData{
+	optional string headPic = 1;   //头像
+	optional int32 state = 2; //有效邀请的标志，1有效，0无效
+}
+
+message PrizeData{
+	optional string pic = 1;
+	optional string name = 2;
+	optional int32 rank = 3;
+	optional string title = 4;
+
+}
+//cmd：  红包活动
+message ActivityRuleResp{
+	optional int32 beginTime = 1;//活动开始时间
+	optional int32 endTime = 2;//活动结束时间
+	optional int32 invitePay = 3;//每邀请一个获利金额
+	optional string activeName = 4;
+	optional string activeDesc = 5;
+	optional int32 open_time = 6;//弹出时间，0标识不弹出，1，2，3表示每隔多久弹出一次
+	repeated PrizeData prizeDataList = 7;
+	optional string activePic = 8;//活动图片
+
+}
+
+
+
+
+

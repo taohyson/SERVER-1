@@ -1,0 +1,13 @@
+package extendCommon;
+
+option java_package = "protobuf.clazz.extendCommon";
+option java_outer_classname = "ExtendsProto";
+import "basic/protocol.proto";
+import "basic/common.proto";
+
+
+//通用字节流扩展pb
+message PermitLessRep{
+	optional int32 playerNumber = 1;   //允许少人模式的人数
+
+}

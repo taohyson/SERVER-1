@@ -1,0 +1,92 @@
+package mj;
+
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "Nanchang";
+import "basic/protocol.proto";
+
+message EveryJingInfo_NC {
+		repeated int32 showCards = 6; // 显示的牌
+		optional int32 zhengJingCount = 1; // 正精的个数
+		optional int32 fuJingCount = 2; //  副精的个数
+		optional bool isBaWangJing = 3; // 是否霸王精 (true是 false否)
+		optional int32 chongGuanScore = 4; // 精的冲关(0表示没有冲关, >1 表示冲关情况)
+		optional int32 everyJingScore = 5; // 得分
+}
+
+
+message ActionJingDatas {
+	repeated int32 showCenterCards = 1; // 中间显示的牌
+	repeated EveryJingInfo_NC jingInfo = 2; //每个玩家对应的显示牌数据 下标对应玩家index
+	optional int32 count = 3; // 发电显示次数
+	optional bool touZi = 4; //是否需要骰子动画
+	optional int32 target = 5; //对应玩家
+	optional int32 touZiOne = 6; //骰子1
+	optional int32 touZiTwo = 7; //骰子2
+	repeated int32 otherCards = 8; //用于显示左右上下精
+	optional bool isTing = 9;  //停牌
+
+}
+
+
+
+//动画数据
+message ActionData_NC {
+	repeated int32 actionType = 1; // 动画类型数组
+	repeated ActionJingDatas actionJingDatas = 2; //动作的精牌数据(actionTypes下标)
+
+}
+
+
+//结算数据
+message GameEndResponse_NC {
+	optional GameEndResponse gameEnd = 1; // 结算
+	repeated int32 zhengJing = 2; // 第一个表示上精中的正精  第二个表示副精
+	optional int32 otherJingNumber = 3; // 其他精牌数量
+	repeated int32 otherJing = 4; // 其他精牌数值 该数组长度为other_jing_number的2倍
+	repeated GameEndInfo gameEndInfoXia = 5; // 小结算胡牌信息
+	repeated GameEndInfo gameEndInfoDa = 6; // 大结算胡牌信息
+	optional string resultDesc = 7; // 胡牌描述
+	repeated ActionData_NC actionDataNC = 8; // 结束后的动画信息
+
+}
+
+//结算信息
+message GameEndInfo{
+	repeated int32 title = 1; // 标题
+	repeated int32 score = 2; //分值
+	optional int32 shangJingCount = 3; //正精数量
+	optional int32 xiaJingCount = 4; //副精数量
+	optional bool  baHu = 5; //霸胡 true霸胡 fales 不显示霸胡
+
+
+	//title 类型
+	enum GameEndInfoType{
+		HUSCORE = 0;       // 胡分
+		GANGSCORE = 1;     //杠分
+		SHANGJING = 2;     //上精
+		HUITOU = 3;    	   //回头
+		XIAJING = 4;       //下精
+		XIAZOUYOU = 5;     //下左右
+		CHANGGE = 6;       //唱歌
+		MAILEI = 7;        //埋雷
+		FADIAN = 8;        //发电
+		SHAIYUELIANG = 9;  //晒月亮
+		ZHAOJINGZI = 10;   //照镜子
+		CHAOZHUANG = 11;   //抄庄
+		PALOU = 12;        //爬楼
+		PIAOJING = 13;     //飘精
+		FAFENG = 14;     //罚分
+
+	}
+}
+
+//发电次数完成
+message FaDianActionEnd{
+	required int32 count = 1; //当前发电次数
+	required int32 tyep = 2; //发电消息类型 1：正常结束;2 停牌, 3不停
+}
+
+
+
+
+

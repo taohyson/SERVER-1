@@ -1,0 +1,171 @@
+package gfWsk;
+option java_package = "protobuf.clazz.gfWsk";
+option java_outer_classname = "gfWskRsp";
+import "basic/protocol.proto";
+
+
+
+
+//刷新用户抓分
+message RefreshScore_Wsk_GF{
+	repeated int32 user_get_score = 1;//抓分
+	optional int32 table_score = 2;//桌面分
+	repeated int32 xian_qian_score = 3;//喜钱分
+}
+//刷新用户抓分
+message LiangPai_Result_Wsk_GF{
+	optional int32 opreate_player = 1;//操作玩家
+	optional int32 card_data = 2;//操作扑克
+	repeated int32 seat_index = 3;
+
+}
+//用户出牌
+message OutCardDataWsk_GF{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated Int32ArrayResponse user_can_out_data = 11;  //出牌数据
+	repeated int32 user_can_out_count = 12;//出牌数量
+	repeated int32 user_get_score = 13;//玩家抓分
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 is_current_first_out = 17;//当前操作玩家是否首出
+	optional int32 is_have_not_card = 18;//当前玩家是否没牌
+	optional int32 is_bao_jing = 19;
+	repeated int32 friend_seat = 20;//叫庄结果
+	optional int32 liang_pai = 21;//亮牌
+}
+message PaiFenData{
+	repeated Int32ArrayResponse cards_data = 1;  //牌分数据
+	repeated int32 cards_count = 2;//牌分数量
+	optional int32 yu_score = 3;//余分
+}
+
+message UserCardData{
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+}
+//结算
+message PukeGameEndWsk_GF{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated UserCardData cards_data = 5; //扑克列表
+	repeated int32 boom_card_num = 6;//炸弹数量
+	repeated int32 end_score = 7;//总分
+	repeated int32 reward_score = 8;//奖分
+	optional int32 player_num = 10;//游戏人数
+	optional int32 banker_player = 11;//庄家
+	optional int32 reason = 12;//结束类型
+	repeated int32 dang_ju_score = 18;//得分
+	repeated int32 zhua_fen = 19;//抓分
+	repeated int32 win_order = 20;//输赢排序
+	repeated int32 jia_fa_socre = 21;//加罚分
+	repeated int32 shao_fen = 28; //烧分
+	optional int32 mian_da = 30; //免打类型(1,罚王免打 2，罚王五十K免打 3.9炸(包括4王免打))
+	repeated Int32ArrayResponse fa_wang_card_data = 31;//罚王数据
+	repeated Int32ArrayResponse card_data_score = 32;//牌型奖励分
+	//总结算
+	repeated int32 all_end_score = 13;//结算总积分
+	repeated int32 end_score_max = 14;//单句最高得分
+	repeated int32 win_num = 15;//赢句数
+	repeated int32 lose_num = 16;//输句数
+	repeated RoomPlayerResponse players = 17;
+	repeated int32 all_reward_score = 22;//总喜钱分
+	repeated int32 all_zhua_fen = 23; // 总抓分
+	repeated int32 end_zhua_fen_max = 24;//单句最高抓分
+	repeated int32 all_tou_you = 25; //头游总数
+	repeated int32 all_win_num = 26; //胜利数
+	repeated int32 all_fail_num = 27; //失败数
+	repeated Int32ArrayResponse hand_card_data = 29; //剩余手牌
+}
+message TableResponse_Wsk_GF {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 user_can_out_data = 19;  //出牌数据
+	optional int32 user_can_out_count = 20;//出牌数量
+	repeated int32 user_get_score = 21;//玩家抓分
+	repeated int32 win_order = 22;//输赢排序
+	optional bool is_yi_da_san = 23;//是否一打三
+	repeated int32 tou_xiang_status = 24;//投降状态 0:还未操作 1：选择投降  2：选择不投降 3：不用显示
+	repeated Int32ArrayResponse fei_wang = 25;//废王
+	repeated int32 jiao_card_data = 26;//叫牌数值
+
+}
+message GameStart_Wsk_GF{
+	optional RoomInfo room_info = 5;
+	repeated RoomPlayerResponse players = 7;
+	optional int32  cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 display_time = 4; //显示时间
+	repeated Int32ArrayResponse fei_wang = 8;//废王
+}
+
+message TouXiang_Anser_Wsk_GF{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	optional string opreate_str = 2;//消息
+	optional bool is_tou_xiang = 3;//0不投降，1投降
+}
+//叫庄结果
+message CallBankerResponse_GF{
+	optional int32 opreate_action = 1; //0:不叫 1：叫
+	optional int32 call_player = 2;//操作玩家 -1：通知第一次叫庄
+	optional int32 current_player= 3;//当前玩家 -1：叫庄结束
+	optional int32 banker_player = 4;//-1：表示庄家未确定
+	optional int32 display_time = 5; //显示时间
+	optional RoomInfo room_info = 6;//
+}
+message TouXiang_Result_Wsk_GF{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	repeated int32 is_agree_touxiang = 2;//是否接受投降 0为处理 ，-1拒绝 1：同意
+	optional int32 request_tou_xiang = 3;//请求投降玩家
+	optional string opreate_str = 4;//消息
+	optional int32 is_ok_cancel = 5;//是否确定取消按钮 0：不需要 1：需要
+}
+message RefreshCardData{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+
+}
+
+//请求
+message Opreate_RequestWsk_GF{
+	optional int32 opreate_type = 1;//1:请求投降 2：同意投降 3：拒绝投降 4：亮牌 5:叫庄 6不叫 7:不投降 8:理牌排序 9:数量排序
+	optional int32 card_data = 2;//亮牌牌值
+	repeated int32 sort_card = 3;//排序牌值
+}
+
+//刷新队友牌值
+message Refresh_Pai_GF{
+	optional int32 seat_index = 1;//队友位置
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	optional int32 card_count = 3;//牌的数量
+}

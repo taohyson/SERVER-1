@@ -1,0 +1,330 @@
+package c2s;
+
+option java_package = "protobuf.clazz.c2s";
+option java_outer_classname = "C2SProto";
+import "basic/protocol.proto";
+import "basic/common.proto";
+message EmptyReq {
+}
+//请求,cmd21
+message AppItemsReq {
+}
+
+//房间信息请求,cmd22
+message RoomInfoReq {
+	required int32 roomId = 1; //房间id
+}
+
+//房间信息返回,cmd24
+message RoomInfoRsp {
+	required int32 roomId = 1;
+	optional int32 gameTypeIndex = 2;
+	optional int32 appId = 3;
+	optional int32 roomRule = 4; //0无围观 1有围观
+	required int32 status = 5;
+	optional int32 clubId = 6;
+	optional string club_name = 7;
+}
+
+//告诉客户端收到某条消息
+message MessageReceiveRsp {
+	required int32 type = 1; //1房间
+	optional int32 var1 = 2; //预留字段
+	optional string str1 = 3; //预留字段
+}
+
+//请求服务器时间，cmd28
+message ServerTimeReq {
+	required int32 clientTime = 1; //请求时间,秒
+}
+
+//请求服务器时间返回，cmd36
+message ServerTimeRsp {
+	required int32 clientTime = 1; //请求时间,秒
+	required int32 serverTime = 2; //服务器当前时间,秒
+}
+
+//红点请求
+message RedHeartReq {
+	optional int64 account_id = 1;
+	repeated int32 type = 2; //类型
+}
+
+message RedHeartRsp {
+	required int32 status = 1; //
+}
+
+message AppAutoIncreVersionRsp {
+	required int32 version = 1;
+}
+
+message SceneReq {
+	required int32 sceneId = 1; //1俱乐部 2-牌局结算界面
+	required int32 category = 2; //1进 0出
+}
+
+//统一战绩查询 cmd:37
+message MilitaryExploitsReqProto {
+	required int32 type = 1; //类型  @see MilitaryExploitsType
+	optional int32 clubId = 2;
+	optional int32 page = 3;
+	optional int32 beginTime = 4; //起始时间
+	optional int32 endTime = 5; //结束时间
+	optional int64 clubMatchId = 6; //亲友圈自建赛Id
+}
+
+//统一战绩回复 cmd:66
+message MilitaryExploitsRspProto {
+	required int32 type = 1; //类型  @see MilitaryExploitsType
+	optional int32 clubId = 2;
+	repeated PlayerResultResponse records = 3;
+	optional int32 totle = 4; // 总条数 \当日开桌数
+	optional int32 page = 5; //当前页数
+	optional int32 rows = 6; //每页条数
+	optional int32 consume = 7; //消耗豆数
+	optional int32 generalRecord = 8; //总战绩 (个人战绩使用)
+	optional int64 clubMatchId = 9; //亲友圈自建赛Id
+    optional int32 exclusive_consume = 10; //专属豆消耗
+}
+
+//手机绑定/登陆
+message PhoneReqProto {
+	required string mobile = 1;
+	required string identifyCode = 2; //校验码
+}
+
+message PhoneLoginReq {
+	optional LoginRequest loginReq = 1;
+	optional PhoneReqProto phoneInfo = 2;
+}
+//手机验证码获取
+message PhoneIdentifyCodeReqProto {
+	required int32 type = 1; //1绑定用户相关 @see IPhoneIdentifyCodeType
+	required string mobile = 2; //手机号
+}
+
+//绑定情况
+message PhoneBindInfoRsp {
+	optional int32 type = 1; //1绑定 2解绑 3绑定状态
+	optional int32 status = 2; //1成功 0失败
+	optional string mobile = 3; //手机号
+}
+
+//测试的
+message __GMReq {
+	required int32 type = 1;
+	optional string value = 2;
+}
+
+//切换微信
+message PhoneSwitchWXReq {
+	required string wx_code = 1; //接口调用凭证
+}
+
+//切换微信回复
+message PhoneSwitchWXRsp {
+	required int32 status = 1; //接口调用凭证
+	optional AccountResponse accountRsp = 2;
+}
+
+//玩家的一些认证信息
+message CertificationProto {
+	optional string mobile = 1; //身份证
+	optional string realName = 2; //实名
+	optional string identityCard = 3; //身份证
+}
+//上报推送信息
+message PushReport {
+	optional int32 plat = 1; //平台，1，安卓，2 ios
+	optional string equipmentId = 2; //设备标识
+	optional int32 channel = 3;//渠道0官方包推送,1OPPO包2VIVO 3HUAWEI,4XIAOMI
+}
+
+//点赞
+message ClubUpvoteProto {
+	required int32 clubId = 1;
+	optional CommonSII vote = 2; //k:战绩id,v1:1赞0取消
+	optional int64 accountId = 3;
+}
+
+//举报非法信息
+message ReportIllegal {
+	optional int64 accountId = 1; //举报者id
+	optional string email = 2; //邮件地址
+	optional string content = 3; //举报内容
+	repeated string imgUrlList = 4; //举报的图片地址
+}
+//上报城市信息
+message CityReport {
+	optional string cityCode = 1; //城市id
+}
+
+//公共
+message CommonCodeRsp {
+	required int32 code = 1;
+	optional string attachment = 2;
+}
+
+//游戏结算消息   cmd=1000
+message GameSettlementMsg {
+	required int32 gameId = 1; //游戏ID
+	required int32 roomId = 2; //房间ID
+	required int32 curRound = 3; //当前局数
+	required int32 maxRound = 4; //设置局数
+	required int64 overTime = 5; //结束时间
+	required int32 gameType = 6; //游戏类型   0开房  4比赛 5俱乐部
+	required string typeName = 7; //房间名称&&比赛场名称&&俱乐部名称
+	required int32 typeId = 8; // 具体游戏类型ID
+	required int32 typeSubId = 9; // 具体游戏类型ID
+	required string appName = 10; //app名称
+	required string gameName = 11; //子游戏名称
+	repeated SettlementAccountMsg accountMsgs = 12; //玩家信息
+	optional string brandId = 13;	//牌局ID
+}
+
+//结算时玩家信息
+message SettlementAccountMsg {
+	required int64 accountId = 1; //账号ID
+	required string nickName = 2; //昵称
+	required int32 score = 3; //得分
+	required float floatScore = 4; //浮点数得分
+}
+
+message AppItemMiniProto {
+	required int32 category = 1; //1:icon,2:downurl
+	repeated CommonIS datas = 2; //k:appid,v:icon/downloadurl
+}
+
+//闲逸豆兑换金币比例请求,cmd65
+message XianYiDouExchangeCoinRateReq {
+}
+
+//闲逸豆兑换金币比例返回,cmd107
+message XianYiDouExchangeCoinRateResp {
+	optional int32 rate = 1; //兑换比例
+}
+
+//闲逸豆兑换金币请求,cmd66
+message XianYiDouExchangeCoinReq {
+	optional int32 num = 1; //兑换数量
+	optional int32 uiType = 2; //操作主界面
+	optional int32 subUiType = 3; //操作子界面
+	optional int32 opId = 4; //操作值
+}
+
+//闲逸豆兑换金币返回,cmd108
+message XianYiDouExchangeCoinResp {
+	optional bool isSuccess = 1; //兑换是否成功
+}
+
+//金币场充值返回,cmd109
+message RechargeForCoinResp {
+	optional bool isSuccess = 1; //是否成功
+}
+
+//删除邮件
+message DelEmailProto {
+	repeated int32 emailId = 1;
+}
+
+message RequestChangeGVoiceStatus {
+	required int32 gvoiceStatus = 1; //实时语音状态
+	optional int32 roomId = 2; //房间号
+}
+
+// 请求语音消息,cmd68
+message VoiceChatRequestProto {
+	optional int32 type = 1; // 1-俱乐部语音消息
+	optional int32 clubId = 2; // 俱乐部Id(type为1时需要)
+	optional int64 uniqueId = 3; //消息唯一Id
+}
+
+// 语音消息返回,cmd114
+message VoiceChatResponse {
+	optional int32 type = 1; // 1-俱乐部语音消息
+	optional int32 clubId = 2; // 俱乐部Id(type为1时需要)
+	optional int64 uniqueId = 3; //消息唯一Id
+	optional bytes content = 4;
+}
+
+// 大厅推荐
+message SdkAppRecommendRequest {
+
+}
+
+// 大厅推荐
+message SdkAppRecommendResponse {
+	repeated SdkApp cpApp = 1;
+	optional string sdkUrl = 2;	//SDK服务器地址
+}
+
+// 请求CP APP列表
+message SdkAppRequest {
+
+}
+
+message SdkAppResponse {
+	repeated SdkApp cpApp = 1;
+	optional string sdkUrl = 2;	//SDK服务器地址
+}
+
+message SdkApp {
+	optional int64 appId = 1;
+	optional string appKey = 2;
+	optional string appName = 3;
+	optional string icon = 4;
+	optional string url = 5;
+	optional string appSecret = 6;
+	optional int32 orientation = 7;	//webview方向
+	optional string citys = 8;	//适用城市
+	optional string specialText = 9;//特效文件名
+	optional int32 displayOrder = 10;//推荐排序
+	optional int32 redState = 11;	//红点提示
+}
+
+message ESDKLoginReq{
+	optional string sdk = 1;
+	optional string app = 2;
+	optional string uin = 3;
+	optional string sess = 4;
+	optional int32 game_index = 5; //游戏标识 1=麻将
+	optional int32 client_flag = 6; //客户端标识 1=安卓 2=苹果 3=pc
+	optional string client_version = 7; //客户端最后登录版本
+	optional int32 reconnect = 8; //0=正常登录  1=重连登录
+	optional string client_ip = 9; //客户端ip
+	optional string str_param = 10; //字符串参数
+	optional string str_channel = 11; //渠道编号
+	optional int32 channel_id = 12; //渠道id
+	optional string imei = 13; //手机唯一码
+}
+message EJCacheLoginReq {
+	optional string self_token = 1; //登录令牌
+	optional int32 game_index = 2; //游戏标识 1=麻将
+	optional int32 client_flag = 3; //客户端标识 1=安卓 2=苹果 3=pc
+	optional string client_version = 4; //客户端最后登录版本
+	optional string client_ip = 5; //客户端ip
+	optional int32 channel_id = 6; //渠道id
+
+}
+
+// 玩家开关数据请求,cmd78
+message PlayerSwtichStatusReq {
+
+}
+
+// 玩家开关数据返回,cmd124
+message PlayerSwitchStatusRsp {
+	optional bool allowInvite = 1; //是否允许邀请
+}
+
+// 玩家开关设置,cmd79
+message PlayerSwitchSetReq {
+	optional int32 allowInvite = 1; // 允许邀请  1-允许 2-不允许
+}
+message SupplementUserInfoReq{//补充用户资料
+	optional string nickName = 1;
+	optional int32 sex = 2;
+	required string mobile = 3;
+	required string identifyCode = 4; //校验码
+}
+

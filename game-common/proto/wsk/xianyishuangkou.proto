@@ -1,0 +1,138 @@
+package xysk;
+option java_package = "protobuf.clazz.xysk";
+option java_outer_classname = "xyskRsp";
+import "basic/protocol.proto";
+
+
+//1001
+message GameStart_xysk{
+	optional RoomInfo room_info = 5;
+	repeated RoomPlayerResponse players = 7;
+	optional int32  cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 display_time = 4; //显示时间
+}
+//用户出牌 1002
+message OutCardDataWsk_xysk{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated Int32ArrayResponse user_can_out_data = 11;  //出牌数据
+	repeated int32 user_can_out_count = 12;//出牌数量
+	repeated int32 user_get_score = 13;//玩家抓分
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 is_current_first_out = 17;//当前操作玩家是否首出
+}
+//刷新用户抓分 1003
+message RefreshScore_xysk{
+	repeated int32 user_get_score = 1;//抓分
+	optional int32 table_score = 2;//桌面分
+	repeated int32 xian_qian_score = 3;//奖分
+	optional int32 cur_get_score = 4;//当前抓分
+	optional int32 target_seat = 5;//1 我方 2对方
+	optional int32 type = 6;//类型 0：不需要动画 1需要动画
+	repeated int32 team = 7;
+}
+
+//亮牌结果 1004
+message LiangPai_Result_xysk{
+	optional int32 opreate_player = 1;//操作玩家
+	optional int32 card_data = 2;//操作扑克
+	repeated int32 seat_index = 3;
+}
+
+
+
+message UserCardData_xysk{
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+}
+//结算 1005
+message PukeGameEndWsk_xysk{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 end_score = 7;//总分
+	repeated int32 reward_score = 8;//奖分
+	optional int32 banker_player = 11;//庄家
+	optional int32 reason = 12;//结束类型
+	repeated int32 di_fen = 13;//底分
+	repeated int32 win_order = 14;//输赢排序
+	optional int32 score_type = 23;// 1：正常 2：双关
+	//总结算
+	repeated int32 all_end_score = 15;//结算总积分
+	repeated int32 win_num = 16;//赢句数
+	repeated int32 lose_num = 17;//输句数
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 all_win_num = 19; //胜利数
+	repeated int32 all_fail_num = 20; //失败数
+	repeated int32 close_door_num = 21;//关门次数
+	repeated int32 boom_num = 22;//炸弹次数
+}
+//1006
+message TableResponse_xysk {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 user_can_out_data = 19;  //出牌数据
+	optional int32 user_can_out_count = 20;//出牌数量
+	repeated int32 win_order = 21;//输赢排序
+	repeated int32 jiao_card_data = 22;//叫牌数值
+
+}
+
+
+
+//1007
+message RefreshCardData_xysk{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+
+}
+
+
+//刷新队友牌值 1008
+message Refresh_Pai_xysk{
+	optional int32 seat_index = 1;//队友位置
+	repeated int32 cards_data = 2; //扑克列表
+	optional int32 card_count = 3;//牌的数量
+}
+//奖分动画 1009
+message Reward_Score_Effect_xysk{
+	repeated int32 xian_qian_score = 1;//奖分
+	optional int32 cur_score = 2;//
+	optional int32 target_seat = 3;
+}
+//请求 1075
+message Opreate_RequestWsk_xysk{
+	optional int32 opreate_type = 1;//1：数量排序 2：大小排序 3：510K排序
+}

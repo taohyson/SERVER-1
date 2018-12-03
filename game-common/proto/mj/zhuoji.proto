@@ -1,0 +1,20 @@
+package mj;
+
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "ZhuoJiPro";
+import "basic/protocol.proto";
+
+message SigonDetail {
+	required int32 id = 1;  // 描述ID
+	optional int32 card_data = 2;
+	required int32 score = 3;
+}
+
+message PersonDetail {
+	repeated SigonDetail detail = 1;
+}
+
+message ResponseMagic {
+	repeated PersonDetail person = 1;
+}
+

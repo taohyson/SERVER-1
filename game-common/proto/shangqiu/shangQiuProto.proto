@@ -1,0 +1,11 @@
+package shangQiu;
+option java_package = "protobuf.clazz.shangQiu";
+option java_outer_classname = "ShangQiuRsp";
+import "basic/protocol.proto";
+
+
+//扩展协议，花牌显示及亮张显示
+message OtherResponse {
+	optional Int32ArrayResponse hua_card = 1;   //花牌数量
+	optional Int32ArrayResponse liang_zhang = 2;  //亮张数量
+}

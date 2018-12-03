@@ -1,0 +1,129 @@
+package pdk;
+
+option java_package = "protobuf.clazz.tdz";
+option java_outer_classname = "TDZRsp";
+import "basic/protocol.proto";
+
+//房间的玩家
+message RoomPlayerResponseTDZ {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+	optional int32 you = 15; // 游数
+}
+
+//结算
+message PukeGameEndTDZ {
+	repeated int32 win_counts = 9; // 赢局数
+	repeated int32 lose_counts = 10; //输局数
+	repeated int32 score_max = 11; // 赢的最大分数
+	repeated float score = 12; //当期分数
+	optional int32 base_score = 13; // 底分
+	optional int32 banker_index = 14; // 庄家
+}
+
+message TableResponse_TDZ {
+	optional int32 cell_score = 1; //单元积分
+	optional int32 banker_player = 2; //庄家用户
+	optional int32 current_player = 3; //当前用户
+	optional int32 scene_info = 4;
+	//下注信息
+	repeated int32 add_jetter = 5; //下注信息
+	//状态变量
+	repeated bool trustee = 6; //是否托管
+	repeated int32 winner_order = 7;
+	//扑克数据
+	repeated int32 card_count = 8; //扑克数目
+	repeated Int32ArrayResponse cards_data = 9; //扑克列表
+	repeated bool open_card = 10; //摊牌
+	optional int32 end_score = 12; //用户分数
+	//叫庄
+	repeated int32 call_banker_info = 13; //所有叫庄信息
+	optional bool player_status = 14; // 是否在游戏
+	repeated int32 card_type = 15; //牌的类型
+	repeated int32 game_time = 16; //牌倍数
+	repeated float point = 24;
+	optional int32 trustee_type = 17; //托管的内容
+	optional RoomInfo room_info = 20;
+	repeated RoomPlayerResponseTDZ players = 21;
+	optional int32 display_time = 18; //当期操作的播放时间
+	optional CardType_TDZ send_card = 19; //发牌 (开牌阶段)
+	optional CallBankerInfo_TDZ my_call_banker_info = 22; //用户叫庄信息（如果有 里有有玩家的叫分数据）（叫庄阶段）
+	optional GameStart_TDZ game_start = 23; //游戏开始（下注阶段）
+}
+
+//用户叫庄
+message CallBanker_TDZ {
+	optional int32 call_banker = 1; //叫庄的用户
+	optional int32 seat_index = 2; //下注用户
+}
+
+//用户叫庄信息
+message CallBankerInfo_TDZ {
+	repeated int32 call_banker_info = 1; //叫庄数据
+	optional int32 display_time = 2; //显示时间
+}
+
+message SendBanker_TDZ {
+	optional int32 cur_banker = 1; //当前庄家
+}
+
+//确认庄家游戏开始
+message GameStart_TDZ {
+	repeated Int32ArrayResponse jetton_cell = 1; //下注筹码
+	optional int32 cur_banker = 3; //当前庄家
+	optional int32 display_time = 4; //显示时间
+	optional int32 min_score = 5; //最低分
+	optional int32 max_score = 6; //最高分
+	optional int32 level = 7; //梯队
+}
+//用户下注
+message AddJetton_TDZ {
+	optional int32 jetton_score = 1; //下注分数
+	optional int32 seat_index = 2; //下注用户
+}
+
+//发牌数据包
+message SendCard_TDZ {
+	repeated Int32ArrayResponse send_card = 1; //牌数据包
+	optional int32 display_time = 2; //显示时间
+	repeated int32 tou_zi = 3; //骰子
+}
+// 发送骰子值
+message SendTouZi_TDZ {
+	optional int32 display_time = 1; //显示时间
+	repeated int32 tou_zi = 2; //骰子
+	repeated int32 score = 3; //分数值
+	repeated int32 seat_index = 4; //座位索引
+	optional bool is_first = 5; // 是否第一局 是/否 true/false
+}
+
+//用户摊牌
+message OpenCard_TDZ {
+	optional int32 seat_index = 1; //摊牌用户
+	optional bool open = 2; //是否摊牌
+	repeated int32 cards = 3; //牌数据
+	optional int32 card_type = 4; //牌类型
+	optional int32 time = 5; //倍数
+	optional float point = 6;
+}
+
+message CardType_TDZ {
+	optional int32 card_type = 1; //牌类型
+	optional int32 time = 2; //倍数
+}
+
+message Timer_OX_TDZ {
+	optional int32 display_time = 1; //显示时间
+}

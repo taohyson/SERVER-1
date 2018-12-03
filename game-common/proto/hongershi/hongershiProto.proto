@@ -1,0 +1,14 @@
+package hongershi;
+
+option java_package = "protobuf.clazz.hongershi";
+option java_outer_classname = "HongErShiRsp";
+import "basic/protocol.proto";
+
+message Operate_Card_HongErShi {
+	optional int32 type = 7; // 操作子类型
+	optional int32 seat_index = 2; // 操作玩家
+	optional int32 operate_card = 3; // 操作卡牌
+	optional int32 operate_code = 4; // 操作(吃、碰、杠)
+	repeated int32 delete_cards = 5; // 要删除的手牌
+	optional int32 delete_count = 6; // 数量
+}

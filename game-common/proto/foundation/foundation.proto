@@ -1,0 +1,333 @@
+package foundation;
+option java_package = "protobuf.clazz.foundation";
+option java_outer_classname = "FoundationProto";
+
+//活动全局奖励
+message FoundationActivityMainReward {
+	optional int32 itemId = 1;	//奖励itemID
+	optional int32 count = 2;	//奖励个数
+}
+//活动主奖励随机奖励
+message FoundationActivityMainRandomReward {
+	optional int32 itemId = 1;	//奖励itemID
+	optional int32 count = 2;	//奖励个数
+	optional int32 type = 3;	//奖励类型
+}
+
+//随机奖励
+message FoundationActivityRandomReward {
+	optional int32 type = 1;	//类型，1闲逸豆，2金币，3背包
+	optional string name = 2; //名字
+	optional int32 count = 3;	//奖励数量
+}
+
+//活动玩家任务对象
+message FoundationActivityMission {
+	optional int32 missionId = 1;
+	optional string missionName = 2;	//任务名称
+	optional int32 missionTargetEnum = 3;	//任务目标类型
+	optional int32 target_game = 4; //指定游戏
+	optional int32 currentCount = 5;	//当前完成次数（或其他类型统计）
+	optional int32 totalCount = 6;	//配置的达成次数
+	optional bool isFinish = 7;	//是否完成
+	optional int32 activityId = 8;
+	optional LinkPage linkPage = 9;
+	optional int32 dayIndex = 10;//第几天的任务
+	optional int32 groupId = 11;//组id
+	optional string id = 12;//id任务唯一标志
+	optional int32 liveness = 13;//任务奖励的活跃度，默认为0
+//	optional int32 totayLiveness = 14;//刷新今日活跃度
+}
+message LinkPage{
+	optional int32 linktype = 1;//跳转类型
+	optional linkdata linkdata = 2;//预留字段
+}
+message linkdata{
+	optional string data = 1;//跳转参数json格式
+}
+
+message FoundationActivity {
+	optional int32 activityId = 1;
+	optional int64 activityEndTime = 2;	//活动结束时间  秒
+	optional string name = 3;	//活动名称
+	optional int32 activity_type = 4; //活动类型（1=功能性活动(比如连续登录,后面可能还会有) 2=图片url）
+	optional string href = 5; //url地址
+	repeated FoundationActivityMainReward mainReward = 6;	//活动全局主奖励
+	repeated FoundationActivityMission mission = 7;	//玩家完成活动情况
+	optional int32 takeRewardCount = 8;	//已经领取了活动奖励次数
+	optional string remark = 9;//备注
+	optional int64 manualDurationTime = 10;	//开启活动持续时间,精确到秒
+	optional int32 activityStartType = 11;	//任务开始类型，1为自动生效，2为需要玩家点击开始
+	optional bool isManualStart = 12;	//是否手动开启
+	optional int32 manualStartEndTime = 13;	//手动开启结束时间
+	optional int32 targetGame = 14;	//指定游戏
+	optional string assignShareUrl = 15;	//指定分享图片
+	repeated MissionGroup missionGroup = 16;	//活动任务组
+	optional int32 displayTarget = 17;	//显示位置，0为在精彩活动，1为在主面板
+//	repeated DailyMission dailyMission = 18;	//每日任务组与奖励
+	optional int32 newUserRewardMoney = 19;//新手豪礼活动累计获得奖励
+	optional string targetGameArray = 20;	//指定游戏数组字符串
+//	optional int32 maxTakeRewardCount = 10;	//最大活动奖励次数，现在填1
+//	optional int32 curTakeRewardCount = 10;	//当前领取的次数
+	optional int64 systemStartTime = 21;	//系统配置开启时间
+	optional string missionShareImgs = 22;	//活动任务分享图
+	optional int32 share_with_qrcode = 23;	//分享是否带二维码
+	optional int32 totalPrize = 24;	//总奖励
+	optional int32 takenPrize = 25;	//已经领取奖励
+	optional int32 todayLiveness = 26;//今日活跃度
+	repeated LivenessReward livenessRewardList = 27;//活跃度奖励列表
+}
+
+message LivenessReward {
+	optional int32 index = 1;//序列号
+	optional int32 needLiveness = 2;//需要的活跃
+	optional int32 state = 3;//领取状态0未达到条件，1达到条件未领取，2已经领取
+	repeated FoundationActivityMainReward rewards = 4;//奖励，走道具背包
+}
+//拉取领取记录请求
+message RewardDetailRequest {
+	optional int32 activityId = 1;
+}
+//活动任务组
+message MissionGroup {
+	optional int32 groupId = 1;	//组ID
+	repeated int32 missionId = 2;	//任务ID集合
+	optional bool isTake = 3;	//是否领取任务组奖励
+	optional string groupName = 4;	//任务组名称
+	optional int32 dailyMissionState = 5;//每日任务完成情况
+	optional int32 dayIndex = 6;//按天区分任务组
+	optional string icon = 7;//奖励图片
+	optional string rewardName = 8;//奖励描述
+	optional int32 remainReward = 9;	//剩余奖品数量
+}
+//message DailyMission {
+//	optional int32 dayIndex = 1;	//第几天任务
+//	repeated int32 missionIds = 2;	//任务ID集合
+//	optional int32 missionState = 3;	//任务组奖励领取状态，0未完成,1未领取，2已经领取，3已错过,4未开始,5明天开启
+//	optional string taskName = 4;	//任务组名称
+//	optional DailyMissionReward dailyReward = 5;//对应的每日奖励
+//	repeated FoundationActivityMission mission = 6;	//玩家完成活动情况
+//}
+//message DailyMissionReward{
+//	optional int32 activityId = 1;//活动id
+//	optional int32 dayIndex = 2;//第几天
+////	optional int32 state = 3;	//是否领取成功，当为成功时，为true
+//	optional string icon = 3;
+//	optional string rewardName = 4;//奖励名称
+//	repeated FoundationActivityMainReward rewardList = 5;//奖励道具列表中的随机道具
+//}
+message RewardDetail {
+	optional int32 total = 1;
+	optional int32 remain = 2;
+}
+
+message TakeRewardRecord {
+	optional int64 accountId = 1;
+	optional string nick = 2;
+	optional string url = 3;
+	optional int64 takeTime = 4;	//领取时间
+	optional string rewardName = 5;	//奖品名称
+	optional int32 top = 6;//1置顶，0不管
+}
+
+message RewardDetailResponse {
+	optional RewardDetail rewardDetail = 1;
+	optional int32  activityId = 2;
+}
+
+message TakeRewardRecordRequest {
+	optional int32 activityId = 1;
+}
+
+message TakeRewardRecordResponse {
+	optional int32  activityId = 1;
+	repeated TakeRewardRecord takeRewardRecord = 2;
+
+}
+
+
+//拉取生效的活动信息请求
+message LoadFoundationActivityRequest {
+
+}
+
+message LoadFoundationActivityResponse {
+	repeated FoundationActivity activity = 1;
+}
+
+//手动开启活动请求，针对某些活动需要手动开启
+message ManualStartActivityRequest {
+	optional int32 activityId = 1;
+}
+
+message ManualStartActivityResponse {
+	optional int32 activityId = 1;
+	optional int64 manualDurationTime = 2;	//开启活动持续时间,精确到秒
+	optional bool isManualStart = 3;	//是否手动开启
+	optional int32 manualStartEndTime = 4;	//手动开启结束时间
+	optional string msg = 5;	//返回提示
+	optional bool success = 6;	//是否成功
+}
+
+
+//领取活动奖励
+message TakeFoundationActivityRequest {
+	optional int32 activityId = 1;
+	optional string nick = 2;
+	optional string url = 3;	//玩家头像URL
+}
+
+//领取活动奖励
+message TakeFoundationActivityResponse {
+	optional int32 activityId = 1;
+	optional int32 flag = 2;//1，主奖品，2随机奖品，3没有奖品，4.主奖励随机物品
+	optional FoundationActivityRandomReward subReward = 3;	//领取的奖励
+	optional string msg = 4;//返回提示
+	optional FoundationActivityMainRandomReward mainRandomReward = 5;	//主奖励随机物品
+}
+
+//活动通知，玩家完成任务，通知到代理服转发到客户端
+message FoundationActMissionNotify {
+	optional FoundationActivityMission mission = 1;
+}
+
+message RedpacketPoolRequest {
+	optional int32 type = 1;//操作类型，1拉取红包池，2提取红包金额
+	optional int32 money = 2;//金额
+}
+
+message RedpacketPoolResponse {
+	optional int32 money = 1;//红包池金额，分为单位
+	optional int32 minTakeMoney = 2;//最低提取金额
+	optional int32 clearTime = 3;//红包清零时间
+}
+
+message RedpacketExchangeGoldRequest{
+	optional int32 type = 1;//操作类型，1拉取红包兑换商品，2兑换闲逸豆
+	optional int32 shopId = 2;//商品id
+	optional int32 count = 3;//商品数量
+}
+message RedpacketExchangeGoldResponse{
+	optional int32 shopId = 1;//商品id
+	optional int32 gold = 2;//闲逸豆数量
+	optional int32 money = 3;//金额
+	optional string shopName = 4;//商品名
+	optional string icon = 5;//商品图标
+}
+
+message OperateResultResPonse{
+	optional bool result = 1;//操作结果
+	optional string msg = 2;//消息
+}
+message MissionGroupRewardReq{
+	optional int32 activityId = 1;//活动id
+	optional int32 groupId = 2;//任务组id
+	optional string nickName = 3;	//玩家昵称
+}
+message MissionGroupRewardResp {
+	optional int32 activityId = 1;//活动id
+	optional int32 groupId = 2;//任务组id
+	optional bool isSuccess = 5;	//是否领取成功，当为成功时，为true
+	optional string msg = 6;	//领取奖励提示
+	optional FoundationActivityMainRandomReward mainRandomReward = 7;
+	optional int32 newUserRewardMoney = 8;//总领取的奖励
+	optional int32 remainCount = 9;	//剩余的奖品数量
+}
+message LoadNewUserActivityRequest {
+
+}
+//message DailyMissionRewardReq{
+//	optional int32 activityId = 1;//活动id
+//	optional int32 dayIndex = 2;//任务天数
+//	optional string nickName = 3;	//玩家昵称
+//}
+//message DailyMissionRewardResp {
+//	optional int32 activityId = 1;//活动id
+//	optional int32 dayIndex = 2;//任务组id
+//	optional bool isSuccess = 3;	//是否领取成功，当为成功时，为true
+//	optional string msg = 4;	//领取奖励提示
+//	optional FoundationActivityMainReward mainRandomReward = 5;
+//	optional int32 newUserRewardMoney = 6;//总领取的奖励
+//}
+//message FoundationTest {
+
+//}
+message InviteFriendsActivityReq{
+
+}
+message InviteFriendsActivity{
+	optional int32 activityId = 1;
+	optional int64 activityStartTime = 2;	//活动开始时间  秒
+	optional int64 activityEndTime = 3;	//活动结束时间  秒
+	optional int32 inviteTotalNum = 4;//总邀请人数
+	optional int32 invitedNum = 5;//已经邀请的人数
+	optional string remark = 6;//备注
+	repeated InviteFriendsList inviteList = 7;//邀请人员列表
+	optional string shareIcon = 8;//分享背景图
+	optional string rewardName = 9;//奖励名称
+	optional int32 rewardMoney = 10;//奖励金额
+	optional int32 maxInvitePersion = 11;//活动最大邀请人数
+	optional int32 totalInvitePersion = 12;//活动期间已经邀请的人数
+
+}
+message InviteFriendsList{//邀请好友列表
+	optional int64 accountId = 1;
+	optional string nick = 2;
+	optional string icon = 3;
+	optional bool isTakeReward = 4;//是否领取过奖励
+	optional int32 missionCount = 5;//总任务数
+	optional int32 complementCount = 6;//完成任务数
+	optional bool valid = 7;//邀请是否有效
+}
+message TakeInviteActivityRewardReq{
+	optional int32 activityId = 1;
+	optional int64 targetId = 2;//领取某个id的邀请任务完成奖励
+
+}
+
+message LoadInviteActivityResp {//返回邀请活动详情
+	optional InviteFriendsActivity inviteActivity = 1;
+}
+
+message TakeInviteActivityRewardResp{
+	optional bool isSuccess = 1;	//是否领取成功，当为成功时，为true
+	optional string msg = 2;	//领取奖励提示
+	optional FoundationActivityMainReward inviteReward = 3;
+	optional int32 activityId = 4;
+	optional int64 targetId = 5;
+}
+
+message InviteFriendNotify {
+	optional InviteFriendsList inviteFriend = 1;
+}
+message InviteActivityQuotaReq{//是否达到活动最大邀请人数请求
+	optional int32 activityId = 2;//领取某个id的邀请任务完成奖励
+}
+
+message InviteActivityQuotaResp {//是否达到活动最大邀请人数返回结果
+	optional bool isOver = 1;
+}
+
+message TakeLivenessRewardReq {
+	optional int32 index = 1;//序列号
+	optional int32 activityId = 2;//活动id
+}
+
+message TakeLivenessRewardResponse {
+	optional int32 activityId = 1;
+	optional int32 flag = 2;//1领取成功，2领取失败，
+	optional string msg = 3;//返回提示
+	optional int32 index = 4;
+//	repeated FoundationActivityMainReward rewardList = 5;
+}
+//活跃度更新
+message LivenessUpdateNotify {
+	optional int32 activityId = 1;
+	optional int32 liveness = 2;
+	repeated LivenessReward livenessRewardList = 3;//活跃度奖励列表
+}
+
+//玩家领取大奖通知（走马等通知）
+message FoundationRewardNotify {
+	optional string message = 1;
+}

@@ -1,0 +1,9 @@
+package laopai;
+option java_package = "protobuf.clazz.laopai";
+option java_outer_classname = "LpRsp";
+import "basic/protocol.proto";
+message LP_XU_JIPAIQI{
+	repeated int32 out_card_index = 1;//出牌索引
+}
+
+

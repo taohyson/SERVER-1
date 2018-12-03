@@ -1,0 +1,146 @@
+package yjqf;
+option java_package = "protobuf.clazz.yuanjiangqf";
+option java_outer_classname = "yuanjiangqfRsp";
+import "basic/protocol.proto";
+
+//游戏开始 1001
+message GameStart_yjqf{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+}
+
+//发牌 1003
+message SendCard_yjqf{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	optional int32 base_cards_count = 3; // 底牌数量
+	repeated int32 base_cards_data = 4; // 底牌列表
+	optional int32 display_time = 5; // 显示时间
+}
+
+//用户出牌 1004
+message OutCardDataWsk_yjqf{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_can_out_data = 11;  //出牌数据
+	optional int32 user_can_out_count = 12;//出牌数量
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 is_current_first_out = 17;//当前操作玩家是否首出
+}
+
+//刷新用户抓分 1006
+message RefreshScore_yjqf{
+	optional bool is_reconnect = 1;//是不是断线重连
+	repeated int32 ji_score = 2;//积分
+	repeated int32 xi_score = 3;//喜分
+	repeated int32 all_ji_score = 4;//总积分
+	repeated int32 all_xi_score = 5;//总喜分
+}
+
+
+//结算  1005
+message PukeGameEndWsk_yjqf{
+    optional RoomInfo room_info = 1;
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 reason = 4;    //结束类型
+	repeated int32 win_order = 5; //本局名次
+	repeated int32 win_score = 6; //本局名次分
+	repeated int32 ji_score = 7;  //本局积分
+	repeated int32 xi_score = 8;  //本局 喜分
+
+	//总结算
+	repeated int32 all_ji_score = 9; //计积分
+	repeated int32 all_jiang_score = 10; //计奖分
+	repeated int32 all_xi_score = 11; //计喜分
+	repeated int32 all_end_score = 12; //结算总积分(总积分)
+	repeated int32 rounding_ji_score = 13; // 四舍五入后得分
+	repeated int32 xitong_score = 14; //系统结算
+	repeated RoomPlayerResponse players = 15;
+}
+
+//断线重连 1002
+message TableResponse_yjqf {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 user_can_out_data = 19;  //出牌数据
+	optional int32 user_can_out_count = 20;//出牌数量
+	repeated int32 user_get_score = 21;//玩家抓分
+	repeated int32 win_order = 22;//输赢排序
+}
+
+//切牌开始 1007
+message QiePaiStart{
+	optional int32  qiepai_chair = 1;//切牌玩家
+	optional int32 display_time = 2; //显示时间
+	optional bool is_animation = 3;//要不要放动画
+
+}
+
+//切牌开始 1008
+message QiePaiResult{
+	optional int32 qiepai_chair = 1;//切牌玩家
+	optional int32 card_index = 2;//牌的索引
+}
+
+//刷新手牌  1009
+message RefreshCardData_yjqf{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+}
+
+//动画特效  1010
+message Effect_type_yjqf{
+	optional int32 seat_index = 1;//座位号
+	optional int32 type = 2;//1：翻牌,2:从玩家飞到记分器，3：从记分器飞到玩家
+	repeated int32 data = 3;//
+	optional int32 is_animation = 4;//0：直接数据显示 1：需要动画
+	optional int32 table_score = 5;//桌面分
+	repeated int32 fen_card = 6;//分牌个数 0:5、 1:10 、2：k
+	repeated int32 ji_score = 7;//积分
+}
+
+//显示底牌  1011
+message Send_dipai_yjqf{
+	optional int32 card_count = 1;//1：底牌数量
+	repeated int32 card_data = 2;//底牌数据
+	repeated int32 card_score = 3;//底牌分数
+	optional int32 seat_index = 4;//获得分数的椅子号
+	repeated int32 ji_score = 5;//玩家积分
+}
+
+//切牌请求
+message Request_qiepai_yjqf{
+	optional int32 card_index = 1;//1：牌索引
+}
+
+

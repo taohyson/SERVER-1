@@ -1,0 +1,79 @@
+package hallguide;
+option java_package = "protobuf.clazz.basic";
+option java_outer_classname = "HallGuideProto";
+
+//获得大厅指引的列表
+message HallGuideRequest{
+	required int32 uiType = 1;		//UI样式(1通用UI,2河南UI)
+}
+//返回大厅指引的列表
+message HallGuideResponse{
+	required int32 uiType = 1;
+	repeated SingleGuideData singleGuide = 2;
+}
+//单条指引
+message SingleGuideData{
+	required int32 guideType = 1;				//指引区域(1亲友圈2比赛场3金币场)
+	optional string guideText = 2;				//指引文本
+	optional string propagateIcon = 3;			//宣传图
+	required int64 startTime = 4;				//生效时间
+	required int64 endTime = 5;				//过期时间
+	required int32 uiType = 6;					//ui样式
+}
+//子游戏资源
+message GameResourceRequest{
+	required int32 appId = 1;//大厅游戏id
+}
+//返回子游戏列表的资源图
+message  GameResourceResponse{
+	optional int32 appId = 1;
+	optional string sealUrl = 2;//印章资源
+	optional string titleUrl = 3;//标题资源
+	optional string bgUrl= 4;//背景资源图
+}
+
+//玩家在客户端上传二维码
+message ClientPlayerUploadErWeiMaRequest {
+	required int32 paramType = 1;		//1是否能上传和上传身份的限制2获取玩家二维码信息3上传玩家二维码
+	optional int32 id = 2;				//数据库唯一标识
+	optional string imageUrl = 3;		//二维码图片地址
+}
+
+//返回是否上传,上传用户身份
+message UploadRoleAndTypeResponse{
+	required int32 role = 1;		//0玩家不能上传1全部都可以上传2代理用户可以上传
+}
+
+//返回记录玩家二维码的结果
+message UploadResultResponse {
+	required int32 result = 1;					//1成功0失败
+	optional string msg = 2;					//备注
+	repeated SingleErWeiMaData single = 3;		//返回新增的结果
+}
+
+//返回玩家二维码列表
+message PlayerErWeiMaResponse {
+	repeated SingleErWeiMaData single = 1;
+}
+
+message SingleErWeiMaData {
+	required int32 id = 1;				//数据库唯一标识
+	required int64 accountId = 2;		//账号ID
+	required string imageUrl = 3;		//图片地址
+	required int32 uploadStatus = 4;	//上传状态(1已上传2审核3审核未通过)
+}
+
+//获得大厅主界面背景资源的列表
+message HallMainViewBackRequest {
+	required string cityCode = 1;		//城市code(逗号分隔字符串,顺序从下级到上级)
+}
+
+//返回大厅主界面背景资源
+message HallMainViewBackResponse {
+	required int32 cityCode = 1;			//适用城市(只包含全国,省和直辖市)
+	optional string backImage = 2;			//背景图
+	optional string personImage = 3;		//人物图
+	optional int64 startTime = 4;			//生效时间
+	optional int64 endTime = 5;			//过期时间
+	optional int32 uiType = 6;				//客户端显示UI类型(1通用UI,2河南UI)
+}

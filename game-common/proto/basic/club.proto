@@ -1,0 +1,1325 @@
+option java_package = "protobuf.clazz";
+option java_outer_classname = "ClubMsgProto";
+import "basic/common.proto";
+//服务器用
+message ClubServerProto {
+	optional int64 nextRefreshTime = 1;
+	optional int32 daily_game_count = 2;
+	optional int64 daily_game_cost = 3; // 闲逸豆消耗
+	repeated ClubDailyCostProto dailysCost = 6;
+	repeated ClubApplyJoinProto agreeMembers = 4; //已经审核通过名单
+	repeated ClubApplyJoinProto requestMembers = 5; //待审核名单
+	repeated ClubJoinQuitMsgProto joinQuitMsgProto = 7; //俱乐部事件消息
+	optional int64 daily_game_exclusive_cost = 8; // 专属豆消耗
+}
+
+message ClubRequest {
+	required ClubRequestType type = 1;
+	optional int32 club_id = 2; // 加入俱乐部 开始牌局 修改玩法 等需要俱乐部id的用
+	optional int32 clubRuleId = 3; // 创建房间用
+	optional string join_content = 4; // 申请描述
+	optional int64 account_id = 5; // 操作的玩家Id
+	optional ClubRecordReqProto recordReq = 6; //牌局记录请求
+	optional ClubProto creatClub = 7; // 创建俱乐部
+	optional ClubUpdateProto clubUpdate = 8; //修改俱乐部
+	optional bool isBatch = 9; // 是否批量处理玩家的申请操作
+	optional int32 joinId = 10; //GAME-TODO 前两个字节桌子序号，后两个字节座位序号
+	optional string field = 11; // [客户端透传字段-请求俱乐部玩法信息，透传给客户端]
+	optional ChatMsgReq chatMsg = 12; //聊天请求
+	optional ClubMemberRemarkProto remark = 13; //备注
+	optional ClubNoticeProto notice = 14; //公告
+	optional string groupId = 15; //群id
+	optional ClubRuleRemarkProto ruleRemark = 16; //包间备注
+	optional int32 status = 17; //通用状态
+	optional int32 exitType = 18; // 1-踢出  2-同意退出申请
+	optional int32 tablePassport = 19; //包间桌子密码
+	optional int64 chatUniqueId = 20; //聊天消息唯一id
+	optional int64 partnerId = 21; //合伙人Id
+	enum ClubRequestType {
+		CLUB_REQ_LIST = 1; // 列表
+		CLUB_REQ_ENTER = 2; // 加入俱乐部
+		CLUB_REQ_MEMBER_OUT = 3; // 退出
+		CLUB_REQ_CREATE_ROOM = 4; // 创建房间
+		CLUB_REQ_RECORD = 5; // 记录
+		CLUB_REQ_CREATE_CLUB = 6; // 创建俱乐部
+		CLUB_REQ_UPDATE_CLUB = 7; // 修改俱乐部
+		CLUB_REQ_CLUB_DETAIL = 8; //俱乐部详情
+		CLUB_REQ_KICK = 9; // 踢人
+		CLUB_REQ_AGREE = 10; // 同意玩家申请
+		CLUB_REQ_REJECT = 11; // 拒绝玩家申请
+		CLUB_REQ_DELETE = 12; //解散俱乐部
+		CLUB_REQ_RULE_TABLES = 13; //规则对应的桌子列表
+		CLUB_REQ_RULE_TABLE_PLAYER_SIZE = 14; //请求当前俱乐部所有规则下对应的人数
+		CLUB_REQ_EVENT_MSG = 15; //俱乐部事件
+		CLUB_REQ_DISBAND_TABLE = 16; //解散桌子
+		CLUB_REQ_RULE_DETAIL = 17; //
+		CLUB_REQ_CHAT = 18; //聊天
+		CLUB_ONLINE_MEMBERS = 19; //成员在线状态
+		CLUB_MEMBER_MARKER = 20; //成员备注
+		CLUB_NOTICE = 21; //俱乐部公告设置
+		CLUB_CHAT_HISTORY = 22; //俱乐部聊天记录
+		CLUB_HONOUR_RECORD = 23; //
+		CLUB_TO_GROUP = 24; //俱乐部成员同步到微信群
+		GROUP_TO_CLUB = 25; //微信成员同步到俱乐部
+		GROUP_REQ_LIST = 26; //我的微信群列表
+		GROUP_MEMBER = 27; //微信群成员
+		BIND_GROUP = 28; //绑定微信群
+		UNBIND_GROUP = 29; //解绑微信群
+		CLUB_FAST_JOIN = 30; //俱乐部快速加入
+		CLUB_GROUP_INFO = 31; //俱乐部绑定的微信群
+		GROUP_MEMBER_JOIN_CLUB = 32; //俱乐部添加微信群成员
+		CLUB_TODAY_RECORD = 33; //俱乐部当日局数和扣逗数
+		CLUB_RULE_MARKER = 34; //玩法/包间备注
+		CLUB_ADD_MEMBER = 35; //俱乐部添加成员
+		CLUB_SET_MANAGER = 36; //添加/设置管理员
+		CLUB_DEFRIEND = 37; //拉黑
+		CLUB_MEMBER_LIST = 38; //俱乐部成员列表
+		CLUB_KICK_PLAYER = 39; //踢桌子内玩家
+	}
+
+}
+
+message ClubRecordReqProto {
+	optional int64 target_account_id = 1;
+	required int32 clubId = 2;
+	optional int32 page = 3;
+	optional int64 begin_time = 4;
+	optional int64 end_time = 5;
+	optional int32 ruleId = 6;
+}
+
+//修改游戏玩法用
+message ClubUpdateProto {
+	required int32 type = 1; //1修改描述 2.修改玩法 3.添加玩法 4.删除玩法 5.俱乐部名 6.设置俱乐部状态 7.设置玩法状态
+	required int32 club_id = 2;
+	optional string desc = 3;
+	repeated ClubRuleProto clubRule = 4; // 游戏玩法
+	optional string club_name = 5;
+	repeated CommonII setStatus = 6; //设置
+}
+
+// 俱乐部数据  获取详情才会下发申请列表 和成员列表
+message ClubProto {
+	optional int32 club_id = 1;
+	optional int32 club_count = 2; // 俱乐部人数
+	optional string club_name = 3; // 俱乐部名
+	optional int64 account_id = 4; // 管理员Id
+	optional string avatar = 5; // 管理员头像
+	optional string desc = 6; //俱乐部描述
+	optional int64 create_at = 9; //创建时间
+	repeated ClubRuleProto clubRule = 7; // 游戏玩法
+	repeated ClubDailyCostProto dailyCosts = 8; //
+	repeated ClubAccountProto memebers = 10; //俱乐部成员
+	repeated ClubApplyJoinProto applyList = 11; //申请列表
+	repeated ClubApplyJoinProto agreeList = 12; //已审核列表
+	repeated CommonII setStatus = 13; //俱乐部相关设置
+	optional string owenerName = 14; //俱乐部群主
+	optional string clubNotice = 15; //俱乐部公告
+	optional int32 playingTableCount = 16;
+	repeated GroupMembers groupMembersList = 17; //微信群成员列表
+	repeated WxGroups wxGroupsList = 18; //微信群列表
+	optional int32 hasAssistant = 19; //是否开通闲逸助手0开通，1未开通
+	optional int32 reqAccountIdentity = 20; //请求者的身份
+	repeated ClubApplyExitProto applyExitList = 21; //退出申请列表
+	optional bool isPartner = 22; //是否合伙人
+}
+
+//微信群成员
+message GroupMembers {
+	optional int32 isJoinInClub = 1; // 是否在俱乐部中，0不在，1在
+	optional string nick = 2; // 昵称
+	optional string headPic = 3; // 头像
+	optional int64 account_id = 4; // Id
+}
+
+message WxGroups {
+	optional int32 groupMemberNum = 1; // 成员数
+	optional string groupName = 2; // 群名称
+	optional string groupId = 3; // 群id
+}
+
+message ClubTodayCostProto {
+	optional int32 clubId = 1;
+	optional int32 daily_count = 2; // 当日开房数
+	optional int64 daily_gold = 3; // 当日消耗闲逸豆数
+}
+
+message ClubDailyCostProto {
+	optional int64 create_at = 1; //时间戳 (-1代表全部)
+	optional int32 daily_count = 2; // 当日开房数
+	optional int64 daily_gold = 3; // 当日消耗闲逸豆数
+	optional int64 daily_exclusive_gold = 4; //当日消耗专属豆
+}
+
+// 俱乐部玩法
+message ClubRuleProto {
+	optional int32 id = 1; // 唯一Id
+	optional int32 gameType = 2; //游戏大类型
+	optional int32 game_type_index = 3; //游戏id
+	optional string gameName = 4; //游戏名字
+	optional string rule_desc = 5; //玩法描述
+	optional CommonGameRulesProto rules = 6;
+	optional int32 game_round = 12;
+	optional int32 app_id = 7;
+	optional string subName = 13; //小类型游戏名称，如看四张
+	repeated CommonII setStatus = 14; //俱乐部玩法相关设置 @see ERuleSettingStatus 1.疲劳值开关 2.局数限制开关
+	optional string remark = 15; //备注，如果有就填
+	optional int32 tireValue = 16; //包间疲劳值门槛
+	optional int32 limitGameRound = 17; //限制的局数
+	optional int32 tableMaxPlayer = 18; //桌子最大人数
+	optional int32 showType = 19; //客户端展示用 0-局数 1-积分
+	optional int32 lotteryCost = 20; //大赢家抽奖消耗
+	optional int32 limitWelfare = 21; //福卡入桌门槛
+	optional int32 welfareCostType = 22; //福卡消耗类型 1-大赢家抽奖 2-所有人抽奖
+	optional int32 allPeopleCost = 23; //福卡所有人抽奖消耗
+	repeated WelfareBigWinCost bigWinCost = 24;// 福卡大赢家抽奖消耗
+}
+
+message WelfareBigWinCost {
+	optional int32 minValue = 1;
+	optional int32 maxValue = 2;
+	optional int32 cost = 3;
+}
+
+// 俱乐部成员
+message ClubAccountProto {
+	optional int64 account_id = 1; // 唯一Id
+	optional string avatar = 2; //游戏大类型
+	optional int64 join_time = 3; //加入时间
+	optional int32 game_time = 4; //局数
+	optional int32 win_time = 5; // 大赢家次数
+	optional string nickname = 6;
+	optional string remark = 7; //备注
+	optional string remark_ext = 8; //第二个备注
+	optional int32 identity = 9; //-1黑名单 0普通成员 1管理员 2创始人
+	optional int32 online = 10; //0离线， 1在线
+	optional int32 isPartner = 11; // 是否合伙人
+	optional int64 parentId = 12; //
+	optional int64 playerClubWelfare = 13; //玩家亲友圈福卡数量
+	optional int32 tireValue = 14; //玩家当日疲劳值
+	optional int32 curGameCount = 15; //玩家当日局数
+	optional int32 curWinCount = 16; //玩家当日大赢家数
+}
+//申请 和已审核公用
+message ClubApplyJoinProto {
+	optional int64 account_id = 1; // 用户id
+	optional string avatar = 2; // 头像
+	optional int64 join_time = 3; //申请时间
+	optional string nickname = 4; //昵称
+	optional string content = 5; //申请描述
+	optional int64 create_time = 6; // 创建时间
+	optional bool isAgree = 7; //已审核列表用。true 表示同意  。false表示拒绝
+	optional int64 partnerId = 8; //邀请玩家的合伙人Id
+}
+
+// 退出俱乐部申请 和已审核公用
+message ClubApplyExitProto {
+	optional int64 account_id = 1; // 用户id
+	optional string avatar = 2; // 头像
+	optional int64 apply_time = 3; //申请时间
+	optional string nickname = 4; //昵称
+	optional int64 create_time = 5; // 创建时间
+	optional int32 tireValue = 6; // 疲劳值
+}
+
+//俱乐部加入，退出消息
+message ClubJoinQuitMsgProto {
+	enum MsgType {
+		JOIN = 0; //加入
+		QUIT = 1; //离开
+		CREATE = 2; //创建
+		SET_MANAGER = 3; //设置管理员
+		SET_DEFRIEND = 4; //拉黑
+		CANCEL_DEFRIEND = 5; //取消拉黑;
+		FREEZE = 6; //冻结
+		UNFREEZE = 7; //取消冻结
+		MODIFY_RULE = 8; //修改玩法
+		ADD_PARTNER = 9; //添加合伙人
+		DEL_PARTNER = 10; //删除合伙人
+		ADD_CHILD = 11; //添加合伙人成员
+		DEL_CHILD = 12; //删除合伙人成员
+		MODIFY_MEM_WELFARE = 13; //修改成员福卡
+		AREA_PROTECT = 14; //后台操作区域保护游戏权限
+		PARTNER_INVITE_JOIN = 15; //亲友圈合伙人邀请加入
+	}
+
+	required MsgType msgType = 1;
+	required int64 accountId = 2;
+	optional string userName = 3;
+	optional int32 operateTime = 4; //单位s
+	optional int32 clubId = 5;
+	optional int64 operatorId = 6; //操作者id
+	optional string operatorName = 7; //操作者名称
+	optional int64 partnerId = 8; //合伙人Id
+	optional string partnerName = 9; //合伙人名称
+	optional int32 tireValue = 10; //疲劳值
+	optional int64 playerClubWelfare = 11; //玩家亲友圈福卡
+    optional int64 param1 = 12; //通用参数1
+    optional int64 param2 = 13; //通用参数2
+	optional string paramStr1 = 14; //通用string参数1
+	optional int64 param3 = 15; //通用参数3
+
+}
+//1规则对应的桌子
+message ClubRuleTableGroupProto {
+	required int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 maxPlayer = 3;
+	repeated ClubTableProto clubTables = 4;
+}
+
+message ClubRuleTableProto {
+	repeated ClubRuleTableGroupProto ruleTables = 1;
+	optional int32 totalPackageCount = 2; // 总包数
+	optional int32 packageIndex = 3; // 包序号
+}
+
+//2俱乐部桌子
+message ClubTableProto {
+	required int32 index = 1;
+	optional int32 roomId = 2;
+	optional int32 curRound = 3;
+	optional int32 allowJoinHalfWay = 4;
+	repeated ClubTablePlayerProto players = 5;
+	optional int32 minPlayerCount = 6; //最小开局人数
+	optional bool isDefaultReady = 7; //是否默认准备的房间
+	optional bool isShow = 8; //是否在展示中(隐藏桌子设置时有用)
+	optional bool isHavePassport = 9; //桌子是否有密码
+}
+
+//3房间的玩家
+message ClubTablePlayerProto {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional bool ready = 8; //0没准备,1准备
+	optional bool is_trustee = 9; //true托管 false 取消
+	optional int64 money = 10; //金币
+	optional int64 gold = 11; //闲逸豆
+	optional int32 clubJoinId = 12;
+	optional float score = 13; //结束了带上
+}
+
+//俱乐部桌子发生状态变更
+message ClubTableStatusUpdateRsp {
+	required int32 type = 1; //see ERoomStatus
+	required int32 clubId = 2;
+	required int32 ruleId = 3;
+	required int32 index = 4;
+	optional int32 roomId = 5;
+	optional int32 roomStatus = 6;
+	optional int32 curRound = 7;
+	optional ClubTablePlayerProto player = 8;
+	repeated ClubTablePlayerProto players = 9; //如果涉及到多个玩家，放到这里
+	optional int32 minPlayerCount = 10; //最小人数
+}
+
+//俱乐部规则下的玩家数量
+message ClubRuleOnSitRsp {
+	required int32 clubId = 1;
+	repeated CommonIII ruleIdAndSize = 2;
+}
+
+//俱乐部事件消息通知
+message ClubEventMsgRsp {
+	required int32 clubId = 1;
+	repeated ClubJoinQuitMsgProto eventMsgs = 2;
+}
+
+//俱乐部操作通知
+message ClubOperateEventRsp {
+	required int32 clubId = 1;
+	required int32 ruleId = 2;
+	optional int32 category = 3; //@see EClubOperateCategory 新增玩法 2删除玩法 3修改玩法  4删除俱乐部
+}
+
+//俱乐部红心
+message ClubRedHeartRsp {
+	required int32 clubId = 1;
+	required int32 type = 2;
+}
+
+//有人请求推送
+message ClubReqRsp {
+	required int32 clubId = 1;
+	optional int32 reqType = 2; //1-加入 2-退出
+	repeated ClubApplyJoinProto applyList = 3; //申请加入列表
+	repeated ClubApplyExitProto exitList = 4; //申请退出列表
+}
+
+message OperateRsp {
+	required int32 result = 1; //操作状态
+	optional string msg = 2; //操作信息
+}
+//加入俱乐部结果，发生在管理员操作同意/拒绝
+message ClubJoinResultRsp {
+	required int32 clubId = 1;
+	required string clubName = 2;
+	required int32 result = 3; //1同意 2拒绝 3提出
+	optional int64 targetAccountId = 4; //目标玩家
+	optional int64 operatorAccountId = 5; //操作者
+}
+
+//俱乐部聊天广播54
+message ClubChatRsp {
+	required int32 clubId = 1;
+	required string clubName = 2;
+	optional ChatMsgRsp chatRsp = 3; //聊天回复
+}
+
+message ClubOnlineMemeberRsp {
+	required int32 clubId = 1;
+	repeated CommonLI memberOnlineStatus = 2; //帐号id ,上线时间(1在线  ,other离线)
+}
+
+//备注
+message ClubMemberRemarkProto {
+	required int64 accountId = 1; //成员信息
+	optional string remark = 2; //备注
+	optional string remarkExt = 3; //备注拓展
+	optional int32 clubId = 4; //俱乐部id 返回时需要
+}
+
+//备注
+message ClubRuleRemarkProto {
+	required string remark = 1; //备注
+	optional int32 clubId = 2; //俱乐部id 返回时需要
+	optional int32 ruleId = 3;
+}
+
+//公告设置,请求填text即可，返回clubId也会填置
+message ClubNoticeProto {
+	required string text = 1;
+	optional int32 clubId = 2;
+}
+
+//聊天记录
+message ClubChatHistory {
+	required int32 clubId = 1;
+	repeated ChatMsgRsp chatHistory = 2;
+}
+
+//俱乐部桌子结算快照
+message ClubGameOverSnapshotProto {
+	required int32 clubId = 1;
+	required int32 ruleId = 2;
+	optional ClubTableProto clubTable = 3;
+	optional string brandId = 4; //牌局id，用于和战绩做映射
+	optional int32 createTime = 5; //牌局开始时间
+}
+
+//荣耀-战绩相关
+message HonourRecordProto {
+	required int32 clubId = 1;
+	repeated CommonLI winRecords = 2; //大赢家
+	repeated CommonLI timeRecords = 3; //次数
+}
+
+//精简版俱乐部信息，不包含玩法
+message ClubSimple {
+	repeated ClubProto clubs = 1;
+}
+
+//专属豆
+message ClubExclusiveGoldProto {
+	required int64 accountId = 1; //拥有者
+	repeated CommonILI exclusive = 2; //专属豆[账号]详情，k:gameid ,v1:数量 ，v2:过期时间
+}
+
+//专属豆活动有更新
+message ClubExclusiveActivityUpdateProto {
+	repeated int32 gameIds = 1; //子游戏id
+}
+
+//通用
+message ClubCommonLIIProto {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional CommonLII common = 3;
+}
+
+message ClubCommonIIsProto {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	repeated CommonII common = 3;
+}
+
+//有人加入俱乐部,推送这个人的信息给操作者
+message ClubMemberJoinProto {
+	optional int32 clubId = 1;
+	optional ClubAccountProto member = 2;
+}
+
+message ClubCreatorGoldUpdateProto {
+	optional int64 accountId = 1;
+	optional int32 category = 2; //@see EWealthCategory
+	optional int64 value = 3; //
+	optional int32 clubId = 4;
+}
+
+//身份操作
+message ClubIdentityUpdateProto {
+	required int32 clubId = 1;
+	optional int64 accountId = 2;
+	optional int32 identity = 3; //新身份
+}
+
+//俱乐部成员列表
+message ClubMemberListProto {
+	required int32 clubId = 1;
+	repeated ClubAccountProto memebers = 2; //俱乐部成员
+}
+
+message ClubCommon {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 joinId = 3;
+	optional int64 targetId = 4; // 被操作玩家Id
+	optional int32 param1 = 5;
+}
+
+//请求俱乐部基本信息
+message ClubActivityMiniInfoReqProto {
+	required int32 clubId = 1;
+}
+
+//请求俱乐部活动信息[请求]
+message ClubActivityInfoReqProto {
+	required int32 clubId = 1;
+	repeated int64 activityIds = 2; //传活动id获取对应的活动信息，不填请求全部活动
+}
+
+//请求俱乐部活动信息[返回]
+message ClubActivityListProto {
+	required int32 clubId = 1;
+	repeated ClubActivityProto acts = 2;
+}
+
+//创建活动[请求]
+message ClubCreateActProto {
+	required ClubActivityProto act = 1;
+}
+
+//删除活动[请求]
+message ClubDelActProto {
+	required int32 clubId = 2;
+	required int64 activityId = 1;
+}
+
+//活动排行榜信息[请求]
+message ClubActRankProto {
+	required int32 clubId = 2;
+	required int64 activityId = 1;
+}
+
+//活动排行榜信息[返回]
+message ClubActivityRankProto {
+	required int32 clubId = 1;
+	optional int64 activityId = 2;
+	repeated CommonRankInfoProto rankInfo = 3;
+}
+
+//俱乐部活动
+message ClubActivityProto {
+	required int32 clubId = 1; //俱乐部id
+	optional string activityName = 2; //活动名称
+	optional int32 activityType = 3; //排名类型
+	required int32 startDate = 4; //起始时间
+	required int32 endDate = 5; //结束时间
+	optional int64 creatorId = 6; //发起者
+	optional int64 activityId = 7; //活动id
+	optional int32 rankLimit = 8; //排行榜人数
+	optional string remark = 9; //备注
+}
+
+//活动时间推送
+message ClubActivityEventNotify {
+	required int32 clubId = 1;
+	optional int64 activityId = 2;
+	optional int64 operatorId = 3;
+	optional int32 eventCode = 4; //1创建2删除3开始4结束
+}
+
+//俱乐部转让
+message ClubAssignmentProto {
+	required int32 clubId = 1;
+	optional int64 targetAccountId = 2;
+	optional PhoneReqProto phoneInfo = 3;
+}
+
+//俱乐部成员头像请求
+message ClubMemberAvatarReq {
+	required int32 clubId = 1;
+	repeated int64 accountIds = 2;
+}
+//俱乐部成员头像返回
+message ClubMemberAvatarRsp {
+	required int32 clubId = 1;
+	repeated CommonLS avatars = 2;
+}
+
+//邀请
+message ClubInviteJoinTableProto {
+	required ClubCommon clubCommon = 1;
+	optional ClubAccountProto account = 2; //请求：被邀请者id ，  反回：邀请者id
+}
+
+//拒绝被邀请
+message ClubIgnoreInviteProto {
+	required int32 clubId = 1;
+	optional int64 targetAccountId = 2;
+	optional int32 time = 3; //备用字段
+	optional int32 type = 4; //1-牌桌邀请 2-添加合伙人 3-删除合伙人 4-合伙人邀请加入
+}
+
+//俱乐部公告
+message ClubBulletinProto {
+	optional int64 id = 1;
+	optional int32 clubId = 2;
+	optional int64 creator = 3;
+	optional int32 startDate = 4;
+	optional int32 endDate = 5;
+	optional string text = 6;
+	optional int32 category = 7; //1系统 2俱乐部
+	optional int32 status = 8; //状态1开始，0暂停
+}
+
+message ClubSetBulletinProto {
+	required int32 clubId = 1;
+	optional int32 type = 2; //1创建 2更新公告内容 3开启  4暂停
+	optional ClubBulletinProto bulletin = 3;
+}
+//俱乐部公告消息
+message ClubBulletinInfoReqProto {
+	required int32 clubId = 1;
+	repeated int64 bulletinIds = 2;
+}
+
+message ClubBulletinInfoRspProto {
+	required int32 clubId = 1;
+	repeated ClubBulletinProto bulletins = 2;
+}
+
+//活动时间推送
+message ClubBulletinEventNotify {
+	required int32 clubId = 1;
+	optional int64 bulletinId = 2;
+	optional int64 operatorId = 3;
+	optional int32 eventCode = 4; //1创建 2更新公告内容 3开启  4暂停
+}
+
+//俱乐部场景标记
+message ClubSceneTagProto {
+	required int32 category = 1; //1俱乐部列表 2俱乐部内部   3离开
+	optional ClubCommon scene = 2; //场景，离开不需要
+}
+
+//请求包间在线人数数据[req]
+message ClubRuleOLMemberReqProto {
+	required int32 clubId = 1;
+	repeated int32 ruleId = 2; // 不传请求全部
+	optional bool hideStartTable = 3;
+}
+
+//俱乐部包间在线玩家
+message ClubRuleOLMemberProto {
+	required int32 ruleId = 1;
+	repeated ClubAccountProto members = 2;
+}
+
+//各个包间的数据[rsp]
+message ClubRuleOLMemberListProto {
+	required int32 clubId = 1;
+	repeated ClubRuleOLMemberProto ruleOLMembers = 2; //只是在线，但不在桌子的成员
+	repeated ClubRuleTableGroupProto ruleTables = 3; //所有包间的桌子数据，精简玩家数据
+}
+
+// 修改俱乐部成员记录,cmd508
+message ClubMemberRecordModifyProto {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+	optional int32 requestType = 3; //请求类型 1-今天 2-昨天 3-前天
+	optional int32 opType = 4; //操作类型 1-修改疲劳值 2-点赞
+	optional int32 tireValue = 5; //修改后的疲劳值
+	repeated int64 targetIds = 6; // 修改的玩家列表(新需求批量修改)
+}
+
+// 修改俱乐部成员记录返回,cmd506
+message ClubMemberRecordModifyResponse {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+	optional int32 requestType = 3; //请求类型 1-今天 2-昨天 3-前天
+	optional int32 opType = 4; //操作类型 1-修改疲劳值 2-点赞
+	optional int32 isLike = 5; //点心状态 0-否 1-是
+	optional int32 tireValue = 6; //修改后的疲劳值
+}
+
+// 俱乐部成员记录请求,cmd509
+message ClubMemberRecordRequestProto {
+	optional int32 clubId = 1;
+	optional int32 requestType = 2; //请求类型 1-今天 2-昨天 3-前天 4-八天 5-全部 6-第四天 7-第五天 8-第六天 9-第七天 10-第八天
+	optional int64 accountId = 3; //请求单个玩家的记录
+}
+
+// 俱乐部玩家记录返回,cmd507
+message ClubMemberRecordResponse {
+	optional int32 clubId = 1;
+	repeated ClubMemberRecord record = 2; //玩家记录
+	optional int32 requestType = 3; //请求类型 1-今天 2-昨天 3-前天 4-八天 5-全部 6-第四天 7-第五天 8-第六天 9-第七天 10-第八天
+	optional int64 accountId = 4; //请求人的Id
+	optional int64 targetAccountId = 5; //被请求人的Id
+}
+
+message ClubMemberRecord {
+	optional int64 accountId = 1;
+	optional int32 game_time = 2; //牌局数
+	optional int32 win_time = 3; //大赢家数
+	optional int32 tireValue = 4; //疲劳值
+	optional int32 isLike = 5; //点心状态 0-否 1-是
+}
+
+// 俱乐部修改疲劳值记录请求,cmd510
+message ClubModifyTireMsgRequestProto {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2; //请求单个玩家的记录
+}
+
+// 俱乐部修改疲劳值记录返回,cmd508
+message ClubModifyTireMsgResponse {
+	optional int32 clubId = 1;
+	repeated ClubModifyTireMsgProto msgs = 2;
+	optional int32 type = 3; //1-请求返回 2-主动推送
+}
+
+message ClubModifyTireMsgProto {
+	optional int64 ope_accountId = 1; //操作者id
+	optional string ope_nickname = 2; //操作者名字
+	optional int64 target_accountId = 3; //被修改玩家Id
+	optional string target_nickname = 4; //被修改玩家名字
+	optional int32 oldValue = 5; //旧值
+	optional int32 newValue = 6; //新值
+	optional int64 time = 7; //操作时间
+	optional int64 recordTime = 8; //记录时间
+	optional int32 msgType = 9; //消息类型 0-修改疲劳值消息  2-亲友圈疲劳值开关操作记录
+	optional int32 switchStatus = 10; //亲友圈疲劳值开关 1-打开 2-关闭
+}
+
+// 俱乐部退出申请拒绝操作返回,cmd510
+message ClubApplyQuitRejectResponse {
+	optional bool isSuccess = 1;
+	optional int32 clubId = 2;
+	optional int64 targetId = 3;
+}
+
+// 亲友圈桌子设置密码,cmd513
+message ClubTableSetPassportProto {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 tableIndex = 3;
+	optional bool isSet = 4;
+	optional int32 passport = 5;
+}
+
+// 亲友圈桌子需要密码,cmd511
+message ClubTableNeedPassportResponse {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 tableIndex = 3;
+}
+
+// 亲友圈禁止同桌,cmd514
+message ClubSetBanPlayerProtoReq {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+	repeated int64 targetAccounts = 3;
+}
+
+// 玩家禁止同桌的玩家列表,cmd515
+message ClubBanPlayerListReq {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+}
+
+// 玩家禁止同桌的玩家列表,cmd512
+message ClubBanPlayerListResponse {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+	repeated int64 banAccounts = 3;
+}
+
+// 俱乐部聊天消息唯一Id返回,cmd513
+message ClubChatUniqueIdResponse {
+	optional int32 clubId = 1;
+	optional int64 uniqueId = 2; //聊天消息唯一Id
+}
+
+// 亲友圈设置桌子密码返回,cmd514
+message ClubSetTablePassportResponse {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 tableIndex = 3;
+	optional bool passportStatus = 4; // 桌子密码状态
+}
+
+// 批量修改俱乐部成员疲劳值返回,cmd515
+message ClubMemberRecordBatchModifyResponse {
+	optional int32 clubId = 1;
+	repeated int64 accountIds = 2;
+	optional int32 requestType = 3; //请求类型 1-今天 2-昨天 3-前天
+	optional int32 tireValue = 4; //修改后的疲劳值
+}
+
+// 设置俱乐部玩家限制局数,cmd517
+message ClubSetPlayerLimitRoundProtoReq {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 value = 3;
+	repeated int64 accountIds = 4;
+}
+
+// 俱乐部玩家限制局数数据返回,cmd516
+message ClubPlayerLimitRoundDataResponse {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	repeated LimitRoundData data = 3;
+}
+
+message LimitRoundData {
+	optional int64 accountId = 1;
+	optional int32 value = 2;
+}
+
+// 俱乐部玩家剩余限制局数返回,cmd517
+message ClubPlayerLeftLimitRoundResponse {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 leftRound = 3; //剩余局数
+}
+
+//俱乐部比赛数据
+message ClubMatchInfoProto {
+	optional int64 id = 1;
+	optional int32 clubId = 2;
+	optional string matchName = 3;
+	optional int32 matchType = 4; //1-自主报名 2-管理员设置
+	optional int32 maxPlayerCount = 5;
+	optional int32 startDate = 6;
+	optional int32 endDate = 7;
+	optional int64 creatorId = 8;
+	optional int32 status = 9;
+	repeated int64 enrollAccountIds = 10;
+	repeated CommonII rewards = 11;
+	optional ClubRuleProto rule = 12;
+	optional int32 opType = 13; // 1-创建 2-删除 3-修改
+	optional int32 costGold = 14; //扣豆数
+	optional int32 openMatchType = 15; // 开赛类型 0-定时开赛 1-满人开赛
+	optional int32 attendCondition = 16; //参赛条件 0-无 1-疲劳值门槛
+	optional int32 conditionValue = 17; // 参赛条件值
+	optional int32 minPlayerCount = 18; //最小开赛人数
+	optional bool isBanEnroll = 19; //是否关闭报名入口
+	repeated int64 banPlayerIds = 20; //禁止报名的玩家
+ }
+
+//亲友圈比赛操作结果返回,cmd521
+message ClubMatchOperateResultResponse
+{
+	optional int32 clubId = 1;
+	optional int32 opType = 2; // 1-创建 2-删除
+	optional bool isSuccess = 3;
+	optional string msg = 4;
+	optional int64 matchId = 5;
+	optional int32 matchType = 6;
+	optional int32 ret = 7; //错误码 1-豆不足
+}
+
+//俱乐部比赛报名,cmd522
+message ClubMatchEnrollProto {
+	required int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int32 category = 3; // 1报名 2取消
+}
+
+//俱乐部比赛报名或退赛结果返回,cmd522
+message ClubMatchEnrollOrExitResultResponse {
+	required int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int32 category = 3; // 1报名 2取消
+	optional bool isSuccess = 4;
+	optional string msg = 5;
+}
+
+//亲友圈自建赛管理员设置参赛玩家,cmd524
+message ClubMatchSetAttendMemberProto
+{
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	repeated int64 accounts = 3; //参赛成员列表
+}
+
+//亲友圈设置参赛成员结果返回,cmd524
+message ClubMatchSetAttendResultResponse {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional bool isSuccess = 3;
+	optional string msg = 4;
+}
+
+//亲友圈自建赛设置参赛成员数据请求,cmd525
+message ClubMatchSetAttendListReq {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+}
+
+//亲友圈自建赛管理员设置参赛玩家列表,cmd523
+message ClubMatchSetAttendMemberResponse
+{
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	repeated int64 accounts = 3; //参赛成员列表
+}
+
+
+//邀请参赛
+message ClubInviteMatchProto {
+	repeated int64 accountIds = 1; // 如果为空表示全员
+}
+
+// 亲友圈自建赛排行数据请求,cmd529
+message ClubMatchRankDataReq {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+}
+
+//亲友圈自建赛排行数据返回,cmd527
+message ClubMatchRankProto {
+	required int32 clubId = 1;
+	optional int64 matchId = 2;
+	repeated CommonRankInfoProto rankList = 3;
+}
+
+// 俱乐部后台开关状态返回,cmd518
+message ClubBanSwitchResponse {
+	optional bool closeChat = 1;
+	optional bool closeBulletin = 2;
+	optional bool closeMarquee = 3;
+	optional bool defendCheating = 4;
+}
+
+//亲友圈自建赛推送,cmd520
+message ClubMatchEventNotify {
+	required int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int64 operatorId = 3;
+	optional int32 eventCode = 4; //1创建2删除3自主参赛4退赛5设置参赛成员6开赛失败
+	optional string matchName = 5;
+	optional bool targetIsManager = 6; //目标玩家是否是管理员
+	optional int32 startTime = 7;//开赛时间
+	optional string clubName = 8; //亲友圈名称
+	optional string operatorName = 9; //操作者名称
+}
+
+//请求亲友圈自建赛信息,cmd523
+message ClubMatchInfoReqProto {
+	required int32 clubId = 1;
+	repeated int64 matchIds = 2; //传比赛id获取对应的比赛信息，不填请求全部活动
+}
+
+//俱乐部比赛数据返回,cmd519
+message ClubMatchGroup {
+	required int32 clubId = 1;
+	repeated ClubMatchInfoProto matchList = 2;
+	optional int32 category = 3; // 1客户端请求的自建赛 2亲友圈所有自建赛
+}
+
+// 亲友圈自建赛桌子数据返回
+message ClubMatchTableInfoResponse {
+	optional int32 tablePlayerNum = 1; // 桌子人数
+	optional int32 tableCost = 2; //桌子扣豆数
+	optional int32 orignalTalbleCost = 3; //建赛时的单桌扣豆数(修改比赛时需要)
+}
+
+// 亲友圈清除玩家限制局数,cmd527
+message ClubClearPlayerLimitRoundReq {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int64 targetId = 3;
+}
+
+// 亲友圈将开赛比赛列表返回,cmd526
+message ClubMatchWillStartListResponse {
+	repeated ClubMatchInfoProto matchs = 1; //在开赛前十分钟内的比赛
+}
+
+// 亲友圈比赛记录数据请求,cmd530
+message ClubMatchRecordReq {
+	optional int32 clubId = 1;
+	optional int64 targetId = 2; //管理员查自己比赛记录时传此字段
+}
+
+// 亲友圈比赛记录数据返回,cmd528
+message ClubMatchRecordResponse {
+	optional int32 clubId = 1;
+	repeated ClubMatchRecordInfo recordList = 2;
+}
+
+message ClubMatchRecordInfo {
+	optional int64 matchId = 1;
+	optional int32 clubId = 2;
+	optional string matchName = 3;
+	optional int32 matchType = 4;
+	optional int32 startDate = 5;
+	optional int32 endDate = 6;
+	repeated CommonII rewards = 7;
+	repeated CommonRankInfoProto rankList = 8;
+	optional string gameName = 9;
+	optional string subName = 10;
+}
+
+// 亲友圈比赛结束通知,cmd529
+message ClubMatchGameEndNotify {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int64 accountId = 3;
+	repeated CommonII rewards = 4;
+	repeated CommonRankInfoProto rankList = 5;
+	optional string gameName = 6;
+	optional string matchName = 7;
+}
+
+// 自建赛数据
+message ClubDataProto {
+	optional int32 match_create_count = 1; // 自建赛建赛数
+	optional int32 match_end_count = 2; // 自建赛成赛数
+	optional int64 match_exclusive_gold = 3; //自建赛消耗专属豆
+	optional int64 match_gold = 4; // 自建赛消耗闲逸豆数
+	repeated ClubDailyMatchDataProto matchDailys = 5;
+}
+
+// 自建赛每日数据
+message ClubDailyMatchDataProto {
+	optional int64 create_time = 1;
+	optional int32 match_create_num = 2; // 自建赛建赛数
+	optional int32 match_end_num = 3; // 自建赛成赛数
+	optional int64 match_exclusive_gold = 4; //自建赛消耗专属豆
+	optional int64 match_gold = 5; // 自建赛消耗闲逸豆数
+}
+
+//自建赛积分数据
+message ClubMatchScoreProto {
+	repeated ScoreProto scores = 1;
+}
+
+message ScoreProto {
+	optional int64 accountId = 1;
+	optional int32 score = 2;
+	optional bool isDisband = 3;
+	optional bool isEnd = 4;
+}
+
+// 俱乐部包间记录请求,cmd531
+message ClubRuleRecordRequestProto {
+	optional int32 clubId = 1;
+	repeated int32 ruleId = 2;
+	optional int32 requestType = 3; //请求类型 1-今天 2-昨天 3-前天 4-八天 5-全部
+}
+
+// 俱乐部包间记录返回,cmd530
+message ClubRuleRecordResponse {
+	optional int32 clubId = 1;
+	optional int32 requestType = 2; //请求类型 1-今天 2-昨天 3-前天 4-八天 5-全部
+	repeated ClubRuleRecordProto ruleRecord = 3;
+	optional int64 accountId = 4;
+}
+
+message ClubRuleRecordProto {
+	optional int32 ruleId = 1;
+	optional int32 gameCount = 2;
+	optional int64 exclusiveGold = 3;
+	optional int64 gold = 4;
+}
+
+// 玩家正在进行的自建赛房间通知,cmd531
+message PlayerOngoingClubMatchRoomNotify {
+	optional int32 roomId = 1;
+	optional string clubName = 2;
+	optional string matchName = 3;
+}
+
+// 亲友圈桌子在房间内解散返回,cmd532
+message ClubTableDisbandInRoomResponse {
+	optional int32 clubId = 1;
+	optional bool onlyManager = 2; //是否开启了仅管理员可解散
+	optional bool isManager = 3; //是否是管理员身份
+	optional int32 ret = 4; //错误码 1-俱乐部不存在 2-包间不存在 3-桌子信息不存在或桌子roomId为0或桌子中已没有自己
+}
+
+// 玩家进入亲友圈自建赛房间请求,cmd533
+message ClubMatchEnterRoomRequestProto {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+}
+
+// 玩家进入亲友圈自建赛房间返回,cmd533
+message ClubMatchEnterRoomResponse {
+	optional int32 ret = 1;//错误码 1-可进入房间 2-该比赛已结束 3-您已经在其他房间中,无法进入 4-您该场自建赛已打完
+	optional string msg = 2;
+}
+
+//身份操作(批量)
+message ClubIdentityUpdateBatchProto {
+	required int32 clubId = 1;
+	repeated MemberIdentity memberIdentity = 2;
+}
+
+message MemberIdentity {
+	optional int64 accountId = 1;
+	optional int32 identity = 2; //新身份
+}
+
+// 亲友圈添加/解除合伙人
+message ClubPartnerCommonResponse {
+	optional int64 accountId = 1;
+	optional string accountName = 2;
+	optional string clubName = 3;
+	optional int32 memberCount = 4;
+	optional int32 clubId = 5;
+}
+
+// 亲友圈同意添加/解除合伙人 添加/移除合伙人子成员
+message ClubPartnerCommonResultResponse {
+	optional int64 accountId = 1;
+	optional int32 ret = 2;
+	optional string msg = 3;
+	optional int32 clubId = 4;
+	optional int64 parentId = 5;
+}
+
+message ClubPartnerCommon {
+	optional int32 clubId = 1;
+	optional int64 partnerId = 2;
+	optional int64 targetId = 3; // 被操作玩家Id
+	optional string targetName = 4;
+	optional string targetAvatar = 5;
+}
+
+message ClubPartnerInviteJoinClubRequest {
+	optional int32 clubId = 1;
+	repeated int64 targets = 2;
+}
+
+// 亲友圈合伙人邀请玩家
+message ClubPartnerInviteJoinProto {
+	optional int32 clubId = 1;
+	optional int64 creatorId = 2;
+	optional string creatorName = 3;
+	optional string clubName = 4;
+	optional int32 memberCount = 5;
+	optional int64 operatorId = 6;
+	optional string operatorName = 7;
+	optional string operatorAvator = 8;
+}
+
+message ClubMatchCommon {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional bool isBan = 3; //是否关闭入口
+	optional bool isSuccess = 4; //操作结果
+}
+
+message ClubMatchManagerCancelEnrollProto {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int64 targetId = 3;
+	optional bool isBan = 4; //是否禁止参赛
+	optional bool isSuccess = 5; //操作结果
+}
+
+message ClubMatchManagerCancelEnrollResponse {
+	optional int64 targetId = 1;
+	optional string clubName = 2;
+	optional string matchName = 3;
+	optional int32 clubId = 4;
+	optional int64 matchId = 5;
+}
+
+//亲友圈牌桌牌局id请求
+message ClubTableBrandIdProto {
+	optional int32 clubId = 1;
+	optional int32 ruleId = 2;
+	optional int32 tableIndex = 3; //桌子索引
+	optional string brandId = 4; //牌局Id
+}
+
+// 自建赛桌子信息返回,cmd548
+message ClubMatchTablesResponse {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int32 gameRound = 3;
+	repeated ClubMatchTableInfoProto tables = 4;
+}
+
+message ClubMatchTableInfoProto {
+	optional int32 roomId = 1;
+	optional int32 curRound = 2;
+	repeated playerInfoProto players = 3;
+	optional bool isEnd = 4;
+}
+
+message playerInfoProto {
+	optional int64 playerId = 1;
+	optional string nickname = 2;
+}
+
+// 自建赛管理员解散桌子
+message ClubMatchTableDisbandProto {
+	optional int32 clubId = 1;
+	optional int64 matchId = 2;
+	optional int32 roomId = 3;
+	optional bool isSuccess = 4;
+}
+
+// 亲友圈事件,cmd550
+message ClubEventProto {
+	optional int32 clubId = 1;
+	optional int32 eventCode = 2; // 1-切换包间模式
+}
+
+// 亲友圈福卡数据返回,cmd551
+message ClubWelfareInfoResponse {
+	optional int32 clubId = 1;
+	optional int64 totalClubWelfare = 2; //亲友圈总福卡数
+	optional int64 selfClubWelfare = 3; // 玩家自己的福卡数
+	optional int32 canGetValue = 4; // 福卡数少于该值可领取
+}
+
+// 亲友圈福卡领取返回,cmd552
+message ClubWelfareGetResponse {
+	optional int32 clubId = 1;
+	optional int32 ret = 2; //0-领取成功 1-没有达到领取条件 2-没有绑定手机号
+	optional string msg = 3;
+}
+
+// 亲友圈修改玩家福卡请求,cmd554
+message ClubModifyPlayerWelfareReq {
+	optional int32 clubId = 1;
+	repeated int64 targets = 2; // 被操作玩家
+	optional int64 welfareValue = 3; //修改的值
+}
+
+// 亲友圈修改玩家福卡返回,cmd553
+message ClubModifyPlayerWelfareResponse {
+	optional int32 clubId = 1;
+	optional int32 ret = 2; //0-修改成功 1-亲友圈福卡数量不足
+	optional string msg = 3;
+	optional int64 welfareValue = 4; //修改的值
+	repeated int64 targets = 5; // 被操作玩家
+}
+
+// 亲友圈福卡抽奖返回,cmd554
+message ClubWelfareLotteryResponse {
+	optional int32 clubId = 1;
+	repeated ClubWelfareRewardProto rewards = 2;
+}
+
+message ClubWelfareRewardProto {
+	optional int32 id = 1;
+	optional int32 rewardNum = 2;
+	optional int32 itemId = 3;
+	optional string itemName = 4;
+	optional string rewardIcon = 5;
+	optional string rewardDesc = 6;
+	optional bool isRealReward = 7; //是否真实奖励
+}
+
+// 亲友圈福卡抽奖记录返回,cmd555
+message ClubWelfareLotteryMsgResponse {
+	optional int32 clubId =1;
+	repeated LotteryMsgProto msg = 2;
+}
+
+message LotteryMsgProto {
+	optional int32 recordTime = 1;
+	optional int64 accountId = 2;
+	optional string nickname = 3;
+	optional string subName = 4;
+	optional int32 cost = 5;
+}
+
+// 亲友圈大赢家抽奖通知,cmd556
+message ClubWelfareLotteryNotify {
+	optional int64 accountId = 1;
+	optional int64 playerClubWelfare = 2;
+	optional int32 costClubWelfare = 3;
+}
+
+// 亲友圈玩家福卡变动记录返回,cmd557
+message ClubMemberWelfareChangeLogResponse {
+	optional int64 accountId = 1;
+	optional int32 clubId = 2;
+	repeated WelfareChangeProto log = 3;
+}
+
+message WelfareChangeProto {
+	optional int32 type = 1; //1-福卡抽奖 2-福卡修改
+	optional int32 costNum = 2;
+	optional string subName = 3;
+	optional int64 operatorId = 4;
+	optional string operatorName = 5;
+	optional int64 oldValue = 6;
+	optional int64 newValue = 7;
+	optional int32 recordTime = 8;
+}
+
+// 亲友圈区域保护游戏权限返回,cmd558
+message ClubAreaProtectResultResponse {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+	optional int32 ret = 3;// 1-需要申请 2-已申请
+}
+
+// 亲友圈区域保护游戏权限申请,cmd556
+message ClubAreaProtectPermissionApplyReq {
+	optional int32 clubId = 1;
+	optional int64 accountId = 2;
+	optional int32 gameId = 3;
+	optional string gameName = 4;
+	optional int32 gameTypeIndex = 5;
+	optional string phone = 6;
+	optional string name = 7;
+}
+
+// 亲友圈玩家信息请求,cmd557
+message ClubMemberInfoReq {
+	optional int32 clubId = 1;
+	repeated int64 accountList = 2;
+}
+
+// 亲友圈玩家信息返回,cmd559
+message ClubMemberInfoResponse {
+	optional int32 clubId = 1;
+	repeated ClubAccountProto memberList = 2;
+}
+
+// 亲友圈创建人是否是代理返回,cmd560
+message ClubOwnerIsAgentResponse {
+	optional int32 clubId = 1;
+	optional bool isAgent = 2;
+}
+
+// 亲友圈添加成员通知,cmd561
+message ClubAddMemberNotify {
+	optional int32 clubId = 1;
+	optional string operatorName = 2;
+	optional string clubName = 3;
+}
+
+// 亲友圈合伙人邀请成员加入结果返回,cmd562
+message ClubPartnerInviteJoinResultResponse {
+	optional int32 clubId = 1;
+	repeated int64 targetIds = 2; //邀请成功的玩家列表
+	optional int32 ret = 3; //错误码 0-成功 1-亲友圈人数已满，部分成员未邀请成功
+}

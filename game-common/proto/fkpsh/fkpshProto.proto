@@ -1,0 +1,101 @@
+package fkpsh;
+option java_package = "protobuf.clazz.fkpsh";
+option java_outer_classname = "fkpshRsp";
+import "basic/protocol.proto";
+//用户结束
+message PlayerResultFkpsh{
+	 repeated   int32   tong_sha_count = 1;  //通杀次数
+	 repeated   int32   tong_pei_count = 2;  //通赔次数
+	 repeated   int32   niu_niu_count = 3;   //牛牛次数
+	 repeated  	int32   no_niu_count  = 4;   //无牛次数
+	 repeated   int32   win_count = 5;       //胜利次数
+	 repeated   int32   player_score = 6;    //总成绩
+}
+
+//结算
+message PukeGameEndFkpsh{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	repeated int32 card_type  = 5; //牛牛牌型
+	repeated int32 end_score = 6;//结算分数
+	optional int32 player_num = 7;//游戏人数
+	optional int32 reason = 8;//结束类型
+	repeated RoomPlayerResponse players = 9;
+	//总结算
+	optional PlayerResultFkpsh player_result = 10;
+	optional int32 winner = 11;//赢家s
+	repeated string str_ox_value = 12;//牛几
+}
+
+message TableResponseFkpsh {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional RoomInfo room_info = 2;
+	repeated RoomPlayerResponse players = 3;
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	repeated int32 jetton_button = 5; // 下注按钮
+	repeated int32 jetton_score = 6;//玩家下注
+	repeated bool open_card = 7;//玩家 完成
+	repeated bool liang_card = 8;//玩家亮牌
+	optional int32 scene_status = 9;  //场景状态
+	optional int32 display_time = 10; //显示时间
+	repeated int32 ox_value = 11;  //牛几
+	repeated int32 times = 12;  //倍数
+	repeated int32 player_score = 13; //用户分数
+	repeated int32 call_button =14;//叫庄按钮
+}
+
+message ButtonOperateFkpsh{
+    optional int32 opreate_type = 1;//按钮显示类型 --0是抢庄 1是下注
+	repeated int32 button = 2;//玩家按钮
+	optional int32 display_time = 3; //下注时间
+	repeated int32 choosecards_index = 4;//需要提示的三张牌 如果没提示 则size为0
+}
+message GameStartFkpsh{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 3;
+}
+
+message JettonResultFkpsh{
+	optional int32 jetton_seat = 1; // 下注用户的位置
+	optional int32 jetton_score = 2; //下注用户的分数
+}
+
+message SelectdBankerFkpsh{
+	optional int32 banker_seat = 1; // 抢庄用户的位置
+	optional int32 banker_score = 2; //抢庄用户的倍数
+}
+
+message SelectdBankerResultFkpsh{
+	optional int32 banker_seat = 1; // 抢庄用户的位置
+	optional int32 banker_score = 2; //抢庄用户的倍数
+}
+
+message SendCardFkpsh{
+    optional int32 opreate_type = 1;//0:抢庄前 1:抢庄后
+	repeated Int32ArrayResponse send_card = 2; // 发牌
+	optional int32 display_time = 3;  // 显示牌
+}
+message OpenCardFkpsh{
+	optional bool open_card = 1;
+	optional int32 seat_index = 2;
+	repeated int32 cards  = 3;
+	optional int32 ox_value = 4;  //牛几
+	optional int32 times = 5;  //倍数
+}
+//亮牌结算
+message LiangCardFkpsh{
+	optional int32 seat_index = 1; //玩家ID
+	repeated int32  cards = 2;       //牌值
+	optional int32 ox_value = 3;  //牛几
+	optional int32 times = 4;  //倍数
+
+}
+//请求
+message Opreate_Fkpsh_Request{
+	optional int32  opreate_type = 1;//1:r抢庄 2：下注  3：开牌
+	optional int32 add_jetton_score = 2;//加注筹码数量 //下注下标
+	optional bool is_ox = 3;   //true 为有牛， false 没有牛
+}

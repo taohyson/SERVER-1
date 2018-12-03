@@ -1,0 +1,27 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "FCMJProto";
+import "basic/protocol.proto";
+
+message GameEndResponse_FC{
+	repeated int32 peng_score = 1;
+	repeated int32 shao_score = 2;
+	repeated int32 gang_score = 3;
+	repeated int32 tan_score = 4;
+	repeated int32 hu_score = 5;
+	repeated int32 reward_score = 6;
+	repeated int32 game_score = 7;  // 得分
+
+	repeated PersonRoundDetail person_round_detail = 8;
+	repeated int32 end_game_score = 9; // 总分
+	repeated int32 hu_tag = 10; // 0:无 1:接炮 2:自摸 3:点炮
+}
+
+message RoundDetail {
+	required int32 round = 1; // 第几局
+	required int32 socre = 2; // 分数
+}
+
+message PersonRoundDetail {
+	repeated RoundDetail round_detail = 1;
+}

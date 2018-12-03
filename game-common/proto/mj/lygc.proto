@@ -1,0 +1,18 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "Lygc";
+import "basic/protocol.proto";
+
+message Lygc_Game_End {
+    optional bool zi_mo_hu = 33; // 是否是自摸胡
+    repeated float ming_gang_score = 34; // 明杠分
+    repeated float an_gang_score = 35; // 暗杠分
+    repeated float tmp_game_score = 36; // 临时分，再加上明杠暗杠分=总得分
+    optional int32 game_end_type = 37; // 1：正常结束；2：流局；3：其他；
+    
+    repeated int32 ming_ci_ci_shu = 38; // 明次次数
+    repeated int32 an_ci_ci_shu = 39; // 暗次次数
+    repeated int32 pi_ci_ci_shu = 40; // 皮次次数
+    repeated int32 zi_mo_ci_shu = 41; // 自摸次数
+    repeated int32 bao_ci_ci_shu = 42; // 包次次数
+}

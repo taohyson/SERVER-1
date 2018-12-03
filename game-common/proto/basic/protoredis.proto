@@ -1,0 +1,318 @@
+option java_package = "protobuf.redis";
+option java_outer_classname = "ProtoRedis";
+
+//==================账号=====================================
+//微信
+message RsAccountWeixinModelResponse {
+	optional int64 account_id = 1; //账号id
+	optional string access_token = 2; //接口调用凭证
+	optional string refresh_token = 3; //用户刷新access_token
+	optional string openid = 4; //授权用户唯一标识
+	optional string scope = 5; //用户授权的作用域，使用逗号（,）分隔
+	optional string unionid = 6; //户统一标识。针对一个微信开放平台帐号下的应用，同一用户的unionid是唯一的。
+	optional string nickname = 7; //普通用户昵称
+	optional string sex = 8; //普通用户性别，1为男性，2为女性
+	optional string province = 9; //普通用户个人资料填写的省份
+	optional string city = 10; //普通用户个人资料填写的城市
+	optional string country = 11; //国家，如中国为CN
+	optional string headimgurl = 12; //用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
+	optional string privilege = 13; //用户特权信息，json数组，如微信沃卡用户为（chinaunicom）
+	optional int64 last_flush_time = 14; //最后刷新的时间，调用wx的
+	optional string self_token = 15; //本游戏的安全登录码
+	optional int64 last_false_self_token = 16; //最后刷新的本游戏登录码
+	optional bool need_db = 17; //是否入库
+}
+
+//账号
+message RsAccountModelResponse {
+	optional int64 account_id = 1; //账号ID
+	optional string pt = 2; //平台标识, WX=微信，SELF=自有
+	optional string account_name = 3; //账号名
+	optional string password = 4; //密码
+	optional int32 login_times = 5; //登录次数
+	optional int64 last_login_time = 6; //最后登录时间
+	optional string mobile_phone = 7; //手机号
+	optional int64 history_pay_gold = 8; //历史充值总额
+	optional int64 gold = 9; //金币数量
+	optional string client_ip = 10; //最后登录的ip,服务端的
+	optional bool need_db = 11; //是否入库
+	optional int32 today_online = 12; //今日在线时长(秒)
+	optional int32 history_online = 13; //历史在线时长(秒)
+	optional int32 banned = 14; //1-封禁 0-不封禁
+	optional int32 is_agent = 15; //是否代理(1-是 0-否)
+	optional string last_client_flag = 16; //最后登录的客户端设备
+	optional string client_version = 17; //客户端最后登录版本
+	optional int64 recommend_id = 18; //推荐代理人id
+	optional int64 money = 19; //铜钱
+	optional string client_ip2 = 20; //最后登录ip2,客户端传的
+	optional int32 proxy_level = 21; //代理级别
+	optional int32 is_inner = 22; //是否内部人员(1-是 0-否)
+	optional int32 promote_level = 23; //推广员级别
+	optional int64 target_proxy_id = 24; //下级代理人id--oss后台改数据用
+	optional bool is_delete_target = 25; //是否删除下级代理--oss后台改数据用
+	optional int64 up_proxy = 26; //上级代理
+	optional int32 consum_total = 27; //累计消耗
+	optional double history_rmb = 28; //总收益RMB
+	optional double receive_rmb = 29; //已经提现RMB
+	optional double rmb = 30; //可提现RMB
+	optional int32 is_rebate = 31; //开通返利(1-是 0-否)
+	optional int32 login_reward = 32; //登录奖励
+	optional double recommend_history_income = 33; //推广员总收入
+	optional double recommend_remain_income = 34; //推广员可提现余额
+	optional double recommend_receive_income = 35; //推广员已经提现的金额
+	optional double recommend_yesterday_income = 36; //推广员昨日收益
+	optional int32 recommend_level = 37; //推广员级别
+	optional string signature = 38; //玩家签名
+	optional int32 goldChangeType = 39; //房卡有变化时，是什么操作类型
+	optional int64 agent_recomment_id = 40;//代理推荐人
+	optional int64 hall_recomment_id = 41;//大厅推广员推荐人
+	optional int32 hall_recomment_level = 42;//大厅推广员推荐等级
+	optional int32 moneyChangeType = 43; //金币变化类型
+	optional int32 welfareChangeType = 44; //福卡变化类型
+	optional int64 welfare = 45; //福卡数量
+	optional int32 channelId = 46;//当前渠道id
+	optional string third_token = 47;	//生成第三方token
+	optional string strTip = 48;
+	optional int32 openAgentSource = 49;//开通代理来源
+	optional int32 diamond = 50;	//钻石(sdk货币)
+	optional int32 diamondChangeType = 51;	//钻石变化类型
+	optional string clientUpdatePackageReward = 52; //客户端更新包奖励
+	optional int32 banClubInvite = 53; //亲友圈禁止邀请
+}
+//账号参数
+message RsAccountParamModelResponse {
+	optional int64 account_id = 1; //账号ID
+	optional int32 type = 2; //类型编码
+	optional int32 val1 = 3; //数值1
+	optional string str1 = 4; //字符串1
+	optional int64 long1 = 5; //长整型值1
+	optional bool need_db = 6; //是否入库
+	optional int64 data1 = 7; //日期1
+}
+//玩家邀请列表
+message RsAccountRecommendResponse {
+	optional int32 id = 1;
+	optional int64 account_id = 2; //玩家id
+	optional int64 target_account_id = 3; //目标玩家
+	optional int64 create_time = 4; //创建时间
+	optional int32 gold_num = 5; //获得的金币数
+	optional string target_name = 6; //目标账号名字
+	optional string target_icon = 7; //目标账号icon
+}
+//玩家推广员信息
+message RsHallRecommendResponse {
+	optional int32 id = 1;
+	optional int64 account_id = 2; //玩家id
+	optional int64 target_account_id = 3; //目标玩家
+	optional int64 create_time = 4; //创建时间
+	optional int32 recommend_level = 5; //推广员等级
+	optional string target_name = 6; //目标账号名字
+	optional string target_icon = 7; //目标账号icon
+	optional int32 proxy_level = 8;//代理等级
+}
+//玩家下级代理列表
+message RsAccountProxyResponse {
+	optional int32 id = 1;
+	optional int64 account_id = 2; //玩家id
+	optional int64 target_account_id = 3; //目标玩家
+	optional int64 create_time = 4; //创建时间
+	optional string remark = 5; //备注
+	optional string target_name = 6; //目标账号名字
+	optional string target_icon = 7; //目标账号icon
+	optional int32 apply = 8; //1-统一0-代同意
+	optional int64 target_gold = 9; //下级代理剩余卡
+	optional int64 target_total_consum = 10; //下级代理累计消耗
+	optional bool is_delete_target = 11; //是否删除下级代理
+}
+//玩家信息更新
+message RsAccountResponse {
+	optional int32 type = 1; //返回类型 1=更新数据
+	optional int64 account_id = 2; //账号ID
+	optional int32 lastGameIndex = 3; //上次登录的游戏
+	optional int32 lastGameStatus = 4; //上一次游戏状态
+	optional int32 lastLogicIndex = 5; //上一次链接的逻辑计算服
+	optional int32 lastProxyIndex = 6; //上一次链接的代理服
+	optional int32 game_id = 7; //当前游戏id
+	//optional string last_login_ip = 8; //最后登录的ip
+	optional RsAccountModelResponse rsAccountModelResponse = 9; //账号
+	optional RsAccountWeixinModelResponse rsAccountWeixinModelResponse = 10; //微信
+	optional int32 room_id = 11; //房间号
+	//optional string ip_addr = 12;//ip物理地址
+	optional bool flushRedisCache = 13; //是否刷新redis缓存
+	repeated RsAccountParamModelResponse rsAccountParamModelResponseList = 14; //账号参数列表
+	repeated RsAccountRecommendResponse rsAccountRecommendResponseList = 15; //玩家邀请列表
+	repeated RsAccountProxyResponse rsRsAccountProxyResponseList = 16; //下级代理列表
+	optional string groupID = 17;
+	optional bool deleteGroupID = 18; //delete groupID
+	optional RsHallRecommendResponse rsHallRecommendResponse = 19;//推广员详情
+	optional int32 allMoney = 20;//领取红包的
+	optional int32 receiveMoney = 21;//提现金额
+	optional int32 enterMatchId = 22;// 当前进入的比赛场
+}
+
+message RsAccountGroup{
+	optional int64 account_id = 1; //账号id
+	optional string groupId = 2; //描述
+}
+
+//====================房间======================================
+message RsRoomResponse {
+	optional int32 type = 1; //1=删除房间号(room_id)  2=玩家退出房间
+	optional int32 room_id = 2; //房间号
+	optional int64 account_id = 3; //账号id
+	optional string desc = 4; //描述
+}
+
+//=====================公告========================================
+message RsGameNoticeModelResponse {
+	optional int32 id = 1; //公告id
+	optional string content = 2; //内容
+	optional int32 game_type = 3; //游戏类型
+	optional int32 delay = 4; //播放间隔
+	optional int64 create_time = 5; //创建时间
+	optional int64 end_time = 6; //公告结束时间
+	optional int32 game_id = 7; //游戏id
+	optional int32 pay_type = 8; //播放类型 1=普通 2=全局
+}
+//==================字典更新========================================
+message RsDictUpdateResponse {
+	enum RsDictType {
+		SYS_PARAM = 1; //系统参数
+		SYS_NOTICE = 2; //系统公告
+		GAME_DESC = 3; //玩法说明
+		SHOP = 4; //商城
+		MAIN_UI_NOTICE = 5; //主界面公告
+		LOGIN_NOTICE = 6; //登录公告
+		MONEY_SHOP = 7; //金币商城
+		ACTIVITY = 8; //活动
+		CONTINUE_LOGIN = 9; //连续登录
+		GOODS = 10; //道具
+		IP_LIST = 11; //ip
+		APPITEM = 12;//游戏下载列表
+		SERVER_LOGIC = 13; //服务器列表
+		GAME_RECOMMEND = 14; //推荐位
+		SERVER_BALANCE = 15; //指定子游戏运行逻辑服
+		SYS_GAME_TYPE = 16;//通知加载游戏类型对应收费索引 游戏类型 描述
+		GAME_GROUP_RULE = 17;
+		RED_PACKAGE_RULE = 18;//红包活动规则
+		TURNTABLE_RULE = 19; // 转盘活动规则
+		SYS_PARAM_SERVER = 20; //服务端系统参数
+		CUSTOMER_SER_NOTICE = 21;//客服界面公告
+		PACKAGE_ITEM = 22;	// 背包物品
+		MATCH_GROUND = 23; //比赛场
+		SERVER_GATE = 24; //
+		MATCH_BROAD = 25;//比赛场公告
+		TURNTABLE = 26; // 转盘
+		INVITE_REDPACKEY = 27;//邀请新用户送红包活动
+		COIN_CONFIG = 28;//金币场配置
+		ITEM_EXCHANGE = 29; //实物兑换
+		WELFARE_EXCHANGE = 30; //福卡兑换
+		CARD_SECRET = 31; //卡密库
+		REDPACKET_POOL = 32;//红包池
+		CHANNEL_DICT = 33; //渠道参数
+		ACTIVITY_MISSION = 34;	//活动任务
+		PUSH_MANAGER_DICT = 35;//推送信息更新
+		GAME_NOTICE_DICT = 36;//游戏跑马灯
+		HALL_GUIDE_DICT = 37;//大厅指引图
+		GAME_RESOURCE_DICT = 38;//子游戏印章、背景、标题资源
+		EXCITE_DICT = 39; //刺激玩法
+		CARD_CATEGORY = 40; //牌型
+		INVITE_FRIENDS_ACTIVITY = 41;//邀请好友活动
+		WELFARE_GOODS_TYPE = 42; //福卡商城分类
+		HALL_MAIN_VIEW_BACK = 43; //大厅主界面背景资源
+		SDK_APP = 44; //第三方CP APP
+		SDK_APP_SHOP = 45; //第三方CP APP商城
+		CORNUCOPIA = 46;//
+		SDK_DIAMOND_SHOP = 47;	//钻石商城
+		COMMON_DICT = 100; //通用字典分发
+
+	}
+
+	optional RsDictType rsDictType = 1; //字典类型
+
+	optional string dictTypeStr=2;///通用字典分发类型--其它服务器监听字符串处理
+}
+//===============我的压力测试========================================
+message RsMyTestResponse {
+	optional int32 type = 1; //类型  1=普通测试
+	optional int32 num = 2; //数量
+}
+
+//===============排行榜=======================================
+message RsRankProto {
+	required int32 rank = 1; //排名
+	optional string head = 2; //头像
+	optional string nickName = 3; //昵称
+	optional int64 accountId = 4; //帐号ID
+	optional string signature = 5; //签名
+	optional int64 value = 6; //数值
+}
+
+message RsRankResponse {
+	required int32 type = 1; //排行榜类型
+	repeated RsRankProto ranks = 2; //排行榜数据
+}
+
+//=============命令=====================
+message RsCmdResponse {
+	optional int32 type = 1; //1=踢玩家下线(account_id)  2=通知所有逻辑算强制结算  3=代理开房变化了(account_id)
+	optional int64 account_id = 2; //账号id
+}
+
+//============准备停服 rmi用的=======================
+//状态
+message RsSystemStopReadyStatusResponse {
+	optional bool systemStopReady = 1; //当前状态 true表示已有计划停止了
+	optional int64 stopData = 2; //停止的时间
+}
+//操作结果
+message RsSystemStopReadyResultResponse {
+	optional int32 code = 1; //返回状态码 0正常 -1表示失败
+	optional string msg = 2; //操作提示
+	optional RsSystemStopReadyStatusResponse rsSystemStopReadyStatusResponse = 3;
+}
+
+//商场操作通知
+message StoreNoticeResponse{
+	optional int64 accountId = 1;
+	optional int32 opType = 2;
+	optional int32 gold = 3; //闲逸豆
+	optional int32 coin = 4; //金币
+	optional int32 uiType = 5;
+	optional int32 uiSubType = 6;
+	optional int32 opId = 7; //操作ID
+}
+
+//RMI通用调用返回
+message RsRMIResultResponse {
+	optional int32 code = 1; //返回关态码 0正常，其它为自定义
+	optional string msg = 2; //提示消息
+}
+
+//总返回
+message RedisResponse {
+	enum RsResponseType {
+		ACCOUNT_UP = 1; //更新玩家信息(rsAccountResponse)
+		ROOM = 2; //房间(rsRoomResponse)
+		GAME_NOTICE = 3; //游戏公告(rsGameNoticeModelResponse)
+		DICT_UPDATE = 4; //字典更新(rsDictUpdateResponse)
+		MY_TEST = 5; //我的压力测试(myTestResponse)
+		CMD = 6; //命令(rsCmdResponse)
+		RANK = 7;//排行榜
+		ACCOUNT_GROUP = 8;//俱乐部与微信群成员同步
+		STORE_NOTICE = 9; //商场操作通知
+	}
+
+	required RsResponseType rsResponseType = 1; //返回类型
+	optional RsAccountResponse rsAccountResponse = 100;
+	optional RsRoomResponse rsRoomResponse = 101;
+	optional RsGameNoticeModelResponse rsGameNoticeModelResponse = 102;
+	optional RsDictUpdateResponse rsDictUpdateResponse = 103;
+	optional RsMyTestResponse rsMyTestResponse = 104;
+	optional RsCmdResponse rsCmdResponse = 105;
+	optional RsRankResponse rsRankRsp = 106;
+	repeated RsAccountGroup rsAccountGroupList = 23;//群组
+	optional StoreNoticeResponse storeResponse = 107;
+}
+
+

@@ -1,0 +1,165 @@
+package backpack;
+
+option java_package = "protobuf.clazz.s2s";
+option java_outer_classname = "BackpackProto";
+
+enum BackpackType {
+	VIEW = 1;	
+	ADD_BACKPACK = 2;
+	DEL_BACKPACK = 3;
+	USE_BACKPACK = 4;
+	GIVE_BACKPACK = 5;
+	IMME_USE_BACKPACK = 6; 
+	USE_BACKPACKS_LOG = 7;
+	USE_BNACKPACK_LOG_DETAIL = 8;	
+	BACKPACK_DETAIL = 9;
+	TOKEN_BACKPACKS_DETAIL = 10;
+	BROAD_BACKPACK_NUM = 11;
+	ITEM_EXCHANGE = 12; //实物兑换
+	WELFARE_STORE_REMAIN_NUM = 13; //福卡商城物品剩余兑换次数
+	WELFARE_EXCHANGE = 14; //福卡兑换
+	EXCHANGE_RECORD = 15; //兑换记录
+	BAG_ITEM_USE = 16; //背包物品使用
+}
+
+/////////////////////////////////////客户端请求协议号：29//////////////////////
+message BackpackReq {
+	// type:
+	// VIEW : 初始化背包面板：
+	// ADD_Backpack : 增加背包道具：[backpack_id]
+	// DEL_Backpack : 删除道具：[backpack_id]
+	// USE_Backpack : 使用道具：[backpack_id]
+	// GIVE_Backpack : 赠送好友：[rec_account_id,backpackId]
+	// IMME_USE_Backpack : 立即使用---->线下参赛券道具 ：[backpackId,personDetail]
+	// USE_BackpackS_LOG : 兑换记录
+	// USE_Backpack_LOG_DETAIL : 兑换记录详细：[backpackId, use_time]
+	required int32 type = 1;
+	optional int64 account_id = 2;
+	optional int64 rec_account_id = 3;
+	optional int32 backpack_id = 4;
+	optional int64 use_time = 5;
+	optional PersonDetail personDetail = 6;
+	repeated int64 backpack_ids = 7;
+	optional string phone = 8; //手机号码
+	optional string phoneIdentityCode = 9; //验证码
+	optional string itemSize = 10; //物品规格
+	optional int32 buyNum = 11; //购买数量
+}
+
+/////////////////////////////////////客户端返回协议号：37//////////////////////
+message BackpackResp {
+	required int32 type = 1;
+	optional PersonBackpack person_backpack = 2;	// VIEW、USE_BACKPACK、USE_BACKPACKS_LOG 返回
+	optional PersonDetail person_Detail = 3;
+	optional int32 state = 4;			// 0: 可以使用，1：未达到使用条件，2：已超出使用范围
+	repeated WelFareExchangeInfo exchangeInfo = 5; //福卡商城物品兑换信息
+	repeated PlayerExchangeRecord record = 6; //玩家兑换记录
+}
+
+message PlayerExchangeRecord {
+	optional string itemName = 1; //物品名称
+	optional int32 itemNum = 2; //物品数量
+	optional string icon = 3; //物品图标
+	optional string exchangeDate = 4; //兑换时间
+}
+
+message WelFareExchangeInfo
+{
+	optional int32 itemId = 1; //物品Id
+	optional int32 remainNum = 2; //剩余兑换次数 (-1表示无限制)
+	optional int32 dailyNum = 3; //玩家每日剩余可兑换次数 (-1表示无限制)
+}
+
+
+message PersonBackpack {
+	repeated Backpack backpack = 1;
+ 	optional bool isUpdate = 2; // 服务器用来验证物品是否删除成功 兼容之前bug
+}
+
+message Backpack {
+	enum BackpackType {
+    	NORMAL_PROP = 1;
+    	NORMAL_TICKET = 2;
+    	OFFLINE_TICKET = 3;
+	};
+	
+	optional int32 backpack_id = 1;				// 道具ID
+	optional string backpack_name = 2;			// 道具name
+	optional string icon = 3;					
+	optional int32 badge_state = 4;				// 角标状态 0: 新道具 ，1：旧道具
+	optional int32 number = 5;					// 数量
+	optional string expiration_data_desc = 6;	// 逾期描述
+	optional int32 state = 7;					// 道具状态  1：可以使用，2：过期
+	optional string description = 8;			// 描述
+	optional int32 give = 9;					// 是否赠送
+	optional int32 backpack_type = 10;			// 物品类型
+	repeated PrizeDesc prize_desc = 11;				// 奖品信息展示
+	optional int64 use_start_time = 12;			// 开始使用的时间
+	optional int64 use_end_time = 13;			// 结束使用的时间
+	
+	optional string use_time_desc = 14;			// 使用时间描述：刚刚、十分钟前
+	optional int64 use_time = 15;				// 使用时间
+	optional int32 use_state = 16;				// 使用的状态：1：成功，2：充值中、3：充值成功、4：失败
+	
+	optional string match_name = 17;
+ 	optional string match_icon = 18;
+ 	optional int64 account_id = 19; 
+ 	optional string head_img = 20;
+ 	optional string name = 21;
+
+ 	optional int32 bag_type = 22; //背包类型1普通道具，2参赛券，3红包，4实物
+ 	optional int32 display_order = 23; //排序参数
+	optional int32 moneyValue = 24; //红包金额(单位分)
+	optional int32 relationMatch = 25; //关联比赛Id
+	optional string item_size = 26; //物品规格 格式: 规格1,规格2...
+}
+
+message PrizeDesc {
+	optional string rank = 1;
+	optional string description = 2;
+}
+// 录入个人信息
+message PersonDetail {
+
+	optional string name = 1;
+	optional string identify_number = 2;
+	optional string call_number = 3;
+	optional int32 backpack_id = 4;				// 道具ID
+	optional string backpack_name = 5;			// 道具name
+	optional string icon = 6;		
+}
+
+//实物兑换返回,cmd110
+message ItemExchangeResp
+{
+	optional bool isSuccess = 1; //是否成功
+}
+
+//福卡兑换返回,cmd111
+message WelfareExchangeResp
+{
+	optional bool isSuccess = 1; //是否成功
+	optional string msg = 2;
+	optional int32 ret = 3; // 1-实物 2-货币
+}
+
+//实物使用结果返回,cmd112
+message RealItemUseResultResp
+{
+	optional bool isSuccess = 1; //是否成功
+	optional string msg = 2; //错误信息
+	optional int32 retCode = 3; //错误码类型  1-游戏认证中心没有绑定手机号 2-微信公众号没有绑定手机号
+	optional int32 itemType = 4; //物品类型
+	optional int32 itemSubType = 5; //物品类别
+	optional string itemName = 6; //物品名称
+	optional string icon = 7; //物品图标
+	optional string phone = 8; //手机号
+}
+
+
+
+
+
+
+
+

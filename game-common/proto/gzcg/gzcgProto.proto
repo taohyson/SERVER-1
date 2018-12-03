@@ -1,0 +1,46 @@
+package czbg;
+
+option java_package = "protobuf.clazz.gzcg";
+option java_outer_classname = "GZCGRsp";
+import "basic/protocol.proto";
+
+//房间的玩家
+message FanJing_GZCG {
+	repeated int32 zheng_jing = 1; // 第一个表示上精中的正精  第二个表示副精
+	optional int32 xia_jing = 2; // 下精的数量[即右上角盖几张牌]
+}
+
+message GameEndResponse_GZCG {
+	optional GameEndResponse game_end = 1; // 结算
+	repeated int32 zheng_jing = 2; // 第一个表示上精中的正精  第二个表示副精
+	optional int32 other_jing_number = 3; // 其他精牌数量
+	repeated int32 other_jing = 4; // 其他精牌数值 该数组长度为other_jing_number的2倍
+	repeated int32 jing_score = 5; // 精牌分
+	repeated int32 hu_pai_score = 6; // 胡牌分
+	repeated int32 jiang_li_score = 7; // 奖励分
+	repeated int32 ming_gang = 8; // 明杠
+	repeated int32 an_gang = 9; //暗杠
+	repeated int32 gang_jing = 10; // 杠精
+	repeated int32 chao_zhuang = 11; // 抄庄
+	repeated int32 total_score = 12; // 总成绩
+	optional string result_desc = 13; // 胡牌描述
+
+	repeated int32 zheng_jing_count = 14; // 每个玩家每一组精中正精的个数
+	repeated int32 fu_jing_count = 15; // 每个玩家每一组精中副精的个数
+	repeated bool is_ba_wang_jing = 16; // 每个玩家每一组精是否霸王精
+	repeated int32 chong_guan_score = 17; // 每个玩家每一组精的冲关(0表示没有冲关, >1 表示冲关情况)
+	repeated int32 every_jing_score = 18; // 每个玩家每一组精的得分
+
+	repeated EveryJingInfo_GZCG jing_info = 19; // 每个玩家的精分信息
+	repeated int32 piao_zheng_jing = 20; // 正精飘分
+	repeated int32 piao_fu_jing = 21; // 副精飘分
+}
+
+message EveryJingInfo_GZCG {
+	repeated int32 zheng_jing_count = 14; // 每个玩家每一组精中正精的个数
+	repeated int32 fu_jing_count = 15; // 每个玩家每一组精中副精的个数
+	repeated bool is_ba_wang_jing = 16; // 每个玩家每一组精是否霸王精
+	repeated int32 chong_guan_score = 17; // 每个玩家每一组精的冲关(0表示没有冲关, >1 表示冲关情况)
+	repeated int32 every_jing_score = 18; // 每个玩家每一组精的得分
+	repeated int32 jing_socre = 19; // 玩家每一组精的分数
+}

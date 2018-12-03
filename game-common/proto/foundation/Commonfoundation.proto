@@ -1,0 +1,38 @@
+package foundation;
+option java_package = "protobuf.clazz.foundation";
+option java_outer_classname = "CommonfoundationProto";
+
+//请求荣誉记录cmd=3013
+message RequestTopHonorRecord{
+	optional int32 appId = 1; //游戏ID
+}
+
+//返回荣誉记录cmd=1015
+message ResponseTopHonorRecord{
+	repeated TopHonorMsg honorMsgs = 1; //荣誉列表
+}
+
+//请求我的冲榜赛荣誉cmd=3014
+message RequestHonorConfigById{
+	optional int32 honorId = 1; //荣誉ID
+}
+
+//返回我的冲榜赛荣誉cmd=1016
+message ResponseHonorConfigById{
+	optional TopHonorMsg honorMsgs = 1; //荣誉列表
+}
+
+message TopHonorMsg{
+	optional int32 honorId = 2;  //荣誉ID
+	optional string nameUrl = 3; //名称资源
+	optional string lableUrl = 4; //称号资源
+	optional string medalUrl = 5; //勋章资源
+	optional string tip = 6; //荣誉来源
+	optional int32 validDay = 7; //有效期
+	optional int32 isEffects = 8; //是否有特效 0无 1有
+	optional int32 appId = 9; //appId
+	optional int64 startTime = 10; //生效时间
+	optional string effect_ani = 11;  //荣誉勋章动画特效文件名
+	optional string table_ani = 12; //牌桌动画特效文件名
+	optional string name = 13; //名称
+}

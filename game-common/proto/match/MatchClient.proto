@@ -1,0 +1,1205 @@
+package match;
+
+option java_package = "protobuf.clazz.match";
+option java_outer_classname = "MatchClientRsp";
+
+import "basic/common.proto";
+
+//cmd=113 请求额外配置
+message MatchExtraConfigRequest {
+	optional int32 type = 1; //类型 1推荐位
+	optional int32 id = 2; //请求ID 0表示全部
+}
+//cmd=113 返回额外配置
+message MatchExtraConfigResponse {
+	repeated MatchConfigProto configs = 1;
+	optional int32 type = 2; //类型
+}
+
+//cmd=114 请求额外比赛配置信息
+message MatchExtraMsgRequest {
+	optional int32 type = 1; //1推荐位
+	optional int32 id = 2; //请求ID 0表示全部
+}
+//cmd=114 返回额外比赛配置信息
+message MatchExtraMsgResponse {
+	repeated MatchBaseProto base = 1;
+	optional int32 type = 2; //类型
+}
+
+message MatchApplyRequest {
+	optional int32 matchId = 1; //比赛Id
+	optional int32 secretKey = 2; //秘钥
+	optional int32 betTimes = 3; //冲榜倍数
+}
+
+//请求联赛侧边栏对应比赛配置信息
+message MatchConfigRequest {
+	optional int32 unionId = 1; //联赛ID 0为全部
+	optional int32 sideType = 2;  //侧边栏类型 0为全部
+}
+
+message MatchDetailConfigRequest {
+	optional int32 matchId = 1;
+}
+
+message MatchEmpty {
+	optional int32 matchId = 1; //比赛ID
+}
+
+//报名成功返回
+message MatchApplyResponse {
+	optional MatchBaseProto base = 1;
+}
+
+//比赛场游戏开始，等待分配
+message MatchGameStartResponse {
+	optional int32 id = 1;
+	optional int32 matchId = 2;
+}
+
+message MatchListRequest {
+	optional int32 unionId = 1; //联赛ID
+	optional int32 sideType = 2;  //侧边栏类型
+}
+
+message MatchListResponse {
+	repeated MatchBaseProto matchs = 2;
+	//	optional MatchPlayerInfoResponse playerInfos = 3;
+}
+
+message MatchBaseProto {
+	optional int32 id = 1; //唯一Id
+	optional int64 startTime = 2; // 比赛开始
+	optional int32 curCount = 3; // 当前人数
+	optional int32 startCount = 4; // 开始人数
+	optional int32 matchId = 5; //matchId
+	optional int32 appId = 6;
+	optional int32 unionId = 7;
+
+	optional int32 status = 12; //玩家状态 0正常 1已预约 2已报名 3准备 4开始
+	optional int32 matchStatus = 13; //比赛场状态  1可预约 2可报名 3比赛开始 4比赛结束  5比赛时间未开始 6比赛时间已结束
+	optional bool isLock = 14; //是否只能在比赛场里，不能干其他事
+	optional int32 game_type_index = 15; //比赛对应的游戏id
+	optional int32 sideType = 16; //侧边栏类型
+}
+
+message MatchRankItemProto {
+	optional int32 itemId = 1;
+	optional string name = 2;
+	optional int32 count = 3;
+	optional string icon = 4; //图片链接
+	optional int32 type = 5; //0背包道具   1荣誉称号
+}
+
+message MatchPlayerInfoResponse {
+	repeated MatchFreeInfoResponse frees = 4;
+	repeated MatchBaseProto matchs = 6; // 玩家所以比赛信息列表
+	optional bool isShowButton = 7; //是否显示激活按钮
+}
+
+message MatchFreeInfoResponse {
+	optional int32 matchId = 1;
+	optional int32 freeCount = 2; //免费次数
+	optional int32 shareCount = 3;  //分享报名次数
+}
+
+//返回联赛列表信息
+message MatchUnionConfigsResponse {
+	repeated MatchUnionConfigProto configs = 1;
+}
+
+message MatchUnionConfigProto {
+	optional int32 id = 1; //联赛Id
+	optional int32 appType = 2; //应用类型
+	optional int32 sort = 3; //排序值
+	optional string name = 4; //联赛名称
+	optional string description1 = 5; //联赛描述1
+	optional string description2 = 6; //联赛描述2
+	optional int32 type = 7; //联赛类型 (1专题赛2普通赛)
+	optional string icon = 8; //联赛主题底图
+	optional string bgImage = 9; //游戏背景图片
+	optional int32 status = 10; //状态  1开启 2关闭
+	optional string showTime = 11; //展示时间
+	optional string closeTime = 12; //关闭展示时间
+	optional string beginTime = 13; //开始时间
+	optional string endTime = 14; //结束时间
+
+	repeated int32 sideTypes = 25; //侧边栏类型
+	optional MatchUnionConfigTopProto topConfig = 26; //冲榜赛配置
+}
+
+//联赛下  冲榜赛相关配置
+message MatchUnionConfigTopProto {
+	optional string rankHeadImage = 1;		//榜单榜头图片
+	optional string rankWholeImage = 2;		//榜单整体皮肤
+	optional string tabSelectImage = 3;		//tab选中
+	optional string tabNoSelectImage = 4;	//tab未选中
+	optional string rankBgImage = 5;			//冲榜赛背景图
+}
+
+message MatchConfigsResponse {
+	repeated MatchConfigProto configs = 2;
+//	optional string desc = 3;
+//	optional string title = 4;
+}
+
+message MatchConfigProto {
+	optional int32 matchId = 2;
+	optional string matchName = 3;
+	optional int32 appId = 30; //appId
+	optional string desc = 4; // 比赛规则 // 无用 2018/01/04
+	optional string tips = 21; // 比赛报名说明   无用 2018/01/04
+	optional int32 maxCount = 7; // 最大人数
+	optional int32 minCount = 19; // 最小人数
+	optional int32 gameId = 8; //游戏id
+	optional string iconItem = 9; // 图标
+	optional string iconTitle = 20; // 图标
+	optional int32 goldCost = 10; // 扣逗
+	optional int32 moneyCost = 11; // 扣钱
+	optional int32 freeCount = 18; //免费次数
+	optional int32 itemCost = 12; //消耗的物品Id
+	repeated MatchRankPrizeConfigProto rankPrizes = 13; //排行奖励
+	optional int32 match_begin_type = 14; //开始类型 1定时开赛，2人满开赛 3.类型 3 线上决赛 4 每日预约赛 5密钥赛 6冲榜
+	optional string dailyStartTime = 15; // 比赛时间
+	optional string dailyEndTime = 16; // 比赛时间
+	optional string startTime = 22; // 比赛日期
+	optional string endTime = 23; // 比赛日期
+	optional string ruleDesc = 17; //玩法描述 无用 2018/01/04
+	optional string client_start_time = 24; //客户端展示时间
+	optional string client_end_time = 25; //客户端展示时间
+	optional bool canCancel = 26; //是否可以取消報名
+	optional int32 money_limit = 27; // 报名金币限制
+	optional bool balance = 28; //是否消耗金币
+	optional bool round_cost = 29; // 每回合消耗
+	optional int32 sort = 31; //排序 asc
+	optional int32 status = 32; // 状态 1为正常 2为屏蔽
+	optional string label = 33; // 比赛标签
+	//	repeated MatchFixRoundConfig fixConfigs = 17; //定局赛配置
+	optional string reserveStartTime = 34; // 预约开始时间
+	optional string reserveEndTime = 35; // 预约结束时间
+	optional int32 unionId = 36; //联赛ID
+	optional int32 sideType = 37; //侧边栏类型
+	optional int32 matchType = 38; //比赛类别 1全民互动赛2精英赛3线下直通赛 4线下赛 5密匙赛 6冲榜赛
+	optional int32 shareCount = 39; //免费分享次数
+	optional string shareIconUrl = 40; //分享图片URL
+	optional string recommendIcon = 41; //推荐位图
+	optional int32 recommendSort = 42; //推荐位排序
+	optional bool isFloatPrize = 43; //是否浮动奖励
+	repeated MatchFloatRankPrizeConfigProto floatRankPrizes = 44; //浮动排行奖励
+	optional int32 cheat = 45; // 是否打开防作弊(1是0否)
+	optional string bannerUrl = 46; //横幅url
+
+	optional MatchConfigTopProto topConfigs = 47;//冲榜赛配置
+}
+
+//冲榜赛相关配置
+message MatchConfigTopProto{
+	repeated int32 rankTypes = 1; //榜单类型  0日  1周  2月
+	repeated MatchTopCostMsg costMsg = 2; //消耗
+	optional string rankGameBgImage = 3;		//冲榜赛子游戏背景图
+	optional string prizeImage = 4;			//冲榜赛奖励图
+	optional string prizeDesc = 5;		//冲榜赛奖励描述
+	optional int32 isReset = 6; //是否开启清零 0否 1是
+	optional int32 resetGold = 7; //清零消耗金豆数
+}
+
+message MatchTopCostMsg{
+	optional int32 times = 1; //倍数
+	optional int32 costType = 2; //1闲逸豆2金币  3道具
+	optional int32 costId = 3; //消耗的ID
+	optional int32 costNum = 4; //消耗的数量
+}
+
+message MatchUnionDetailConfig {
+	optional int32 unionId = 1;
+	optional string desc = 2;
+}
+
+message MatchDetailConfig {
+	optional int32 matchId = 1;
+	optional string desc = 2; // 比赛规则
+	optional string tips = 3; // 比赛报名说明
+	optional string ruleDesc = 4; //玩法描述 无用 2018/01/04
+}
+
+//message MatchFixRoundConfig{
+//	repeated MatchFixDetailConfig details = 1;
+//	message MatchFixDetailConfig{
+//		optional int32 minArea = 1;
+//		optional int32 maxArea = 2;
+//		optional int32 num = 3;
+//	}
+//}
+message MatchFloatRankPrizeConfigProto { //浮动奖励
+	optional int32 minNum = 1; //最小人数
+	optional int32 maxNum = 2; //最大人数
+	repeated MatchRankPrizeConfigProto rankPrizes = 3; //排行奖励
+}
+
+message MatchRankPrizeConfigProto {
+	optional int32 minRank = 1;
+	optional int32 maxRank = 2;
+	optional int32 gold = 3;
+	optional int32 money = 4;
+	repeated MatchRankItemProto items = 5;
+}
+
+message MatchInfoResponse {
+	optional int32 matchId = 1;
+	optional int32 curRank = 2; // 我的排名
+	optional int32 curCount = 3; // 当前人数
+	optional int32 outRank = 6; // 前多少人晋级
+	optional int32 curRoom = 7; // 当前桌数
+	optional int32 curProgess = 8; //当前进度
+	repeated MatchProgressInfoProto progresses = 9; // 进度列表
+	optional bool isStart = 10; //比赛是否已经开始  //无效
+	optional int64 startTime = 11; //比赛开始时间
+	optional bool isWaitRank = 14; //是否等待进入下一轮
+	optional int32 isAddtionMatch = 15; // 加时赛轮数
+	optional bool isHaveAdmin = 16; //是否拥有管理员
+	optional int32 tableStatus = 17; //当前桌子状态 0比赛即将开始  1等待管理员开始比赛  2比赛已开始  3比赛已暂停 4比赛结束 5复活状态
+	optional MatchReviveMsg reviveMsg = 18; //复活信息
+}
+
+//复活信息
+message MatchReviveMsg{
+	optional int32 gold = 1; //复活消耗的金豆数
+	optional int32 time = 2; //复活操作时间戳
+	optional double timesOrRank = 3; // 打立出局为倍数    快速赛为名次
+	optional int32 sumNum = 4; //总人数
+}
+
+//返回比赛分数信息
+message MatchScoreInfoResponse{
+	optional int32 outScore = 1; //当前的淘汰分
+	optional int32 baseScore = 2; // 底分倍率
+	optional int32 base = 3; // 底分
+	optional int32 times = 4; // 倍数
+	optional int32 matchId = 5; //比赛ID
+}
+
+message MatchProgressInfoProto {
+	optional int32 type = 1; // 1.打立出局 2.定局赛 3.瑞士移位
+	optional int32 curRound = 2; // 当前第几轮
+	optional int32 startCount = 3; // 人数
+	optional int32 riseCount = 4; // 晋级人数
+}
+
+//当前小局结束
+message MatchRoundOverResponse {
+	optional bool isTableOver = 1; // 是否当前牌桌大结算
+	optional int32 curRank = 2; //当前排名
+	optional int32 curRoomCount = 3; // 还剩多少桌
+	repeated MatchRankInfoProto ranks = 4;
+	optional int32 matchId = 5; //比赛ID
+	optional MatchRankPrizeConfigProto roundPrize = 6; //轮数奖励 快速赛
+}
+
+message MatchRoundStartRepsonse {
+	optional int32 curRound = 1; // 当前局数
+	optional int32 gameRound = 2; // 当前局数
+}
+
+message MatchRankInfoProto {
+	optional int32 curRank = 1;
+	optional string nickname = 2;
+	optional float curScore = 3;
+	optional float roundScore = 4; //本局分数
+	optional int32 cardType = 5; //牌局类型  0正常  1:春天 2:反春
+	optional int64 accountId = 6; //玩家ID
+	optional int32 times = 7;//倍数
+}
+
+message MatchFailResponse {
+	optional string matchName = 1;
+	optional int32 matchId = 2;
+	optional int32 id = 3;// 唯一Id
+	optional int32 failType = 4; //失败类型  1人数不足 2服务器异常  3比赛强制解散
+}
+
+message MatchOverResponse {
+	optional int32 matchId = 1;
+	optional int32 myRank = 2;
+	optional MatchRankPrizeConfigProto rankPrize = 3; //排行奖励
+	optional bool isLevel = 4; //是否退赛
+	optional int32 matchType = 6;  //比赛类型  1普通  5管理员赛  6冲榜赛
+
+	repeated MatchTopOverRankMsg topRankMsgs = 7; //冲榜赛结算数据
+	repeated MatchRankPrizeConfigProto roundPrize = 8; //轮数奖励 快速赛
+}
+
+// 注册某个比赛的数据同步
+message MatchSynRegisterRequest {
+	optional int32 unionId = 1; //大于0为注册联赛
+	optional bool isReg = 2; // true为注册 false 为取消注册
+	optional int32 sideType = 3; //大于0为注册的侧边栏类型
+	optional int32 scheduleId = 4; //赛程ID 大于0为注册推荐位
+	repeated int32 unionIds = 5; //覆盖注册联赛ID列表，大于0为注册联赛
+}
+
+// 服务器主动取消玩家注册（玩家主动的不推）
+message MatchUnRegisterResponse {
+	optional int32 unionId = 1;
+}
+
+message MatchChangeResponse {
+	optional int32 matchId = 1;
+	optional int32 curCount = 2;
+	optional int64 startTime = 3;
+	//  optional bool isOver = 4; // 表示今天的比赛结束了,没新的比赛
+	optional int32 id = 5; //比赛Id
+	optional int32 appId = 6;
+	//  optional bool isCanEnter = 7; // 是否能重新进入
+	//  optional bool isStart = 8; //是否开始比赛
+	optional int32 matchStatus = 10;
+}
+
+message MatchEnterResponse {
+	optional int32 matchId = 1;
+	optional string msg = 2;
+	optional int32 status = 3; //0不能进，不移除(报名预约赛等)  1可以进(可报名阶段)  2可以进(开始阶段等)  3不能进，移除(淘汰、一分钟未进等)
+}
+
+//每次匹配开始
+message MatchBaseStartResponse {
+	optional int32 type = 2; // 1.打立出局 2.定局赛 3.瑞士移位
+	optional bool isFirstStart = 3; // 是否是第一次匹配
+	optional int32 matchRound = 4; // 当前type对应的轮数
+	optional int32 outScore = 5; //当前的淘汰分
+	optional int32 baseScore = 6; // 底分倍率
+	optional int32 base = 7; // 底分
+	optional int32 times = 8; // 倍数
+	optional int32 matchId = 9; //比赛ID
+	optional int32 outRank = 10; // 前多少人晋级
+	optional int32 addtionRound = 11; // 加时赛轮数
+}
+
+//比赛进度变更 分数转换
+message MatchScoreChangeResponse {
+	optional int32 oldScore = 1;
+	optional int32 newScore = 2;
+	optional int32 curProgress = 3; //当前进度
+	optional int32 maxProgress = 4; //最大进度
+	optional int32 matchId = 5; //比赛ID
+}
+
+//比赛 断线重连
+message MatchConnectResponse {
+	optional int32 matchRound = 1; // 当前type对应的轮数
+	optional int32 type = 2; // 1是打立出局
+	optional int32 curScore = 3; // 分数
+	optional MatchInfoResponse matchInfo = 4;
+	optional int32 outScore = 5; //当前的淘汰分
+	optional int32 baseScore = 6; // 底分倍率
+	optional int32 base = 7; // 底分
+	optional int32 times = 8; // 倍数
+	optional int32 matchId = 9; //比赛ID
+}
+
+// 预约报名
+message MatchAuthRequest {
+	optional MatchAuthProto msg = 2;
+}
+
+//玩家预约报名回复
+message MatchAuthResponse {
+	optional bool isSuccess = 1;
+	optional string errorMsg = 2;
+}
+
+//玩家认证报名数据
+message MatchAuthProto {
+	optional string name = 1;
+	optional string code = 2; //身份证
+	optional int64 phone = 3;
+	optional int32 postcode = 4; // 邮编
+	optional string address = 5;
+	optional string email = 6; // 邮箱
+}
+
+//获取玩家比赛名称
+message MatchRecordRequest {
+	optional int32 id = 1;
+}
+
+message MatchRecordResponse {
+	optional int32 rank = 1; // 没有找到为0
+	optional string tip = 3; //提示语
+	optional int32 matchId = 4; //比赛ID
+	optional int32 matchType = 5; //比赛类型  1普通  5管理员赛  6冲榜赛
+	optional MatchRankPrizeConfigProto rankPrize = 7; //排行奖励
+	repeated MatchRankPrizeConfigProto roundPrizes = 8; //轮数奖励
+}
+
+// 进入预约的比赛等待
+message MatchReserveRequest {
+	optional int32 matchId = 1;
+	optional int32 secretKey = 2; //秘钥
+}
+
+// 返回预约等待结果
+message MatchReserveResponse {
+		optional MatchBaseProto base = 1;
+}
+
+// 比赛排行日志 cmd=16
+message MatchRankLogsRequest {
+	optional bool isTop = 1; //是否冲榜赛
+	optional int32 matchId = 2;
+}
+
+// 比赛排行日志
+message MatchRankLogsResponse {
+	repeated MatchRankLogProto rankLogs = 1;
+	optional bool isTop = 2; //是否冲榜赛
+}
+
+message MatchRankLogProto {
+	optional int32 matchId = 1;
+	optional string matchName = 2;
+	optional int64 createTime = 3;
+	optional int32 rank = 4;
+	optional bytes prize = 5; //
+	optional string gameName = 6;
+	optional int32 score = 7; //冲榜积分
+	optional int32 times = 8; //冲榜倍数
+}
+
+//排行奖励
+message MatchRankLogPrizeProto {
+	optional int32 gold = 1;
+	optional int32 money = 2;
+	repeated MatchRankItemProto items = 3;
+}
+
+//胜局奖励
+message MatchRoundLogPrizeProto{
+	repeated MatchRankLogPrizeProto prizes = 1;
+}
+
+//进入比赛请求
+message MatchEnterRequest{
+	optional int32 matchId = 1;
+}
+
+//退出比赛请求
+message MatchLeaveRequest{
+	optional int32 matchId = 1;
+}
+
+//取消报名比赛请求
+message MatchCancelApplyRequest{
+	optional int32 matchId = 1;
+}
+
+//退出比赛返回
+message MatchLeaveResponse{
+	optional int32 matchId = 1;
+}
+
+//请求指定ID比赛数据  cmd=100
+message MatchIdInfoRequest {
+	optional int32 matchId = 1;
+}
+
+//返回指定ID比赛数据  cmd=100 用于弹窗处理
+message MatchIdInfoResponse {
+	optional MatchBaseProto matchInfo = 1;
+	optional bool isData = 2;  //是否存在相关数据
+}
+
+//返回玩家比赛数据 cmd=101
+message MatchIdInfosResponse {
+	repeated MatchBaseProto matchInfos = 1; // 预约&&报名的比赛
+	optional bool isUpdate = 2; //是否更新
+}
+
+//请求比赛游戏规则 cmd=102
+message MatchGameRuleRequest {
+	optional int32 matchId = 1;
+}
+
+//返回比赛游戏规则 cmd=102
+message MatchGameRuleResponse {
+	optional int32 matchId = 2;
+	repeated MatchGameRuleInfo infos = 1;
+}
+
+message MatchGameRuleInfo {
+	optional int32 ruleId = 1;
+	optional int32 value = 2;
+}
+
+// 请求比赛联赛边角列表信息   CMD=104
+message MatchUnionSideListRequest{
+	repeated int32 sideTypes = 1; //侧边栏类型 -1为全部
+}
+
+// 返回比赛联赛边角列表信息   CMD=104
+message MatchUnionSideListResponse{
+	repeated MatchUnionSideConfigProto infos = 1;
+}
+
+//联赛边角配置信息
+message MatchUnionSideConfigProto {
+	optional int32 id = 1; //Id
+	optional string image = 4; //边角图片
+	optional string name = 5; //名称
+	optional int32 sort = 6; //排序
+	optional int32 sideType = 7; //侧边栏类型
+	optional int64 startTime = 8; //生效时间
+	optional int64 endTime = 9; //失效时间
+}
+
+//107:请求比赛内排名
+message MatchRankRequest{
+	optional int32 matchId = 1;
+	optional int32 id = 2;
+}
+
+//107:返回比赛内排名
+message MatchRankResponse{
+	repeated MatchRankMsg rankMsgs = 1;
+	optional MatchRankMsg myRankMsg = 2; //我的排名
+	optional int32 matchId = 3; //比赛ID
+}
+
+message MatchRankMsg{
+	optional int32 rankIndex = 1; //排名
+	optional int64 accountId = 2;
+	optional string nickname = 3;
+	optional string headUrl = 4;
+	optional int32 score = 5; //积分
+	optional bool isMySelf = 6; //是否自己
+	optional bool isLeave = 7; //是否退赛
+}
+
+message MatchRankAttachMsg{ //比赛排行附加内容
+	optional int32 winNum = 1; //上游次数
+	optional int32 singleNum = 2; //报听次数
+	optional int32 status = 3; //状态   0淘汰  1替补  2晋级 3退赛
+}
+
+//比赛管理请求 cmd=108
+message MatchWinnerStartRequest {
+	optional int32 matchId = 1; //比赛Id
+}
+
+//比赛管理返回 cmd=108
+message MatchWinnerStartResponse {
+	optional MatchBaseProto base = 1;
+}
+
+//比赛大赢家列表请求 cmd=109
+message MatchWinnerListRequest{
+	optional int32 matchId = 1; //比赛Id
+}
+
+//比赛大赢家列表请求 cmd=109
+message MatchWinnerListResponse{
+	repeated MatchWinnerMsg msgs = 1;
+	optional bool isAllocation = 2; //是否允许配桌
+	optional int32 tableStatus = 3; //当前桌子状态 0比赛即将开始  1等待管理员开始比赛  2比赛已开始  3比赛已暂停 4比赛结束
+	optional int32 tableNum = 4; //每桌需分配的人数
+}
+
+//比赛大赢家旁观请求 cmd=110
+message MatchWinnerOperationRequest{
+	optional int32 opType = 3; //1继续比赛 2暂停比赛  3旁观 4删除比赛
+	optional int32 matchId = 1; //比赛Id
+}
+
+//比赛大赢家旁观返回 cmd=110
+message MatchWinnerOperationResponse{
+	optional TipMsg msg = 1;
+	optional int32 opType = 2;
+	optional int32 matchId = 3; //比赛Id
+}
+
+//比赛大赢家配桌请求 cmd=111
+message MatchWinnerAllocationRequest{
+	optional int32 matchId = 1; //比赛Id
+	repeated WinnerAllocationMsg allocationMsg = 2; //分配信息
+}
+
+//比赛大赢家配桌请求 cmd=111
+message MatchWinnerAllocationResponse{
+	optional TipMsg msg = 1;
+}
+
+//比赛大赢家信息更新返回 cmd=112
+message MatchWinnerRefreshResponse{
+	optional int32 matchId = 1; //信息刷新比赛ID
+	optional int32 id = 2;
+}
+
+//请求比赛大赢家分配桌子信息 cmd=115
+message MatchWinnerTableRequest{
+	optional int32 matchId = 1; //比赛ID
+}
+
+//返回比赛大赢家分配桌子信息 cmd=115
+message MatchWinnerTableResponse{
+	optional int32 matchId = 1; //比赛ID
+	repeated MatchWinnerInfoMsg infos = 2; //玩家信息
+	optional int32 opType = 3; //0全部 1新增、修改 2删除
+	optional int32 tableNum = 4; //每桌需分配的人数
+}
+
+//比赛大赢家没准备列表信息 cmd=116
+message MatchWinnerNoReadyListResponse{
+	optional int32 matchId = 1; //比赛ID
+	repeated MatchWinnerInfoMsg infos = 2; //玩家信息
+}
+
+//117:返回比赛大赢家晋级排行榜
+message MatchWinnerRankResponse{
+	optional int32 matchId = 1; //比赛ID
+	repeated MatchWinnerMsg rankMsgs = 2;
+}
+
+//请求比赛复活  cmd=118
+message MatchReiveRequest{
+	optional int32 matchId = 1; //比赛ID
+	optional bool isRevive = 2; //是否复活
+}
+
+//返回比赛复活 cmd=118
+message MatchReiveResponse{
+	optional TipMsg tipMsg = 1;
+	optional int32 tableStatus = 2; //复活成功之后下发状态   当前桌子状态 0比赛即将开始  1等待管理员开始比赛  2比赛已开始  3比赛已暂停 4比赛结束
+}
+
+message MatchWinnerInfoMsg{
+	optional int32 index = 1; //桌子索引
+	optional int64 accountId = 2; //账号ID
+	optional string headUrl = 4; //头像
+	optional string nickname = 5; //昵称
+	optional bool isReady = 6; //是否准备
+}
+
+
+message WinnerAllocationMsg{
+	optional int32 index = 1; //分配组次索引
+	repeated int64 accountIds = 2; //该组次的玩家ID集合
+}
+
+message MatchWinnerMsg{
+	optional int32 index = 1; //排名
+	optional int64 accountId = 2;
+	optional string headUrl = 3;
+	optional string nickname = 4;
+	optional int32 score = 5;
+	optional bool isObserve = 6; //是否可以旁观
+	optional int32 alloactionIndex = 7; //分配组次索引
+	optional int32 roomId = 8; //旁观房间号
+
+	optional MatchRankAttachMsg attachMsg = 9;
+}
+
+message TipMsg{
+	optional int32 status = 1; //0失败  1成功
+	optional string tip = 2; //提示语
+}
+
+//比赛兑换请求 cmd=201
+message MatchExchangeRequest{
+	optional string cdKey = 1; //兑换码
+}
+
+//比赛兑换返回 cmd=201
+message MatchExchangeResponse{
+
+	message exchangeItemMsg{
+		optional int32 itemId = 1; //奖励物品ID
+		optional int32 itemNum = 2;
+		optional string iconUrl = 3; //图片url
+		optional string itemName = 4; //物品名称
+	}
+
+	repeated exchangeItemMsg msg = 1;
+}
+
+//聊天唯一ID请求 cmd=220
+message MatchChatIdRequest{
+	optional int32 groupId = 1; //聊天组唯一ID
+}
+
+//聊天唯一ID返回 cmd=220
+message MatchChatIdResponse{
+	optional int32 groupId = 1; //聊天组唯一ID
+	optional int64 chatId = 2; //当前分配的聊天ID
+}
+
+//聊天发送请求 cmd=221
+message MatchChatSendRequest{
+	optional ChatMsgReq chatMsg = 1;
+	optional int32 groupId = 2; //聊天组唯一ID
+}
+
+//聊天发送返回 cmd=221
+message MatchChatSendResponse{
+	optional ChatMsgRsp chatMsg = 1;
+	optional int32 groupId = 2; //聊天组唯一ID
+}
+
+//语音聊天内容请求 cmd=222
+message MatchChatVoiceRequest{
+	optional int64 chatId = 1; //当前分配的聊天ID
+	optional int32 groupId = 2; //聊天组唯一ID
+}
+
+//语音聊天内容请求 cmd=222
+message MatchChatVoiceResponse{
+	optional int32 groupId = 1; //聊天组唯一ID
+	optional int64 chatId = 2; //当前分配的聊天ID
+	optional bytes content = 3; //语音内容字节码
+}
+
+//请求加入聊天房间  cmd=223
+message MatchChatRoomRequest{
+	optional int32 matchId = 1; //相对应比赛ID
+	optional bool isEnter = 2; //true进入   false退出
+}
+
+//请求加入聊天房间  cmd=223
+message MatchChatRoomResponse{
+	optional int32 groupId = 1; //聊天组唯一ID
+	optional int32 matchId = 2;
+}
+
+//请求聊天记录  cmd=224
+message MatchChatRecordRequest{
+	optional int32 groupId = 1; //聊天组唯一ID
+	optional int64 chatId = 2;
+}
+
+//返回聊天记录  cmd=224
+message MatchChatRecordResponse{
+	optional int32 groupId = 1; //聊天组唯一ID
+	repeated ChatMsgRsp chatMsgs = 2; //聊天记录列表
+}
+
+//请求举报聊天  cmd=225
+message MatchChatReportRequest{
+	optional int64 accountId = 1; //玩家ID
+	optional string content = 2; //举报内容
+	optional int32 groupId = 3; //聊天组唯一ID
+}
+
+//返回举报聊天  cmd=225
+message MatchChatReportResponse{
+	optional TipMsg tipMsg = 1; //结果
+}
+
+//请求我的战绩  cmd=251
+message MatchMyRecordRequest{
+}
+
+//返回我的战绩  cmd=251
+message MatchMyRecordResponse{
+	optional MatchChampionMsg championMsg = 1; //冠亚季军信息
+	repeated MatchGameMsg gameMsgs = 2; //游戏数据
+}
+
+//请求今日赛程  cmd=252
+message MatchScheduleRequest{
+}
+
+//请求今日赛程  cmd=252
+message MatchScheduleResponse{
+	optional int32 opType = 2;  //0客户端获取全部   1更新新增  2删除
+	repeated MatchSimpleConfigMsg configMsgs = 1;
+}
+
+//请求验证我的秘钥  cmd=253
+message CheckMyScreteRequest{
+	optional int32 secretKey = 1; //秘钥
+	optional int32 matchId = 2; //比赛ID
+}
+
+//返回验证我的秘钥  cmd=253
+message CheckMyScreteResponse{
+	optional TipMsg tipMsg = 1; //结果
+}
+
+//比赛游戏信息
+message MatchGameMsg{
+	optional int32 appId = 1; //-1为总数据  具体ID为子游戏数据
+	optional int32 num = 2; //比赛场次
+	optional int32 prize = 3; //获奖次数
+	optional int32 sumPrize = 4; //总获奖次数(仅对总数据生效)
+}
+
+//冠亚季军信息
+message MatchChampionMsg{
+	optional int32 first = 1; //第一名
+	optional int32 second = 2; //第二名
+	optional int32 third = 3; //第三名
+}
+
+//赛程简洁信息
+message MatchSimpleConfigMsg{
+	//比赛配置信息
+	optional int32 matchId = 1;
+	optional string matchName = 2;
+	optional int32 appId = 3; //比赛对应的app id
+	optional int32 match_begin_type = 4; //开始类型 1定时开赛，2人满开赛 3.类型 3 线上决赛 4 每日预约赛 5密钥赛
+	optional MatchRankPrizeConfigProto prizeMsg = 6; //冠军奖励信息
+	optional int32 unionId = 7; //联赛ID
+
+	//比赛玩家状态信息
+	optional int64 startTime = 10;
+	optional int32 status = 11; //玩家状态 0正常 1已预约 2已报名 3准备 4开始
+	optional int32 matchStatus = 12; //比赛场状态  1可预约 2可报名 3比赛开始 4比赛结束  5比赛时间未开始 6比赛时间已结束
+}
+
+//-----------------冲榜赛开始一-----------------------
+//请求冲榜赛排名 cmd=300
+message RequestTopRankList{
+	optional int32 rankType = 1; // 0日榜  1周榜  2月榜
+	optional int32 matchId = 2; //对应比赛ID
+}
+
+//返回冲榜赛排名 cmd=300
+message ResponseTopRankList{
+	optional int32 rankType = 1; // 0日榜  1周榜  2月榜
+	repeated TopRankMsg rankMsgList = 2; //冲榜排名信息
+	optional TopRankMsg myRankMsg = 3; //我的排行
+	optional int32 matchId = 4; //对应比赛ID
+	optional int32 rewardScore = 5; //最小奖励积分
+}
+
+//请求冲榜获奖名单 cmd=301
+message RequestTopRewardList{
+	optional int32 rankType = 1; // 0昨日榜  1上周榜  2上月榜
+	optional int32 matchId = 2; //对应比赛ID
+}
+
+//返回冲榜获奖名单 cmd=301
+message ResponseTopRewardList{
+	optional int32 rankType = 1; // 0昨日榜  1上周榜  2上月榜
+	repeated TopRankMsg rankMsgList = 2; //冲榜排名信息
+	optional TopRankMsg myRankMsg = 3; //我的排行
+	optional int32 matchId = 4; //对应比赛ID
+}
+
+//请求冲榜赛列表 cmd=302
+message RequestTopList{
+}
+
+//返回冲榜赛列表 cmd=302
+message ResponseTopList{
+	repeated int32 matchIds = 1; //列表
+	optional int32 unionId = 2; //联赛ID
+}
+
+//请求冲榜赛跑马灯战绩 cmd=303
+message RequestTopRecords{
+	optional int32 matchId = 2; //对应比赛ID
+}
+
+//返回冲榜赛跑马灯战绩 cmd=303
+message ResponseTopRecords{
+	repeated string content = 1; //记录内容
+	optional int32 matchId = 2; //对应比赛ID
+}
+
+//请求冲榜赛排行改变记录cmd=304
+message RequestTopRankChange{
+	optional int32 id = 1; //对应比赛唯一id
+}
+
+//请求冲榜赛排行改变记录cmd=304
+message ResponseTopRankChange{
+	optional int32 id = 1; //对应比赛唯一id
+	optional TopRankChangeMsg changeMsg = 2; //记录内容
+}
+
+//请求我的冲榜赛奖励cmd=305
+message RequestMyTopReward{
+	optional int32 matchId = 1; //对应比赛ID
+}
+
+//返回我的冲榜赛奖励cmd=305
+message ResponseMyTopReward{
+	repeated GameTopRankMsg msgs = 1; //列表
+	optional int64 timestamp = 2; //发奖日期
+}
+
+//请求冲榜赛对局记录cmd=306
+message RequestTopRoundRecord{
+	optional int32 matchId = 1; //对应比赛ID
+}
+
+//返回冲榜赛对局记录cmd=306
+message ResponseTopRoundRecord{
+	optional int32 matchId = 1; //对应比赛ID
+	repeated TopRoundMsg roundMsgs = 2; //对局列表
+	optional int32 curScore = 3; //当前积分
+}
+
+//请求冲榜赛下个荣誉cmd=307
+message RequestTopNextHonor{
+	optional int32 matchId = 1; //对应比赛ID
+}
+
+//返回冲榜赛下个荣誉cmd=307
+message ResponseTopNextHonor{
+	optional int32 curMonthIndex = 1; //当前月榜排名
+	optional string honorUrl = 2; //荣誉资源
+	optional string nameUrl = 3; //名称资源
+	optional int32 curHonorId = 4; //当前的荣誉Id
+	optional int32 riseRankIndex = 5; //下个称号需提升的名称
+	optional int32 matchId = 6;
+}
+
+//请求冲榜赛清零cmd=308
+message RequestTopReset{
+	optional int32 matchId = 1; //对应比赛ID
+}
+
+//返回冲榜赛清零cmd=308
+message ResponseTopReset{
+	optional TipMsg tip = 1;
+}
+
+message TopRoundMsg{
+	optional int32 round = 1; //轮数
+	optional int32 index = 2; //局数ID
+	optional int32 score = 3; //积分
+	optional int32 times = 4; //冲榜倍数
+}
+
+message TopRankChangeMsg{
+	optional int32 baseScore = 1; //基础分
+	optional int32 times = 2; //倍数
+	optional int32 winScore = 3; //该次分数
+	optional int32 ownScore = 4; //最终积分
+	optional int32 dailyRank = 5; //当前日排名
+	optional int32 dailyRankNum = 6; //当前日排名变化名次
+	optional int32 weekRank = 7; //当前周排名
+	optional int32 weekRankNum = 8; //当前周排名变化名次
+	optional int32 monthRank = 9; //当月排名
+	optional int32 monthRankNum = 10; //当月排名变化名次
+	optional int32 matchId = 11; //比赛ID
+	optional int64 timestamp = 12; //开赛时间
+}
+
+message GameTopRankMsg{
+	optional int32 matchId = 1; //对应比赛ID
+	repeated TopRankMsg rewardMsgs = 2; //奖励列表
+}
+
+message TopRankMsg{
+	optional int32 rankId = 1; //排名
+	optional string headUrl = 2; //头像
+	optional string nickname = 3; //昵称
+	optional int32 score = 4; //积分
+	optional MatchRankPrizeConfigProto rankPrize = 5; //排行奖励
+	optional int32 rankType = 6; // 榜单类型  0日榜  1周榜  2月榜
+	optional int64 accountId = 7; //玩家ID
+	optional int64 timestamp = 8; //当天时间戳
+	optional string matchName = 9; //比赛名称
+}
+
+message MatchTopOverRankMsg {
+	optional int64 accountId = 1; //玩家ID
+	optional int32 rankId = 2; //排名
+	optional string headUrl = 3; //头像
+	optional string nickname = 4; //昵称
+	optional float curScore = 5; //积分
+	optional int32 times = 6;  //倍数
+}
+
+//-----------------冲榜赛结束一-----------------------
+
+//-----------------快速赛开始一-----------------------
+//快速赛配桌成功 cmd=330
+message ResponseQuickRoomInfo{
+	optional int32 matchId = 1; //比赛ID
+	optional int32 uniqId = 2; //比赛唯一ID
+	repeated QuickRoomMsg msgs = 3;
+}
+
+message QuickRoomMsg{
+	optional int64 accountId = 1; //玩家ID
+	optional int32 seatId = 2; //座位ID
+	optional int32 score = 3; //积分
+}
+
+//-----------------快速赛开始一-----------------------
+
+//-----------------系统功能开始一-----------------------
+//请求玩家身份激活 cmd=400
+message RequestIdentityEnable{
+	optional string identityCode = 1; //身份激活码
+}
+
+//返回玩家身份激活 cmd=400
+message ResponseIdentityEnable{
+	optional TipMsg tipMsg = 1;
+	optional bool isShowButton = 2; //是否显示激活按钮
+}
+
+//请求玩家身份激活内容 cmd=401
+message RequestIdentityContent{
+}
+
+//返回玩家身份激活 cmd=401
+message ResponseIdentityContent{
+	optional string title = 1;
+	optional string content = 2;
+}
+
+//-----------------系统功能结束一-----------------------
+
+//-----------------竞技二打一-----------------------
+//请求竞技二打一玩家信息  cmd = 150
+message AthleticsBaseMsgRequest{
+	optional int64 accountId = 1;
+}
+
+//返回竞技二打一玩家信息  cmd = 150
+message AthleticsBaseMsgResponse{
+	optional AthleticsScoreMsg scoreMsg = 1;
+	optional LevelMsg levelMsg = 2;
+	optional RankMsg rankMsg = 3;
+}
+
+//请求竞技二打一认证信息  cmd = 151
+message AthleticsAuthMsgRequest{
+	optional int64 accountId = 1;
+}
+
+//请求竞技二打一认证信息  cmd = 151
+message AthleticsAuthMsgResponse{
+	optional string nickname = 1; //昵称
+	optional string headUrl = 2; //头像链接
+	optional string bindingPhone = 3; //绑定手机号码
+	optional string accountName = 4; //户名
+	optional string identityNum = 5; //身份证号码
+	optional string bankName = 6; //开户行
+	optional string bankNum = 7; //银行卡号
+}
+
+//请求提交竞技二打一认证信息  cmd = 152
+message SubmitAthleticsAuthRequest{
+	optional int64 accountId = 1;
+	optional int32 opType = 2; //1手机绑定  2身份认证  3银行认证
+	optional string name = 3; //账号
+	optional string num = 4; //卡号
+}
+
+//请求竞技二打一认证信息  cmd = 152
+message SubmitAthleticsAuthResponse{
+	optional AthleticsAuthMsgResponse authMsg = 1;
+}
+
+//请求竞技二打一领取信息  cmd = 153
+message AthleticsRewardMsgRequest{
+	optional int64 accountId = 1;
+}
+
+//请求竞技二打一领取信息  cmd = 153
+message AthleticsRewardMsgResponse{
+	optional int32 rewardMoney = 1; //累积奖金
+	optional int32 canRewardMoney = 2; //可领取的累积奖金
+	optional int32 taxRate = 3; //扣除的所得税
+	optional bool isWithdraw = 4; //是否能提现
+	optional bool isExchange = 5; //是否能兑换
+	optional int32 withdrawNum = 6; //剩余提现次数
+	optional int32 maxWithdrawNum = 7; //最大提现次数
+	optional int32 exchangeNum = 8; //剩余兑换次数
+	optional int32 maxExchangeNum = 9; //最大兑换次数
+	optional string accountName = 10; //户名
+	optional string identityNum = 11; //身份证号码
+	optional string bankName = 12; //开户行
+	optional string bankNum = 13; //银行卡号
+}
+
+//请求竞技二打一奖金领取  cmd = 154
+message AthleticsRewardRequest{
+	optional int64 accountId = 1;
+	optional int32 opType = 2; //0兑换  1提现
+	optional int32 opRewardMoney = 3; //进行操作累积奖金
+}
+
+//返回竞技二打一奖金领取  cmd = 154
+message AthleticsRewardResponse{
+	optional int32 status = 1; //状态值 1成功 -1领取失败 -2未验证 -3达到最大领取次数
+	optional int32 tip = 2; //相关信息提示
+}
+
+//请求竞技二打一排名信息  cmd = 155
+message AthleticsRankRequest{
+	optional int64 accountId = 1;
+	optional int32 rankType = 2; //1闲逸排行  2全国排名
+}
+
+//返回竞技二打一排名信息  cmd = 155
+message AthleticsRankResponse{
+	optional int32 rankType = 1; //1闲逸排行  2全国排名
+	optional MyRankMsg myRankMsg = 2;
+	repeated GameRankMsg rankMsg = 3;
+}
+
+//请求竞技二打一牌手等级配置信息  cmd = 156
+message AthleticsLevelConfigsRequest{
+}
+
+//返回竞技二打一牌手等级配置信息  cmd = 156
+message AthleticsLevelConfigsResponse{
+	repeated LevelConfigMsg configs = 1;
+}
+
+//牌手等级配置信息
+message LevelConfigMsg{
+	optional bool isLock = 1; //是否解锁
+	optional int32 level = 2; //等级
+	optional string name = 3;  //名称
+}
+
+//排行榜排行信息
+message GameRankMsg{
+	optional int32 index = 1;
+	optional string nickname = 2;
+	optional AthleticsScoreMsg scoreMsg = 3;
+}
+
+//我的排行信息
+message MyRankMsg{
+	optional int32 index = 1; //-1为未上榜
+	optional LevelMsg levelMsg = 2;
+	optional AthleticsScoreMsg nextScoreMsg = 3; //下一级分数信息
+}
+
+//牌手分数信息
+message AthleticsScoreMsg{
+	optional int32 redScore = 1; //红分
+	optional int32 silverScore = 2; //银分
+	optional int32 goldScore = 3; //金分
+}
+
+//牌手等级信息
+message LevelMsg{
+	optional int32 level = 1; //等级
+	optional string name = 2;  //名称
+}
+
+//排名信息
+message RankMsg{
+	optional int32 gameIndex = 1; //闲逸排名
+	optional int32 globalIndex = 2;  //全国排名
+}
+
+//请求指定ID比赛配置信息
+message MatchIdConfigRequest {
+	optional int32 matchId = 1;
+}
+
+//返回指定ID比赛配置信息
+message MatchIdConfigResponse {
+	optional MatchConfigProto configs = 1;
+}

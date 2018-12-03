@@ -1,0 +1,32 @@
+package redpacket;
+option java_package = "protobuf.clazz.activity";
+option java_outer_classname = "ActivityTurntableServerProto";
+import "activity/activityTurntable.proto";
+
+message TurntableClientReq{
+	optional int64 accountId = 1;
+	optional TurntableReq req = 2;
+	optional string nickname = 3;
+}
+
+
+message TurntableGameOverReq{
+	repeated int64 accountId = 1;
+}
+
+//入库数据
+message TurntableServerData{
+	optional int32 id = 1;
+	optional int64 dailyRefreshTime = 2;
+	repeated TurntablePlyerResponse players = 3;
+	repeated PrizeServerData prizes = 4;
+}
+//奖励列表
+message PrizeServerData{
+	optional int32 id = 1;
+	optional int32 awardCount = 2; // 已发放数据
+	optional int32 dailyAwardCount = 3; // 单日已发放数量
+}
+
+
+

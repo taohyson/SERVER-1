@@ -1,0 +1,15 @@
+package phz;
+option java_package = "protobuf.clazz.phz";
+option java_outer_classname = "ScoreRecord";
+import "basic/protocol.proto";
+
+message Score_Record {
+    repeated int32 score_player_1 = 1; // 玩家1的所有小局的分
+    repeated int32 score_player_2 = 2; // 玩家2的所有小局的分
+    repeated int32 score_player_3 = 3; // 玩家3的所有小局的分
+    repeated int32 score_player_4 = 4; // 玩家4的所有小局的分
+    optional int32 score_total_1 = 5; // 玩家1的总分
+    optional int32 score_total_2 = 6; // 玩家2的总分
+    optional int32 score_total_3 = 7; // 玩家3的总分
+    optional int32 score_total_4 = 8; // 玩家4的总分
+}

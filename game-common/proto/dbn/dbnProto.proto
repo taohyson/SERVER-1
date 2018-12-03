@@ -1,0 +1,141 @@
+package dbn;
+option java_package = "protobuf.clazz.dbn";
+option java_outer_classname = "dbnRsp";
+import "basic/protocol.proto";
+//房间信息
+message RoomInfoDbn {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional string game_rule_des = 3; //玩法说明
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+
+}
+//房间的玩家
+message RoomPlayerResponseDbn {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+}
+
+//结算
+message PukeGameEndDbn{
+	optional RoomInfoDbn room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 end_score = 6;//结算分数
+	optional int32 player_num = 7;//游戏人数
+	optional int32 reason = 8;//结束类型
+	repeated RoomPlayerResponseDbn players = 9;
+	//总结算
+	repeated int32 all_end_score = 10;//结算总积分
+	repeated int32 end_score_max = 11;//单句最高得分
+	repeated int32 win_num = 12;//赢句数
+	repeated int32 lose_num = 13;//输句数
+
+	optional int32 winner = 14;//赢家
+}
+message TableResponseDbn {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional RoomInfoDbn room_info = 3;
+	repeated RoomPlayerResponseDbn players = 4;
+	repeated int32 card_count = 5; //扑克数目
+	repeated Int32ArrayResponse cards_data = 6; //扑克列表
+	repeated int32 jetton_score = 7;//玩家下注
+	repeated bool open_card = 8;//玩家下注
+	repeated bool liang_card = 9;//玩家下注
+    optional int32 table_di_fen = 10;  //桌上底分
+    optional int32 Operate_qie_card = 11; //是否操作切牌
+    optional int32 card = 12; //切出来的牌
+	optional int32 first_seat_idex =13; //先家的位置
+	optional int32 scene_status = 14;  //场景状态
+	optional int32 display_time = 15; //显示时间
+	repeated int32 player_times = 16;  //用户倍数
+	repeated int32 ox_value = 17;  //牛几
+	repeated int32 player_score = 18; //用户分数
+}
+message BankerResult
+{
+	optional int32 opr_type = 1;      //0显示庄家动画   补庄0x000000001;//下庄  0x000000002;//连庄	0x000000004; //跳庄0x000000008;//补庄
+	optional int32 bu_banker_score = 2; //补庄分数
+	optional int32 all_banker_count = 3; //庄家用户个数
+	optional int32 cur_banker_count = 4; //当前是第个庄家
+	optional int32 banker_cur_round = 5;//当前庄家的第几局
+	optional int32 table_di_fen = 6;   //底分
+	optional int32 cur_banker  = 7;    //当前庄家
+}
+message ButtonOperate{
+	optional int32 opr_type      = 1;	//操作类型  1庄家操作，2下注操作， 3 切牌操作
+	optional int32 operate_index = 2;  //操作用户ID ， -1 所有玩家
+	optional int32 banker_operate = 3; //庄家操作0x000000001;//下庄  0x000000002;//连庄	0x000000004; //跳庄0x000000008;//补庄
+	repeated int32 jetton_score = 4;//玩家下注
+	optional int32 display_time = 5; //下注时间
+}
+message GameStartDbn{
+	optional RoomInfoDbn room_info = 1;
+	optional int32 current_player = 2;//当前玩家
+	repeated RoomPlayerResponseDbn players = 3;
+	optional int32 table_di_fen = 4;  //桌上底分
+
+}
+message FirstSeat{
+	optional int32 card = 1; //切出来的牌
+	optional int32 first_seat_idex = 2; //先家的位置
+
+}
+message Jetton_result{
+	optional int32 jetton_seat = 1; // 下注用户的位置
+	optional int32 jetton_score = 2; //下注用户的分数
+}
+message SendCard_Dbn{
+	repeated Int32ArrayResponse send_card = 1; // 发牌
+	optional int32 display_time = 2;  // 显示牌
+}
+message OpenCard_Dbn{
+	optional bool open_card = 1;
+	optional int32 seat_index = 2;
+	repeated int32 cards  = 3;
+	optional int32 times = 4;       //倍数
+	optional int32 ox_value = 5;  //牛几
+}
+//亮牌结算
+message LiangCard_Dbn{
+	optional int32 opr_type  = 1;  // 0banker _opr,      1: ldle compare
+	optional int32 seat_index = 2; //玩家ID
+	optional int32 score = 3; //庄家分数
+	optional int32 table_di_fen = 4; //桌子分数
+	repeated int32  cards = 6;       //牌值
+	optional int32 times = 7;       //倍数
+	optional int32 ox_value = 8;  //牛几
+	repeated RoomPlayerResponseDbn players = 9; //刷新用户分数
+}
+message Animation_Dbn{
+	optional int32  opr_type = 1; //0 tong_sha,  1 tong_pei
+}
+//请求
+message Opreate_dbn_Request{
+	optional int32  opreate_type = 1;//1:切牌 2：下注  3：开牌 4：再挺一局 5：补庄6：下庄
+	optional int32 add_jetton_score = 2;//加注筹码数量 //下注下标
+}

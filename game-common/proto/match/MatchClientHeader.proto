@@ -1,0 +1,14 @@
+package matchHeader;
+option java_package = "protobuf.clazz.match";
+option java_outer_classname = "MatchClientHeaderRsp";
+
+message MatchClientRequest{
+	optional int32 cmd = 1; //协议Id
+	optional bytes data = 2;
+}
+
+message MatchClientResponse{
+	optional int32 cmd = 1; //协议Id
+	optional bytes data = 2;
+}
+

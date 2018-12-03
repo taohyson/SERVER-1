@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rules >
+	<group type='0' selectedIds='25' des="人数">
+		<rule>
+			<id>25</id>
+			<value>0</value>
+			<des>四人麻将</des>
+			<line>1</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>	
+
+		<rule>
+			<id>25</id>
+			<value>1</value>
+			<des>三人麻将</des>
+			<line>1</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>	
+	</group>
+	<group type='0' selectedIds='1' des="玩法">
+		<rule>
+			<id>1</id>
+			<value>1</value>
+			<des>自摸胡</des>
+			<line>2</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		<rule>
+			<id>1</id>
+			<value>0</value>
+			<des>可炮胡</des>
+			<line>2</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		
+	
+	</group>
+	<group type='1' selectedIds='2,8' des="可选">
+		<rule>
+			<id>2</id>
+			<value>1</value>
+			<des>可胡七对</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		<rule>
+			<id>8</id>
+			<value>1</value>
+			<des>强制胡牌</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		<rule>
+			<id>10</id>
+			<value>1</value>
+			<des>抢杠胡</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+
+	</group>
+    <group type='0' selectedIds='4' des=" ">
+		<rule>
+			
+			<id>1000</id>
+			<value>1</value>
+			<des>不抓鸟</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		<rule>
+			<id>4</id>
+			<value>1</value>
+			<des>抓2鸟</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		<rule>
+			<id>5</id>
+			<value>1</value>
+			<des>抓4鸟</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+		<rule>
+			<id>6</id>
+			<value>1</value>
+			<des>抓6鸟</des>
+			<line>3</line>
+			<mode>0</mode>
+			<switch>0</switch>
+		</rule>
+
+	</group>
+
+</rules>

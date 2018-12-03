@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<global>
+	<!-- redis -->
+	<redis>
+		<hostNode>192.168.1.10:6379	</hostNode>
+		<passwd>5xjagjbzq0XnLDv</passwd>
+		<maxIdle>300</maxIdle>
+		<maxActive>600</maxActive>
+		<maxWait>1000</maxWait>
+		<testOnBorrow>true</testOnBorrow>
+	</redis>
+
+	<!-- mongo -->
+	<mongo>
+		<hostNode>192.168.1.10:27017</hostNode>
+		<passwd>5xjagjbzq0XnLDv</passwd>
+		<dataName>yxdb</dataName>
+		<connectionsPerHost>8</connectionsPerHost>
+		<threadsAllowedToBlockForConnectionMultiplier>4
+		</threadsAllowedToBlockForConnectionMultiplier>
+		<connectTimeout>3000</connectTimeout>
+		<maxWaitTime>3000</maxWaitTime>
+		<autoConnectRetry>true</autoConnectRetry>
+		<socketKeepAlive>true</socketKeepAlive>
+		<socketTimeout>1500</socketTimeout>
+		<slaveOk>false</slaveOk>
+	</mongo>
+
+	<!-- mysql -->
+	<mysql>
+		<url>jdbc:mysql://192.168.1.10:3306/yx_public?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull
+		</url>
+		<userName>root</userName>
+		<passWord>Hello123#</passWord>
+	</mysql>
+
+	<!-- 中心服务器 -->
+	<centerRmi>
+		<hostNode>192.168.1.10:30010</hostNode>
+	</centerRmi>
+
+	<!-- 中心服务器 -->
+	<clubServer>
+		<hostNode>192.168.1.68:30016</hostNode>
+	</clubServer>
+	
+	<test>
+		<a>asdsf234256432#$%</a>
+		<b>54</b>
+		<c>true</c>
+		<d>
+			<s>aaaaaa</s>
+			<s>bbbbbb</s>
+			<s>cccccc</s>
+			<s>dddddd</s>
+			<s>eeeeee</s>
+		</d>
+	</test>
+</global>

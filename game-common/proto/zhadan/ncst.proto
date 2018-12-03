@@ -1,0 +1,176 @@
+package ncst;
+option java_package = "protobuf.clazz.ncst";
+option java_outer_classname = "NcstRsp";
+import "basic/protocol.proto";
+
+
+//1001
+message GameStart_Ncst{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+	optional int32 liang_pai_card = 3;//翻牌
+	optional int32 seat_index = 4;//翻牌玩家位置
+	optional int32 game_cell = 5;//底分
+}
+
+//刷新用户抓分 1005
+message RefreshScore_Ncst{
+	repeated int32 user_get_score = 1;//抓分
+	optional int32 table_score = 2;//桌面分
+	repeated int32 reward_score = 3;
+	optional int32 is_animation = 4;//需要动画
+	optional int32 get_score_seat = 5;
+	repeated int32 prv_get_score = 6;//上一回合得分
+	repeated int32 team = 7;//1的为第一对 2的为第二对
+}
+
+//用户出牌 1003
+message OutCardDataWsk_Ncst{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_get_score = 11;//玩家抓分
+	repeated int32 hand_card_count = 12; //扑克数目 -1不显示数目 -2 显示小于15张 0即为打完了
+	repeated Int32ArrayResponse hand_cards_data = 13; //扑克列表
+	repeated int32 win_order = 14;//输赢排序
+	optional int32 is_current_first_out = 15;//当前操作玩家是否首出
+	optional int32 is_can_ya = 16;//是否能压
+	optional bool is_can_out_friendcards = 18;//能操作对方的牌
+	optional bool is_can_opreate = 19;//是否可操作
+}
+
+
+//结算 1004
+message PukeGameEndWsk_Ncst{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 win_lose_score = 6;//输赢分数
+	repeated int32 end_score = 7;//总分
+	repeated int32 reward_score = 8;//奖分
+	optional int32 player_num = 9;//游戏人数
+	optional int32 banker_player = 10;//庄家
+	optional int32 reason = 11;//结束类型
+	repeated int32 zhua_fen = 12;//抓分
+	repeated int32 win_order = 13;//输赢排序
+	optional int32 game_cell = 14;//底分
+	repeated int32 team = 15;//1的为第一对 2的为第二对
+	repeated int32 di_pai_card = 22;//底牌
+	optional int32 score_type = 23;//0正常 1：双关
+	//总结算
+	repeated int32 all_end_score = 16;//结算总积分
+	repeated RoomPlayerResponse players = 17;
+	repeated int32 win_num = 18;
+	repeated int32 lose_num = 19;
+	repeated int32 boom_num = 20;
+	repeated int32 max_dun_num = 21;
+}
+//1002
+message TableResponse_Ncst {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目 -1不显示数目 -2 显示小于15张 0即为打完了
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated Int32ArrayResponse user_can_out_data = 19;  //出牌数据
+	repeated int32 user_can_out_count = 20;//出牌数量
+	repeated int32 user_can_out_type = 22;
+	repeated int32 win_order = 21;//输赢排序
+	optional int32 round = 23;
+	optional int32 game_cell = 24;//底分
+		optional bool is_can_out_friendcards = 25;//能操作对方的牌
+	optional bool is_can_opreate = 26;//是否可操作
+}
+//二维数组
+message Card_Arrary_Ncst{
+	repeated Int32ArrayResponse card_data = 1;
+}
+//1006
+message liang_dun_Ncst{
+	repeated Card_Arrary_Ncst cards_data = 5;  //本轮墩牌数据
+}
+//1007
+message effect_type_Ncst{
+	optional int32 seat_index = 2;
+	optional int32 type = 1;//
+	optional int32 data = 3;//数据
+}
+//1008
+message RefreshCardData_Ncst{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+}
+//1009
+message SendCardNcst{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	optional int32 round = 3;//当前回合
+}
+//1010 亮牌请求
+message MingPaiRequest_Ncst{
+	optional int32 seat_index = 1;
+	optional string str = 2;
+}
+//1011 亮牌回答
+message MingPaiAnser_Ncst{
+	optional int32 seat_index = 1;
+	optional string str = 2;
+	optional bool is_agree = 3;
+}
+//1012 确认亮牌
+message MingPaiSure_Ncst{
+	optional string str = 1;
+}
+//1013
+message ChatResponse_Ncst{
+	optional int32 type = 1;//1:问 2：答
+	optional int32 chat_index = 2;//
+	optional int32 seat_index = 3;
+}
+//1014
+message round_end_Ncst{
+	repeated int32 team = 1;//1的为第一对 2的为第二对
+	repeated int32 user_get_score = 2;//玩家抓分
+	repeated int32 di_pai_card = 3;//底牌
+}
+//1015 确认亮牌回复
+message MingPaiSureAnser_Ncst{
+	optional int32 seat_index = 1;
+}
+// 1016
+message Send_friend_status_Ncst{
+	optional int32 type = 1;//1被接管 2:隐藏
+}
+//请求 1078
+message Opreate_RequestWsk_Ncst{
+	optional int32 opreate_type = 1;// 1:看墩 2:亮牌请求 3：同意亮牌 4：不同意亮牌 5：亮我的牌 6：亮对家牌 7：问 8：答 9
+	optional int32 chat_index = 2;//
+	optional int32 seat_index = 3;//出牌位置
+	repeated int32 cards_data = 4;//
+	optional int32 out_type = 5;//出牌类型
+}

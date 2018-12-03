@@ -1,0 +1,122 @@
+package abz;
+option java_package = "protobuf.clazz.abz";
+option java_outer_classname = "AbzRsp";
+import "basic/protocol.proto";
+
+//用户出牌
+message OutCardDataAbz{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_can_out_data = 11;  //出牌数据
+	optional int32 user_can_out_count = 12;//出牌数量
+	repeated int32 hand_card_count = 13; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 14; //扑克列表
+	optional int32 is_current_first_out = 15;//当前操作玩家是否首出
+	optional int32 is_current_ya_pai = 16;//是否能压牌
+}
+message ZhanjiData{
+	repeated Int32ArrayResponse game_score = 1;  //战绩
+}
+//结算
+message PukeGameEndAbz{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	optional int32 player_num = 6;//游戏人数
+	optional int32 banker_player = 7;//庄家
+	optional int32 reason = 8;//结束类型
+	repeated int32 game_score = 9;//积分
+
+	//总结算
+	repeated int32 all_end_score = 10;//结算总积分
+	repeated RoomPlayerResponse players = 17;
+}
+message TableResponse_Abz {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  out_cards_type = 7;			//本轮出牌类型
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 ming_pai_status = 19;//明牌状态 0：正常状态，1：明牌状态
+	optional int32 bao_num = 20;//几包
+	repeated int32 call_banker_action = 21;//叫庄 -1:没有任何状态 0：过 1：摆包 2：抢包
+	optional int32 is_current_ya_pai = 22;//是否能压牌
+	repeated int32 change_aciton = 23;//换牌操作
+	repeated int32 chang_card_data = 24;//换的牌
+}
+message GameStart_Abz{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+	repeated int32 card_count = 3; //扑克数目
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+}
+//叫庄结果
+message CallBankerResponse_ABZ{
+	optional int32 opreate_action = 1; //0:过 1:摆包 2:抢包
+	optional int32 call_player = 2;//操作玩家 -1：通知第一次叫庄
+	optional int32 current_player= 3;//当前玩家 -1：叫庄结束
+	optional int32 banker_player = 4;//-1：表示庄家未确定
+	repeated int32 user_card_count = 5; //扑克数目
+	repeated Int32ArrayResponse user_cards_data =6; //扑克列表
+	optional int32 display_time = 7; //显示时间
+	optional RoomInfo room_info = 8;//
+	optional int32 bao_num = 9;//几包
+}
+message Change_card_Response{
+	repeated int32 card_data = 1;//外面的牌
+	repeated int32 hand_card_data = 2;//手牌
+	optional int32 current_player = 3;//当前玩家 ：-1：换牌结束
+	optional int32 change_player = 4;//操作玩家
+	optional int32 change_action = 6;//操作，0：过 1：换牌 2:第一个开始换牌
+	optional int32 banker_player = 8;//庄家
+	optional int32 bao_num = 9;//几包
+	optional int32 display_time = 5; //显示时间
+	optional RoomInfo room_info = 7;//
+	optional int32 origin_card = 10;//换出去的牌
+	repeated int32 target_card = 11;//换回来的牌
+}
+message Refresh_Card_Response{
+	repeated int32 hand_card_count = 1;//手牌
+	repeated Int32ArrayResponse hand_card_data =2; //扑克列表
+}
+message Change_card_Request{
+	optional int32 origin_card_data = 1;//源数据
+	optional int32 target_card_data = 2;//目标数据
+	optional int32 change_action = 6;//操作，0：过 1：换牌
+}
+message Call_Banker_Request_Abz{
+	optional int32 select_bao = 1 ;//0:过1:摆包 2:抢包
+}
+
+//用户出牌
+message OutCardData_Request_Abz{
+	repeated int32 out_cards = 1;//所出的牌
+	optional int32 out_card_count = 2;//出牌的数量
+	optional int32 b_out_card_type = 42; //是否出牌 0 不出 ，带 出牌类型
+}

@@ -1,0 +1,13 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "HuiZhou";
+import "basic/protocol.proto";
+
+message MJ_Hui_Zhou {
+    repeated MJ_Hui_Zhou_Xiao_Ju msgs = 1; //
+}
+
+
+message MJ_Hui_Zhou_Xiao_Ju {
+    repeated int32 fen = 1; // 每一小局分
+}

@@ -1,0 +1,108 @@
+package wsk;
+option java_package = "protobuf.clazz.wsk";
+option java_outer_classname = "WSKPro";
+import "basic/protocol.proto";
+
+
+//房间信息
+message RoomInfoWSK {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	optional string game_rule_des = 3; //玩法说明
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 _banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+	optional bytes commResponse = 13; //通用字节流
+}
+
+//房间的玩家
+message RoomPlayerResponseWSK {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+	optional bytes commResponse = 15; //通用字节流
+}
+
+//用户出牌
+message OutCardDataWSK{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_can_out_data = 11;  //出牌数据
+	optional int32 user_can_out_count = 12;//出牌数量
+	repeated int32 user_get_score = 13;//玩家抓分
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 is_current_first_out = 17;//当前操作玩家是否首出
+	optional int32 is_have_not_card = 18;//当前玩家是否没牌
+}
+
+// 抢庄或者独牌信息
+message CallBanker{
+	optional int32 operate_action = 1;	//0:不叫，1：叫
+	optional int32 operate_player = 2;	//操作的玩家
+	optional int32 current_player = 3;	//当前玩家
+	optional int32 banker_player = 4; // -1表示庄家未确定
+	optional int32 display_time = 5; //显示时间
+}
+
+// 游戏开始
+message GameStartWSK{
+	optional int32  cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 display_time = 4; //显示时间
+	optional RoomInfoWSK room_info = 5;
+	repeated RoomPlayerResponse players = 6;
+	optional bytes commResponse = 7; //通用字节流
+
+}
+
+// 牌信息
+message CardData{
+	repeated Int32ArrayResponse cards_data = 1;  //牌分数据
+	repeated int32 cards_count = 2;//牌分数量
+	optional int32 yu_score = 3;//余分
+}
+
+// 查牌信息
+message RestCardDetail {
+	optional CardData score_card = 1;// 五十K的牌
+	optional CardData rest_card= 2; // 剩下的牌
+}
+
+message AnimationSeat{
+	optional int32 card_value = 1;//牌值
+	optional int32 seat_index = 2;//位置
+}
+
+//刷新用户抓分
+message RefreshScore{
+	repeated int32 user_get_score = 1;//抓分
+	optional int32 table_score = 2;//桌面分
+}

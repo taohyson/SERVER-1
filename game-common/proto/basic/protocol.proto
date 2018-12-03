@@ -1,0 +1,1696 @@
+option java_package = "protobuf.clazz";
+option java_outer_classname = "Protocol";
+//option optimize_for = LITE_RUNTIME;
+//option java_generic_services = true;
+import "basic/club.proto";
+import "basic/common.proto";
+//心跳请求
+message HeartRequest {
+	optional int64 time = 1;
+	optional int32 seq_num = 2; //序号
+}
+//心跳返回
+message HeartResponse {
+	optional int64 sys_time = 1;
+	optional int32 seq_num = 2; //序号
+}
+
+//登录请求
+message LoginRequest {
+//1=微信登录重新授权(wx_code,game_index,client_flag) 2=平台转码的微信登录(self_token,game_index) 3=快速登录(imei,game_index,client_flag) 100=成功登录后请求  4=客户端ip(client_ip) 6=微信新登陆
+	optional int32 type = 1;
+	optional string wx_code = 2; //接口调用凭证
+	optional string self_token = 3; //登录令牌
+	optional string imei = 4; //手机唯一码
+	optional int32 game_index = 5; //游戏标识 1=麻将
+	optional int32 client_flag = 6; //客户端标识 1=安卓 2=苹果 3=pc
+	optional string client_version = 7; //客户端最后登录版本
+	optional int32 reconnect = 8; //0=正常登录  1=重连登录
+	optional string client_ip = 9; //客户端ip
+	optional string str_param = 10; //字符串参数
+	optional string str_channel = 11; //渠道编号
+	optional string access_token_json = 12; //
+	optional string access_user_json = 13;
+	optional int32 channel_id = 14; //渠道id
+
+}
+
+//账号信息
+message AccountResponse {
+	optional int64 account_id = 1; //账号id
+	optional string account_name = 2; //账号名字
+	optional int32 sex = 3; //性别 1=男 2=女
+	optional int32 account_create_time = 4; //账号创建时间
+	optional int64 gold = 5; //金币 闲豆
+	optional int32 vip_lvl = 6; //vip等级
+	optional string head_img_url = 7; //头像
+	optional string ip = 8; //客户端ip
+	optional string nick_name = 9; //昵称
+	optional string ip_addr = 10; //ip物理地址
+	optional bool is_null_agent_pw = 11; //是否是空的代理密码
+	optional int64 recommend_id = 12; //推荐人账号id
+	optional int32 is_inner = 13; //是否内部人员
+	optional int64 money = 14; //金币
+	optional string signature = 15; //签名
+	optional string hall_recomment_id = 16; //大厅推广员id
+	optional int32 hall_recomment_time = 17; //大厅推广员绑定时间
+	optional string mobile = 18; //手机号码
+	optional string realName = 19; //实名
+	optional string identityCard = 20; //身份证
+	optional int32 get_prize = 21; //是否领取填写推荐人奖励，0未领取，1领取
+	optional int64 welfare_card = 22; //福卡数量
+	optional int32 binded_mobile = 23;//0未绑过，1已绑，2解绑了
+	optional int32 diamond = 24;	//钻石（SDK货币）
+}
+//玩家信息
+message PlayerResponse {
+	optional int64 user_id = 1; //角色id,每个游戏不同
+	optional int64 account_id = 2; //账号id
+	optional string user_name = 3; //角色名
+	optional int32 score = 4; //分数
+	optional int32 vip_lvl = 5; //vip等级
+	optional int32 player_create_time = 6; //角色创建时间
+	optional string account_icon = 7; //账号头像
+	optional string account_ip = 8; //账号ip
+}
+//游戏通用属性值
+message AccountPropertyResponse {
+//属性id <1000 为账号的   >=1000为系统的
+	optional int32 prop_id = 1;
+	optional int32 val1 = 2; //数值1
+	optional int32 val2 = 3; //数值2
+	optional int32 val3 = 4; //数值3
+	optional string str1 = 5; //字符串1
+	optional string str2 = 6; //字符串2
+	optional int64 vallong1 = 7; //长整型值1
+	optional int32 val4 = 8; //数值4
+	optional int32 val5 = 9; //数值5
+}
+//游戏通用属性值列表
+message AccountPropertyListResponse {
+	repeated AccountPropertyResponse accountProperty = 1;
+}
+
+//登录返回,所有登录方式通用的属性
+message LoginItemResponse {
+	optional AccountResponse accountResponse = 1; //账号信息
+	optional PlayerResponse playerResponse = 2; //角色信息
+	optional int32 game_index = 3; //游戏标识
+	optional string game_name = 4; //游戏名称
+	repeated AccountPropertyResponse accountProperty = 5;
+}
+//微信登录相关信息
+message WxLoginItemResponse {
+	optional string self_token = 1; //本平台登录码
+	optional LoginItemResponse loginItemResponse = 2; //登录通用信息
+}
+message EJItemResponse {
+	optional string uin = 1; //本平台登录码
+	optional LoginItemResponse loginItemResponse = 2; //登录通用信息
+}
+//快速登录返回
+message FastLogingItemResponse {
+	optional string imei = 1; //唯一码
+	optional LoginItemResponse loginItemResponse = 2; //登录通用信息
+}
+
+message SubAppItemResponse {
+	required int32 appId = 1; //子游戏 appId
+	required string packagepath = 2; //包名
+	required string version = 3; //版本
+	optional string iconUrl = 4; //图标Url
+	required int32 status = 5; //游戏状态;    0 未发布  1 发布;
+	required int32 order = 6; //游戏的次序  展示的顺序值， 从小到大。
+	required int32 flag = 7; //游戏的标记  （new、hot、活动、比赛）;
+	required int32 packagesize = 8; //子游戏包的大小
+	optional string downUrl = 9; //最新整包下载路径
+	optional string appName = 10; //游戏名字
+	optional int32 gameType = 11; //游戏类型
+	optional string city = 12; // 游戏所属的城市 ,Deprecated
+	optional bool showIndex = 13; //是否在首页展示
+	optional string filterCity = 14; //游戏不能出现的城市,Deprecated
+	optional int32 showFlag = 15; //首页展示新字段
+	repeated int32 cityCodes = 16; //
+	repeated int32 filterCityCodes = 17;
+	optional int32 placeholder = 18; //占位符
+}
+
+message UpdateSubAppItemResponse {
+	repeated SubAppItemResponse items = 1;
+	optional int32 autoIncreVersion = 2; //自增版号
+}
+
+message SubAppUpdateItem {
+	required int32 appId = 1; // 游戏ID
+	required string downUrl = 2; // 包下载路径
+	required string version = 3; // 顺序
+	required int32 size = 4; // 包大小
+}
+
+message SubAppUpdateResponse {
+	repeated SubAppUpdateItem items = 1;
+}
+
+message SubAppUpdateRequest {
+	required int32 appId = 1; //游戏ID
+	required string version = 2; //请求更新的版本号，服务器返回比这个版本号高的更新差异包
+}
+
+//登录返回
+message LoginResponse {
+//1=微信登录返回(wxLoginItemResponse,error_code) 2=快速登录返回(fastLogingItemResponse)
+//3=平台转码微信登录返回(wxLoginItemResponse,error_code) 4=通知客户端最低版本要求(clientVersionRequireResponse)
+//5=返回客户端ip
+//6=易接登录返回
+//7=易接平台转码登录返回
+	optional int32 type = 1;
+	optional WxLoginItemResponse wxLoginItemResponse = 2; //微信相关信息
+	optional FastLogingItemResponse fastLogingItemResponse = 3; //快速登录返回
+	optional int32 error_code = 4; //登录状态码0正常  1失败
+	optional string client_ip = 5; //客户端ip
+	repeated SubAppItemResponse appList = 6; //子游戏列表
+	optional int32 roomStatus = 7; //房间状态，1有房间，需要发起重连
+	optional int32 cityCode = 8; //玩家上穿的IP所对应的城市码(baidu)
+	optional int32 loginType = 9; //1微信 2手机3易接
+	optional string third_token = 10;	//生成第三方Token
+	optional EJItemResponse ejItemResponse = 11;//易接登录返回
+	optional bool needRegister = 12;//需要先补充注册信息
+}
+//创建房间
+message RoomRequest {
+//1=创建房间请求(game_type_index,game_rule_index,game_round) 2=加入房间(room_id,room_pw) 3=重新进入房间
+//4=请求牌局数据(target_account_id,如果有传这个值表示其它玩家的)
+//5=请求某一局数据(record_id)
+//6=小局数详细数据(brand_id)
+//7=牌局父ID  -- 根据牌局父ID查询 小局记局表
+//10 = 玩家准备
+//11 = 解散房间
+//12 进入了房间
+//13 聊天audio_chat
+//14表情(emjoy_id)
+//15跑呛
+//16位置(LocationInfor)
+//17三人场(open_three)
+//20托管(is_trustee)
+//21/道具   发送(target_account_id,goodsID)
+//22/主动 请求刷新玩家状态
+
+//50=代理房间列表,主界面
+//51=代理房间创建
+//52=代理开房记录(cur_page)
+
+//101 = 玩家出牌(operate_card),
+//102 = 玩家操作,吃碰杠等。(operate_card,operate_code)
+	optional int32 type = 1;
+	optional int32 game_type_index = 2; //麻将类型
+	optional int32 game_rule_index = 3; //玩法
+	repeated int32 game_rule_index_ex = 44; //附加玩法
+	optional int32 game_round = 4; //局数
+	optional int32 room_id = 5; //房间号
+	optional string room_pw = 6; //房间密码
+	optional int32 operate_card = 7; //操作的牌
+	optional int32 operate_code = 8; //操作指令
+	optional int64 record_id = 9;
+	optional int32 round = 10;
+	optional int32 emjoy_id = 12;
+	optional int32 operate_len = 13;
+	optional int32 club_id = 47;
+	optional CommonGameRulesProto new_rules = 50; // 新rules
+	optional bool is_new_rule = 51; //新的玩法初始化方式
+	optional int32 proxy_create_room_count = 52; //代理创建房间数
+
+	//语音
+	optional bytes audio_chat = 11;
+	optional float audio_len = 14; //音效长度
+	optional int32 audio_size = 15;
+	optional int64 brand_id = 16; //牌局id
+	optional int32 in_room_way = 17; //进入的方式 1=普通  2=从分享链接进来的
+	//
+	optional int64 target_account_id = 18; //目标玩家账号id
+	optional int32 pao = 19; //跑
+	optional int32 qiang = 20; //呛
+	optional int64 target_brand_parent_id = 21; //目标牌局父ID
+	optional LocationInfor locationInfor = 22; //定位信息
+	optional bool open_three = 23; //允许三人场
+	optional bool is_trustee = 24; //是否托管
+	optional int32 cur_page = 25; //当前页
+	optional int32 luo_code = 26; //落牌
+	optional int32 goodsID = 27; //道具ID
+	optional bool is_cancel_ready = 28; //是否取消准备
+	optional string record_id_str = 29;
+	optional string brand_id_str = 30;
+	optional int32 select_call_banker = 31;
+	optional int32 add_jetton = 32;
+	optional bool open_card = 33;
+	optional int32 appId = 34;
+	optional int32 base_score_gan = 35; //洛阳杠次 杠底分
+	optional int32 base_score_ci = 36; //洛阳杠次 次底分
+	optional int32 base_score = 38; //底分
+	optional int32 max_times = 39; //封顶番数
+	repeated int32 out_cards = 40; //所出的牌
+	optional int32 out_card_count = 41; //出牌的数量
+	optional int32 b_out_card_type = 42; //是否出牌 0 不出 ，带 出牌类型
+	optional int32 nao = 43; //信阳麻将闹庄
+	optional int32 select_qiang_banker = 45; //抢地主
+	optional bytes commRequet = 46; //通用字节流
+	optional int32 biaoyan = 48; //三门峡麻将表演分
+	optional int32 trustee_type = 49; // 托管内容
+	optional int32 seat_index = 53; //座位
+	optional bool is_rand_index = 54; //是否机座位 随机=false , 选座位 = true
+	optional int32 rule_id = 55;
+	optional string club_name = 56;
+	optional int32 clubMemberSize = 57; //俱乐部成员数
+	optional int32 handler_status = 58; //handler 操作类型
+	repeated int32 kou_pai = 59; // 扣在手中的牌
+
+	optional string clientVersion = 60; //客户端版本号，在12协议号带
+}
+//房间玩家账号信息
+message LogicRoomAccountItemRequest {
+	optional int64 account_id = 1; //账号id
+	optional int64 gold = 2; //金币
+	optional int32 proxy_index = 3; //代理服id
+	optional int64 proxy_session_id = 4; //在代理服的session_id
+	optional string account_icon = 5; //账号头像
+	optional string account_ip = 6; //账号ip
+	optional string nick_name = 7; //昵称
+	optional int32 sex = 8; //性别 1=男 2=女
+	optional string ip_addr = 10; //ip物理地址
+	optional int64 money = 11;
+	optional int64 club_owner = 12; //
+	optional int32 day_all_round = 13; //一天打的总大局
+	optional int32 reward_count = 14; // 已获得的奖励次数
+	optional int32 join_id = 15; //俱乐部用
+	optional LocationInfor locationInfor = 16; //定位信息
+	optional int64 create_time = 17;	//增加玩家创建时间
+	optional string honorMsg = 18; //玩家荣誉信息
+}
+//逻辑-创建房间
+message LogicRoomRequest {
+//创建房间(roomRequest,room_id,logicRoomAccountItemRequest) 2=进入房间(roomRequest,room_id,logicRoomAccountItemRequest) 3=重新进入房间(roomRequest,room_id)
+//4=玩家掉线(account_id)//5-刷新玩家金币信息 6=观战
+	optional int32 type = 1;
+	optional RoomRequest roomRequest = 2; //客户端的消息
+	optional int32 room_id = 3; //房间号
+	optional LogicRoomAccountItemRequest logicRoomAccountItemRequest = 4; //房间玩家账号信息
+	optional int64 account_id = 5; //账号id
+	optional int32 game_id = 6;
+	optional int64 add_money = 7; //金币
+	optional int64 add_gold = 8; //闲逸豆
+	optional LogicRoomAccountItemRequest clubOwnerAccount = 9; //俱樂部部長
+	optional int64 clubMatchId = 10;
+	repeated LogicRoomAccountItemRequest clubMatchPlayers = 11;
+}
+
+message ClubMatchPlayer {
+	optional int64 accountId = 1;
+	optional int32 proxyServerId = 2;
+}
+
+message ChiGroupCard {
+	optional int32 lou_weave_count = 1;
+	repeated int32 lou_weave_kind = 2; //落起组合
+}
+//组合子项
+message WeaveItemResponse {
+	optional int32 weave_kind = 1; //组合类型
+	optional int32 center_card = 2; //中心扑克
+	optional int32 public_card = 3; //公开标志
+	optional int32 provide_player = 4; //供应用户
+	optional int32 hu_xi = 5; //组合胡息
+	repeated ChiGroupCard chi_group_card = 6; //吃牌对应的落组合
+	repeated int32 weave_card = 7; //实际组合牌--
+	repeated int32 client_special_card = 8; //客户端需要特殊处理的牌值
+}
+
+message WeaveItemResponseArrayResponse {
+	repeated WeaveItemResponse weaveItem = 1;
+}
+
+message Int32ArrayResponse {
+	repeated int32 item = 1;
+}
+
+message TableResponse {
+//游戏变量
+	optional int32 cell_score = 1; //单元积分
+	optional int32 banker_player = 2; //庄家用户
+	optional int32 current_player = 3; //当前用户
+	//状态变量
+	optional int32 action_card = 4; //动作扑克
+	optional int32 action_mask = 5; //动作掩码
+	optional int32 left_card_count = 6; //剩余数目
+	repeated bool trustee = 7; //是否托管
+	repeated int32 winner_order = 8;
+	//出牌信息
+	optional int32 out_card_player = 9; //出牌用户
+	optional int32 out_card_data = 10; //出牌扑克
+	repeated int32 discard_count = 11; //丢弃数目
+	repeated Int32ArrayResponse discard_cards = 12; //丢弃记录
+	//扑克数据
+	repeated int32 card_count = 13; //扑克数目
+	repeated int32 cards_data = 14; //扑克列表
+	optional int32 send_card_data = 15; //发送扑克
+	//组合扑克
+	repeated int32 weave_count = 16; //组合数目
+	repeated WeaveItemResponseArrayResponse weaveItemArray = 17; //组合扑克
+	repeated int32 cards_data_niao = 18; //扎鸟
+	repeated int32 hu_xi = 19; // 显示胡息
+}
+
+//房间信息
+message RoomInfo {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional string game_rule_des = 3; //玩法说明
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 _banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+	optional int32 matchId = 13; //比赛配置Id
+	optional int32 clubId = 14; // 俱乐部Id
+	optional CommonGameRulesProto new_rules = 15; // 新rules
+	optional int32 game_max_player = 16; //游戏总人数
+	optional int32 ruleId = 17;
+	optional int32 createType = 18;
+	optional int32 clubRoomIndex = 19; //房间索引
+	optional int32 match_index_id = 20; //比赛场唯一场次ID
+	optional string club_name = 21;//俱乐部名称
+	optional int64 clubMatchId = 22; //俱乐部自建赛Id
+	repeated int32 matchUniqIds = 23; //比赛唯一ID列表
+}
+
+//房间的玩家
+message RoomPlayerResponse {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional int32 pao = 11; //跑
+	optional int32 qiang = 12; //呛
+	optional LocationInfor locationInfor = 13;
+	optional bool open_three = 14; //true 允许少人摸索 false 取消
+	optional bool is_trustee = 15; //true托管 false 取消
+	optional int64 money = 16; //金币
+	optional int64 gold = 17; //闲逸豆
+	optional int32 has_piao = 18; //是否飘分
+	optional int32 nao = 19; //闹
+	optional int32 jiao_di_zhu = 20; //叫地主
+	optional int32 qiang_di_zhu = 21; //抢地主
+	optional int32 biaoyan = 22; //表演分
+	optional int32 zi_ba = 23; //自拔
+	optional int32 duan_men = 24; //断门
+	optional int32 gvoiceStatus = 25; //实时语音 麦克风和喇叭的状态
+	optional int32 status = 26; //0无效,1普通房间，2普通围观 3上帝视角
+	optional int32 myHonorId = 27; //我的荣誉ID
+	optional int32 myHonorLevel = 28; //我的荣誉等级
+	optional string lableUrl = 29; //称号资源
+}
+
+//游戏开始
+message GameStartResponse {
+	optional int32 sice_index = 1; //骰子点数
+	optional int32 banker_player = 2; //庄家用户
+	optional int32 current_player = 3; //当前用户
+	repeated int32 cards_count = 4; //每个用户的手牌
+	optional int32 player_action = 5; //用户动作
+	repeated int32 card_data = 6; //手牌
+	optional int32 left_card_count = 7; //剩余牌
+	optional int32 xiao_hu_tag = 8; //小胡标记 0 没小胡 1 有小胡；
+	optional int32 game_round = 9;
+	optional int32 cur_round = 10; //当前局数
+	repeated Int32ArrayResponse cards_data = 11;
+	repeated int32 other_cards = 12; //其他牌数据
+}
+
+message PlayerResultResponse {
+	repeated int32 zi_mo_count = 1;
+	repeated int32 jie_pao_count = 2;
+	repeated int32 dian_pao_count = 3;
+	repeated int32 an_gang_count = 4;
+	repeated int32 ming_gang_count = 5;
+	repeated float game_score = 6;
+	repeated Int32ArrayResponse lost_fan_shu = 7;
+	repeated int32 win_order = 8;
+	optional int32 room_id = 9;
+	optional int64 create_time = 10;
+	optional int64 room_owner_account_id = 11;
+	optional string room_owner_name = 12;
+	optional int32 game_type_index = 17; //玩法
+	optional int32 game_rule_index = 18; //玩法
+	repeated int32 game_rule_index_ex = 44; //附加玩法
+	optional string game_rule_des = 19; //玩法说明
+	optional int32 game_round = 20;
+	repeated string players_name = 13;
+	repeated int64 players_id = 14;
+	optional int64 record_id = 15;
+	optional int32 app_id = 45;
+
+	//长沙
+	repeated int32 da_hu_zi_mo = 21;
+	repeated int32 da_hu_jie_pao = 22;
+	repeated int32 da_hu_dian_pao = 23;
+	repeated int32 xiao_hu_zi_mo = 24;
+	repeated int32 xiao_hu_jie_pao = 25;
+	repeated int32 xiao_hu_dian_pao = 26;
+
+	//飘赖
+	repeated int32 piao_lai_count = 27;
+	repeated int32 men_qing_count = 28; //福禄寿 门前次数
+	repeated int32 gun_gun_count = 29; //福禄寿 滚滚次数
+	repeated int32 peng_peng_hu_count = 30; //福禄寿 碰碰胡次数
+	repeated int32 gang_shang_hua_count = 31; //福禄寿 杠上开花次数
+	repeated int32 hai_di_count = 32; //福禄寿 海底次数
+	repeated RoomPlayerResponse players = 16;
+	optional RoomPlayerResponse create_player = 33; //创建者
+	repeated int32 hu_pai_count = 34; // 胡牌次数
+	repeated int32 ming_tang_count = 35; //明堂次数
+	repeated int32 ying_xi_count = 36; //硬息次数
+	optional string record_id_str = 37;
+	optional PlayerResultFLSResponse flsResponse = 38; //福禄寿扩展字段
+	repeated int32 seven_count = 39; //777牌型
+	repeated int32 AA_count = 40; // aa牌型
+	repeated int32 wu_xiao_long_count = 41; //五小龙牌型
+	repeated int32 hjk_count = 42; //黑杰克
+	repeated int32 liu_zi_fen = 43; //溜子分
+	optional int64 costGold = 46;
+	optional int32 creatType = 47; //创建房间类型
+	optional string recordName = 48; //俱乐部昵称、微信群昵称、房主昵称
+	optional int32 randomNum = 49; // 记录随机码
+	optional int32 upvote = 50; //是否被点赞0否，1是
+	optional int32 costType = 51; //1房卡 2金币 3专属豆
+	optional string subName = 52; //小类型游戏名称，如看四张
+	optional int32 clubRuleId = 53; //俱乐部包间Id
+}
+
+message PlayerResultFLSResponse {
+	repeated int32 hong = 1;
+	repeated int32 hei = 2;
+	repeated int32 qing = 3;
+	repeated int32 tai = 4;
+	repeated int32 ka = 5;
+	repeated int32 shidui = 6;
+	repeated int32 ku = 7;
+}
+
+message ClubResponse {
+	required ClubResponseType type = 1; //操作反馈
+	repeated ClubProto clubs = 2; //俱乐部列表 会全部下发
+	optional int32 club_id = 3; //加入俱乐部，退出俱乐部用
+	optional ClubProto clubDetail = 4; //俱乐部详情
+	optional ClubRecordRepProto record = 5;
+	optional int64 target_account_id = 6; // 操作的玩家Id
+	optional ClubUpdateProto clubUpdate = 7;
+	optional bool isBatch = 9; // 是否批量处理玩家的申请操作
+	optional string field = 10; //[客户端透传字段-请求俱乐部玩法信息，透传给客户端]
+	enum ClubResponseType {
+		CLUB_RSP_LIST = 1; // 列表
+		CLUB_RSP_ENTER = 2; // 加入
+		CLUB_RSP_MEMBER_OUT = 3; //退出
+		CLUB_RSP_CRETAE_ROOM = 4; // 创建房间
+		CLUB_RSP_UPDATE_CLUB = 5; //修改俱乐部
+		CLUB_RSP_CLUB_DETAIL = 6; //俱乐部详情
+		CLUB_RSP_KICK = 7; //踢人
+		CLUB_RSP_RECORD = 8; //牌局记录 ，proto未定
+		CLUB_RSP_DELETE = 9; //俱乐部解散
+		CLUB_RSP_CLUB_CREATE = 10; //创建俱乐部成功 返回 clubDetail
+		CLUB_RSP_CLUB_AGREE = 11; // 同意加入成功
+		CLUB_RSP_CLUB_REJECT = 12; //拒绝加入成功
+		CLUB_RSP_CLUB_NEW_MSG = 13; //俱乐部有新数据
+	}
+
+}
+
+message ClubRecordRepProto {
+	optional int64 target_account_id = 1;
+	required int32 clubId = 2;
+	required RoomResponse roomResponse = 3;
+}
+
+//游戏结束
+message GameEndResponse {
+//
+	optional RoomInfo room_info = 30;
+	optional int32 end_type = 27; //游戏状态
+	optional int32 cur_round = 28; //当前圈数
+	optional int32 game_round = 1; //游戏状态
+
+	//游戏变量
+	optional int32 cell_score = 5; //单元积分
+	optional int32 banker_player = 6; //庄家用户
+
+	//结束信息
+	repeated int32 provide_player = 7; //供应用户
+	repeated int64 chi_hu_right = 8; //胡牌类型
+	repeated int64 start_hu_right = 9; //起手胡牌类型
+	repeated int32 start_hu_score = 10; //起手胡牌分数
+
+	//积分信息
+	repeated float game_score = 11; //游戏积分
+	repeated int32 win_order = 12; //胡牌排名
+
+	//详细得分
+	repeated float gang_score = 13;
+	repeated int32 gang_count = 14;
+	repeated Int32ArrayResponse lost_fan_shu = 15;
+
+	//扑克数据
+	optional int32 left_card_count = 19; //剩余数目
+	repeated Int32ArrayResponse cards_data = 20; //牌列表
+	repeated int32 hu_card_data = 21; //repeated Int32ArrayResponse	hu_card_data = 21;								//胡的牌
+	repeated WeaveItemResponseArrayResponse weaveItemArray = 16; //组合扑克
+	repeated int32 cards_data_niao = 17; // 鸟牌
+	optional int32 count_pick_niao = 18; //中鸟个数
+	repeated Int32ArrayResponse player_niao_cards = 29; //玩家中鸟
+	optional PlayerResultResponse player_result = 31;
+	repeated string result_des = 32;
+	optional int32 game_type_index = 33;
+	optional int64 start_time = 34;
+	optional int32 version = 35;
+	repeated int32 hu_result = 36;
+	optional int32 round_over_type = 37;
+	optional int32 room_over_type = 38;
+	optional int32 compress_video = 40;
+	optional Video_Record record = 39;
+	optional int64 brand_id = 41;
+	optional int32 show_bird_effect = 42; //0不显示 1显示
+	repeated int32 especial_show_cards = 43;
+	optional int64 end_time = 44; //结束时间
+
+	//牌局特殊显示的描述
+	optional string especial_txt = 45;
+	optional int32 especial_txt_type = 46;
+	repeated int32 bao_ting_cards = 47;
+	repeated Int32ArrayResponse hu_card_array = 48; //胡的牌
+	repeated int32 pao = 49;
+	repeated int32 qiang = 50;
+	optional int32 game_player_number = 51; //游戏人数
+	repeated int32 cards_list = 52; //牌堆里的牌
+	optional string brand_id_str = 53;
+	optional int64 run_player_id = 54; //逃跑玩家id
+	repeated int32 jetton_score = 55; //下注分数
+	repeated int32 card_type = 56; //牌类型
+	optional int32 tun_shu = 57; //囤数    ph庄家次数
+	optional int32 fan_shu = 58; //翻数    ph点炮用户
+	optional int32 zong_xi = 59; //总息    ph胡牌类型
+	optional int32 win_lzi_fen = 60; //赢溜子分
+	optional int32 hu_xi = 61; //硬息
+	optional bytes commResponse = 62; //通用字节流
+}
+
+//回放/
+message Video_Record_Item {
+	optional int32 type = 1;
+	optional int32 current_player = 2;
+	optional int32 operate_player = 3; //操作用户
+	optional int32 card_count = 4; //牌数量
+	repeated int32 card_data = 5; //牌
+	repeated int64 effects_index = 6;
+	optional int32 effect_time = 7;
+	optional int32 effect_count = 8;
+	optional int32 effect_type = 9;
+
+	//操作
+	optional int64 actions = 10; //长度为0,关闭操作条
+
+	//组合数据
+	repeated WeaveItemResponse weave_items = 11;
+	optional int32 weave_count = 12;
+}
+
+message Video_Record_Item_List {
+	optional int32 left_card_count = 1;
+	optional int32 current_player = 2;
+	repeated Video_Record_Item records = 3;
+}
+
+message Record_RoomResponse {
+	optional int64 delta = 1;
+	optional RoomResponse rr = 2;
+}
+
+message Video_Record {
+	optional RoomInfo room_info = 1; //房间信息
+	repeated RoomPlayerResponse players = 2; //牌桌玩家
+	repeated Int32ArrayResponse hand_cards = 3;
+	repeated Video_Record_Item_List records = 4;
+	optional int32 banker_player = 5;
+	repeated Record_RoomResponse record_list = 6;
+}
+
+//代理房间子项
+message ProxyRoomItemResponse {
+	optional int32 room_id = 1; //房间id
+	optional int32 surplus_time = 2; //剩余时间(秒)
+	optional int32 room_max_people = 3; //房间最大人数
+	optional int32 room_cur_people = 4; //房间当前人数
+	optional int32 room_status = 5; //房间状态(0=未开始,1=开始)
+	optional int32 game_type_index = 6; //麻将类型
+	optional string game_rule_des = 7; //玩法描述
+	optional int32 game_round = 8; //游戏局数
+	optional int32 appId = 9; //子游戏大id
+	repeated string player_name = 10;
+	optional int32 curRound = 11; //当前局数
+}
+//代理房间页面
+message ProxyRoomViewResposne {
+	repeated ProxyRoomItemResponse proxyRoomItemResponseList = 1; //当前开房列表
+	optional int32 can_max_room = 2; //最大能创建的房间数量
+	optional int32 type = 3; //获取类型
+}
+
+//房间总返回
+message RoomResponse {
+	optional int32 type = 1; //返回类型  1=桌子信息(tableResponse,players)
+	//2 创建房间
+	//3重连返回,没有有效房间
+	//4请求牌桌数据
+	//10 进入房间
+	//11 有玩家进出房间
+	//12更新玩家手牌数据(operate_player,card_count,card_data)
+	//13更新玩家牌数据(包含吃碰杠组合)(operate_player,card_count,card_data,weave_items)
+	//14摊牌
+	//15结束(GameEndResponse,RoomInfo,RoomPlayerResponse)
+	//16断线重连桌子(TableResponse,RoomInfo,RoomPlayerResponse)
+	//17 刷新玩家出的牌(operate_player,card_data)
+	//18 玩家申请解散房间( operate_code=1发起解散2=同意解散3=不同意解散)
+	//19 显示小胡(card_data\operate_code\operate_player)
+	//20系统级别的,收到这个消息,玩家强制退出客户端
+	//21玩家准备(operate_player)
+	//22解散(release_players,request_player_seat,left_time,release_time)
+	//23语音聊天(operate_player,audio_chat)
+	//24表情聊天(emjoy_id)
+
+	//25牌的操作,添加牌到玩家的牌堆等
+	//26显示效果(effects_index,effect_time,effect_target)
+
+	//44刷新玩家组合牌
+
+	//200 开始(gameStart)
+	//201 =玩家出牌(CMD_OutCard: operate_player,operate_card)
+	//202 = 操作提示(CMD_OperateNotify:operate_player,operate_code,operate_card)
+	//203 = 操作结果(CMD_OperateResult:operate_player,provide_player,operate_code,operate_card)
+	//204 = 发牌（CMD_SendCard:operate_player,operate_card,operate_code,left_card_count)
+	//205 = 胡牌结果(CMD_OperateResult:operate_player,provide_player,operate_code,operate_card,chi_hu_rights)
+
+	//300=叫地主
+	//301=叫分
+	//302=抢地主
+
+	//30=大局记录列表
+	//31=小局记局表表(game_round_records)
+	//32=小局记局(单个)(game_round_record)
+
+	//40=定位信息(LocationInfor)
+	//41=是否托管(istrustee)
+	//43=道具返回(operate_player,targetID,goodID)
+	optional TableResponse table = 2; //桌子
+	repeated RoomPlayerResponse players = 3; //牌桌玩家
+	optional GameStartResponse gameStart = 14;
+	optional RoomInfo room_info = 15; //房间信息
+	optional int32 game_status = 16; //房间状态
+	optional int32 operate_player = 8; //操作用户
+	optional int32 provide_player = 9; //供应用户
+	optional int64 operate_code = 10; //操作代码
+	optional int32 operate_card = 11; //操作扑克
+	optional int32 card_target = 34; //牌的对象
+
+	//玩家状态
+	optional GameEndResponse game_end = 18;
+	optional int32 show_direct = 19;
+	repeated PlayerResultResponse game_room_records = 20;
+	repeated GameEndResponse game_round_records = 21;
+	repeated int64 chi_hu_rights = 22;
+	repeated int32 release_players = 26;
+	optional int32 request_player_seat = 27;
+	optional int64 left_time = 28;
+	optional int64 release_time = 30;
+
+	//麻将牌相关的 出显示牌 未进入牌堆,或者是手牌相关
+	optional int32 card_count = 12; //牌数量
+	repeated int32 card_data = 13; //牌
+	optional int32 card_type = 33; //牌的类型
+	optional int32 operate_len = 32;
+	//基础信息
+	optional int32 left_card_count = 23;
+	optional int32 current_player = 25;
+	optional int32 target = 42;
+	repeated int32 player_status = 24;
+	repeated int32 card_status = 47; //牌型状态
+	//表情
+	optional int32 emjoy_id = 31;
+
+	//语音
+	optional bytes audio_chat = 29;
+	optional float audio_len = 40; //音效长度
+	optional int32 audio_size = 41;
+
+	//组合数据
+	repeated WeaveItemResponse weave_items = 17;
+	optional int32 weave_count = 44;
+
+	//效果
+	repeated int64 effects_index = 35; //定义的效果码
+	optional int32 effect_time = 36; //持续时间
+	optional int32 effect_count = 43; // 效果码数量
+	optional int32 effect_type = 45; // 效果定义大类型
+	repeated int32 especial_show_cards = 50;
+
+	//操作
+	repeated int64 actions = 38; //长度为0,关闭操作条
+	repeated int32 chi_hu_cards = 49;
+	optional int32 room_id = 46; //房间id,当前用于方便查询日志
+
+	//子局详细
+	optional GameEndResponse game_round_record = 48;
+
+	//牌局过程结算
+	repeated float score = 51;
+	repeated float opereate_score = 55;
+	optional int32 score_type = 52;
+
+	//牌局特殊显示的描述
+	optional string especial_txt = 53;
+	optional int32 especial_txt_type = 54;
+	optional int32 discard_index = 56;
+	optional int32 flash_time = 57;
+	optional int32 stand_time = 58;
+
+	//出牌可以听的牌
+	optional int32 out_card_count = 59;
+	repeated int32 out_card_ting_count = 60;
+	repeated Int32ArrayResponse out_card_ting_cards = 61;
+	repeated int32 out_card_ting = 62;
+
+	//跑和呛
+	optional int32 pao_min = 63; //跑
+	optional int32 pao_max = 64; //跑
+	optional int32 qiang_min = 65; //呛
+	optional int32 qiang_max = 66; //呛
+	optional int32 pao = 67; //跑
+	optional int32 qiang = 68; //呛
+	optional string pao_des = 69;
+	optional string qiang_des = 70;
+	optional int32 insert_time = 71; //插入时间
+	optional ProxyRoomViewResposne proxyRoomViewResposne = 72; //代理开房间页面
+	optional bool istrustee = 73;
+	optional bool is_ting = 74;
+	optional int32 cur_page = 75; //当前页
+	optional int32 page_size = 76; //页大小
+	optional int32 total_page = 77; //总页数
+	optional int32 total_size = 78; //总数
+	optional int32 page_type = 79; //page分页类型0-不分页,1-分页
+	optional int64 kind_type = 80; //用来表示吃碰杠牌
+	optional bool is_gold_room = 85; ////是否等待他人操作
+	optional int32 hu_xi_type = 90;
+	optional int32 hu_xi_count = 91;
+	optional bool is_xiang_gong = 92; //是否相公
+	optional int32 goodID = 93; //道具ID
+	optional int64 targetID = 94; //目标对象ID
+	optional bool is_cancel_ready = 95; //是否取消准备
+	repeated int32 cards_list = 96; //底牌
+	optional RoomResponse_OX room_response_ox = 97; //牛牛数据
+	optional RoomResponse_HJK room_response_hjk = 98; //二十一点
+	optional RoomResponse_PDK room_response_pdk = 99; //跑得快
+	optional int32 nao = 100; //闹庄
+	optional string naodes = 101;
+	optional bytes commResponse = 103; //通用字节流
+	optional int32 appId = 104; //游戏类型[请求回放的时候需要带上发给客户端]
+	optional int32 biaoyan = 105; //闹庄
+	optional string biaoyandes = 106;
+	optional int32 biaoyan_min = 107; //表演分
+	optional int32 biaoyano_max = 108; //表演分
+	repeated int32 douliuzi = 109; // 逗溜子分数
+	optional int32 zongliuzi = 110; //总溜子分数 0没有警告，1可以判断是否警告， 2警告， 3不警告
+	optional int64 totalCost = 111; //俱乐部用
+	repeated int32 handler_status = 112; //操作handler_status
+	optional int32 playerEnterType = 113;  //0无效,1普通房间，2普通围观 3上帝视角
+}
+
+//提示总返回
+message MsgAllResponse {
+	optional int32 type = 1; //返回类型 1=普通提示(msg) 2=带错误码的普通消息 3=带错误码有确定按钮的消息
+	optional string msg = 2; //提示内容
+	optional int32 error_id = 3;
+	optional int32 time = 4; //时间
+}
+//游戏公告
+message GameNoticeAllResponse {
+	optional int32 type = 1; //返回类型  1=普通公告(只在大厅显示),2=通知类型(无论在哪里都要提示),3=子游戏显示(只有子游戏才显示)
+	optional string msg = 2; //消息内容
+	optional int32 gameId = 3; //游戏类型
+	optional int32 appId = 4; //子游戏类型
+}
+//我的压力测试请求
+message MyTestRequest {
+	optional int32 type = 1; //请求类型 1=普通消息请求()
+}
+//我的压力测试返回
+message MyTestResponse {
+//返回类型 1=普通消息返回   100=通知客户端进行多少次type=1的请求,客户端限制一下最大值(num)
+	optional int32 type = 1;
+	optional int32 num = 2; //次数
+}
+
+//其它系统请求
+message OtherSystemRequest {
+//请求类型 1=查看系统公告 2=游戏玩法说明 3=主界面公告 5=定位(LocationInfor) 6=分享活动面板
+//7=成功分享每日每分享  8=分享活动的详细邀请人列表(cur_page) 9=道具列表 10=客服界面公告  11=比赛场公告  12=分享任务
+	optional int32 type = 1;
+	optional LocationInfor locationInfor = 2; //位置信息
+	optional int32 cur_page = 3; //当前页,默认填1
+	optional int32 appId = 4;
+	optional int32 shareType = 5; //分享类型 EShareType
+}
+
+//位置信息
+message LocationInfor {
+	optional int64 target_account_id = 1; //目标账户id
+	optional double pos_x = 2; //X坐标
+	optional double pos_y = 3; //Y坐标
+	optional string address = 4; //物理地址
+	repeated double distance = 5; //与其它人的距离 按seat位置取
+	optional int64 time = 6; //上次请求时间
+}
+
+//游戏玩法说明详细项
+message GaemDescItemResponse {
+	optional int32 id = 1; //id 1=转转 2=长沙
+	optional string title = 2; //标题
+	optional string game_desc = 3; //详细说明
+	optional int32 sort = 4; //排序
+}
+
+//道具信息
+message GoodsResponse {
+	optional int32 goodID = 1; //道具ID
+	optional int32 money = 2; //使用的金币数
+	optional string icon = 3; //图片
+	optional int32 sort = 4; //排序
+}
+//主界面公告详细项
+message MainUiNoticeItemResponse {
+	optional int32 id = 1;
+	optional int32 type = 2; //1=文字 2=图片url
+	optional string content = 3;
+	optional string href = 4;
+	optional int32 if_login_open = 5; //是否登录时打开，-1 为否 0及以上为间隔相应小时打开
+	optional string title = 6; //标题
+	optional int32 open_object = 7;//开放对象，0全部，1安卓，2ios
+}
+//比赛场公告
+message MatchBroadResponse {
+	optional int32 id = 1;
+	optional int32 match_union_id = 2; //联赛id
+	optional int32 match_id = 3; //比赛场id
+	optional int32 broad_type = 4; //播放类型(1比赛场界面播放2APP内播放)
+	optional int32 broad_num = 5; //播放次数
+	optional string content = 6; //公告内容
+}
+//登录公告
+message LoginNoticeResponse {
+	optional string title = 1; //标题
+	optional string content = 2; //内容
+}
+//分享活动面板数据
+message ShareActivityViewResponse {
+	optional int32 every_share_gold = 1; //每日分享可获得的金币数
+	optional int32 friend_down_self_gold = 2; //分享给好友下载可获得金币数
+	optional int32 friend_down_friend_gold = 3; //分享给好友下载他可获得的金币数
+	optional int32 invite_people_count = 4; //已邀请的人数
+	optional int32 invite_gold_num = 5; //历史获邀请得的金币
+	optional int32 today_share_status = 6; //今日是否已分享,0=未分享 1=已分享
+}
+//分享活动邀请子项
+message ShareInviteInfoResponse {
+	optional int64 account_id = 1; //玩家id
+	optional string name = 2; //名字
+	optional string icon = 3; //icon
+	optional int64 create_time = 4; //创建时间
+	optional int32 gold_num = 5; //获得金币数量
+}
+//分享活动列表页面
+message ShareInviteViewResponse {
+	repeated ShareInviteInfoResponse shareInviteInfoList = 1; //数据列表
+	optional int32 totalPage = 2; //总页数
+	optional int32 curPage = 3; //当前页
+	optional int32 pageSize = 4; //每页数据大小
+}
+
+//其它系统返回
+message OtherSystemResponse {
+//返回类型 1=系统公告内容(content) 2=游戏玩法说明(gaemDescItemResponseList) 3=主界面公告(mainUiNoticeItemResponseList) 4=登录公告(loginNoticeResponse) 5=定位(LocationInfor)
+//6=活动面板数据(shareActivityViewResponse) 7=每日分享之后请求结果(goldNumber表示获取的金币数) 8=活动列表页面(shareInviteViewResponse) 9=道具列表
+	optional int32 type = 1;
+	optional string content = 2; //内容
+	repeated GaemDescItemResponse gaemDescItemResponseList = 3;
+	repeated MainUiNoticeItemResponse mainUiNoticeItemResponseList = 4;
+	optional LoginNoticeResponse loginNoticeResponse = 5; //登录公告
+	optional LocationInfor locationInfor = 6; //位置信息
+	optional int32 goldNumber = 7;
+	optional ShareActivityViewResponse shareActivityViewResponse = 8; //分享活动面板数据
+	optional ShareInviteViewResponse shareInviteViewResponse = 9; //分享活动列表页面
+	repeated GoodsResponse goodList = 10;
+	optional int32 appId = 11;
+	repeated MatchBroadResponse matchBroadResponseList = 12;
+}
+
+//商城请求
+message StoreRequest {
+	optional int32 type = 1; //请求类型 1=房卡功能状态 2=商城列表 3=购买商品(goods_id)，
+	//4=微信支付成功(gameOrderId发送游戏订单号--失败的不用发这个协议) 5=ios支付(gameOrderId发送游戏订单号,receipt)
+	//6=ios购买商品(goods_id) 7=ios商城列表 8=金币商城兑换 9=兑换金币(goods_id) 10=实物兑换商品  11=福卡兑换商品
+
+	//13=ios购买砖石商品(goods_id)-参考6 14=ios砖石支付(gameOrderId发送游戏订单号,receipt,rechargeType,transaction_id)-参考5 rechargeType这里也为2
+
+	//15=安卓购买砖石商品(goods_id) 参考3    另外充值成功了别忘了发4 此时的rechargeType==2
+
+	// 16=支付宝购买商品(goods_id)--跟3一样，返回也是16
+	//17=支付宝支付成功通知服务器(gameOrderId,receipt,rechargeType)-参考5 receipt-表示支付宝的订单号-没有返回
+	//20易接购买闲逸豆
+	//21易接购买钻石
+	//22钻石-任意金额支付(差额支付)-goods_id,sdkID,rechargeType(1-微信，2-支付宝)
+	optional int32 goods_id = 2; //商品id
+	optional string gameOrderId = 3; //游戏订单号
+	optional string receipt = 4; //ios票据
+	optional string transaction_id = 5; //ios单号
+	optional int32 rechargeType = 6; //充值类型 0-商城 1-金币场(直接由豆兑换为金币)
+	optional int32 uiType = 7; //操作主界面
+	optional int32 subUiType = 8; //操作子界面
+	optional int32 opId = 9; //操作值
+	optional string sdkID = 10; //sdk预支付ID
+}
+//商城商品
+message StoreGoodResponse {
+	optional int32 id = 1; //商品id
+	optional string name = 2; //商品名
+	optional int32 gold = 3; //房卡数量
+	optional int32 send_gold = 4; //赠送的房卡数量
+	optional int32 price = 5; //价格
+	optional string icon = 6; //icon
+	optional bool isHotSale = 7; //是否热卖
+	optional string sendTag = 8; //赠送标签
+}
+
+//商城钻石商品
+message StoreDiamondResponse {
+	optional int32 id = 1; //商品id
+	optional string name = 2; //商品名
+	optional int32 diamond = 3; //钻石
+	optional int32 send_diamond = 4; //赠送的钻石数量
+	optional int32 price = 5; //价格
+	optional string icon = 6; //icon
+	optional bool isHotSale = 7; //是否热卖
+	optional string sendTag = 8; //赠送标签
+	optional int32 type = 9;	//0为android，1为ios
+}
+
+
+//闲逸豆交易流水记录
+message GoldCardTransResponse {
+	optional string title = 1;	//交易备注标题
+	optional int32 time = 2;	//交易时间，按秒计
+	optional int32 transGold = 3;	//交易豆
+	optional int32 currentGold = 4;	//当前豆
+	optional string id = 5;
+	optional int32 gameId = 6;	//子游戏ID
+	optional int32 appId = 7;	//appID
+	optional string appName = 8;	//app名称
+}
+
+//金币商城商品
+message StoreGoodMoneyResponse {
+	optional int32 id = 1; //商品id
+	optional string name = 2; //商品名
+	optional int32 money = 3; //金币数量
+	optional int32 send_money = 4; //赠送的房卡数量
+	optional int32 price = 5; //价格-需要的闲逸豆
+	optional string icon = 6; //icon
+	optional bool isHotSale = 7; //是否热卖
+	optional string sendTag = 8; //赠送标签
+}
+
+//商城购买返回
+message PayBuyResponse {
+	optional string appid = 1; //appId
+	optional string timestamp = 2; //时间搓格式
+	optional string noncestr = 3; //随机字符串
+	optional string package = 4; //扩展字段
+	optional string sign = 6; //签名
+	optional string partnerid = 7; //商户号
+	optional string prepayid = 8; //预支付交易会话ID
+	optional string gameOrderID = 9; //游戏内订单--支付成功了发给服务器
+	optional int32 fee = 10;//订单金额 分为单位
+	optional int32 nums = 11;//货品数量
+	optional int32 rmb=12;//差额支付的金额
+}
+
+//实物兑换商城商品
+message StoreExchangeItemResponse {
+	optional int32 itemId = 1; //物品Id
+	optional string itemName = 2; //物品名称
+	optional string icon = 3; //物品图标
+	optional int32 exchangeTicketNum = 4; //所需兑换券数量
+	optional int32 exchangeTicketId = 5; //兑换券ID
+	optional string exchangeTicketName = 6; //兑换券名字
+	optional string desc = 7; //物品描述
+}
+
+//福卡商城商品分类
+message StoreWelfareGoodsType {
+	optional int32 goodsType = 1; //分类Id
+	optional string goodsTypeDesc = 2; //分类描述
+	optional int32 order = 3; //排序
+}
+
+//福卡兑换商城商品
+message StoreWelfareCardExchangeResponse {
+	optional int32 itemId = 1; //物品Id
+	optional string itemName = 2; //物品名称
+	optional string icon = 3; //物品图标
+	optional int32 welfareCardNum = 4; //所需福卡数量
+	optional string desc = 5; //物品描述
+	optional int32 goodsType = 6; //商品分类
+	optional string goodsTypeDesc = 7; //商品分类描述
+	optional int32 discountPrice = 8; // 特惠价格
+	optional int64 discountBeginTime = 9; //特惠开始时间
+	optional int64 discountEndTime = 10; //特惠结束时间
+	optional string goodsDesc = 11; //商品描述
+	optional string goodsSize = 12; //商品规格 格式: 规格1,规格2...
+	optional int32 limitType = 13; //库存类型 0-无限制 1-限制
+	optional string viewPic = 14; //轮播图 格式:pic1,pic2...
+	optional string descPic = 15; //详情图 格式:pic1,pic2...
+	optional int32 hotTag = 16; // 1-热卖
+	optional int32 itemNum = 17; // 物品数量
+	optional int32 dailyLimitNum = 18; //每日限兑数量,-1表示不限
+	optional int32 goods_order = 19; //商品排序
+}
+
+//商城总返回
+message StoreAllResponse {
+	optional int32 type = 1; //返回类型 1=返回房卡功能状态(status,msg) 2=商品列表(storeGoodResponseList) 3=购买返回(payBuyResponse)
+	//5=ios支付返回(gameOrderId发送游戏订单号,receipt,isSuccess) 6=ios购买返回(payBuyResponse)  8=金币商城兑换(moneyList)
+	//9=兑换金币(goods_id) 10=实物兑换商城 11=福卡兑换商城  16=支付宝购买购买返回(payBuyResponse)
+	optional int32 status = 2; //状态
+	optional string msg = 3; //提示内容
+	repeated StoreGoodResponse storeGoodResponseList = 4; //商品列表
+	optional PayBuyResponse payBuyResponse = 5; //商城购买返回
+	optional string receipt = 6; //ios票据
+	optional bool isSuccess = 7; //ios支付是否成功
+	repeated StoreGoodMoneyResponse moneyList = 8; //金币商城
+	repeated StoreExchangeItemResponse itemList = 9; //实物兑换商城
+	repeated StoreWelfareCardExchangeResponse welfareItemList = 10; //福卡兑换商城
+	repeated StoreWelfareGoodsType welfareGoodsType = 11; //福卡商城商品分类
+	repeated StoreDiamondResponse storeDiamondList = 12;	//钻石商城商品
+}
+//房卡相关请求
+message GoldCardRequest {
+//请求类型  1=修改密码(old_passwd[没有首次可不填],new_passwd) 2=赠送他人房卡(num,target_account_id,verify,old_passwd)
+//3=代理转卡历史记录(curr_page,默认填1,target_account_id[没有不要传值])
+//4=查看代理商城  5=购买代理商品(goods_id) 6=微信支付成功(gameOrderId发送游戏订单号--失败的不用发这个协议)
+//7=更新推荐代理人id(target_account_id)
+//8=填写代理推荐人
+//9=闲逸豆记录
+//12=购买砖石商品(goods_id)
+	optional int32 type = 1;
+	optional string old_passwd = 2; //旧密码
+	optional string new_passwd = 3; //新密码
+	optional int32 num = 4; //数量
+	optional int64 target_account_id = 5; //目标账户id
+	optional bool verify = 6; //确认
+	optional int32 cur_page = 7; //当前页
+	optional int32 goods_id = 8; //商品id
+	optional string gameOrderId = 9; //游戏订单号
+}
+//精彩活动总请求
+message ActivityRequest {
+//请求类型: 1请求活动信息() 2=领取登录奖励（activityID） 5=上报信息(upType,upText)
+	optional int32 type = 1;
+	optional int32 activityID = 2; //活动ID(1=连续登录)
+	optional int32 shareType = 3;//0非分享获取奖励，1分享获取双倍奖励
+	optional int32 upType = 4;//上报类型
+	optional string upText=5;//上报的值
+}
+
+//精彩活动总返回
+message ActivityResponse {
+//总返回类型: 1请求活动信息返回(ActivityDetailResponse)
+//2=领取登录奖励(is_success)
+	optional int32 type = 1;
+	repeated ActivityDetailResponse activityDetails = 2; //活动详细信息
+	optional bool is_success = 3; //领取奖励成功失败的标记
+	optional int32 reward_day = 4; //已经领了第几天
+	optional int32 shareType = 5;//1分享领取双倍奖励，0非双倍
+	optional int32 shareReward = 6;//是否领取过双倍奖励 1分享领取双倍奖励，0非双倍
+}
+
+//活动详细信息
+message ActivityDetailResponse {
+	optional int32 activityID = 1; //活动ID(1=连续登录)
+	optional string name = 2; //活动名称
+	optional int32 activity_type = 3; //活动类型（1=功能性活动(比如连续登录,后面可能还会有) 2=图片url）
+	optional string href = 4; //url地址
+	repeated ContinueLoginResponse continueLoginResponse = 5; //连续登录奖励详细信息
+	optional int32 login_can_reward = 6; //连续登录可以领取的奖励(第几天的)
+	optional int32 login_is_reward = 7; //连续登录当天是否领取奖励
+	optional int32 reward_day = 8; //已经领了第几天
+	optional string content = 9; //内容
+	optional int32 share_reward = 10;//0未领取分享双倍奖励，1领取了
+}
+
+//连续登录奖励封装
+message ContinueLoginResponse {
+	optional int32 day = 1; //天数
+	repeated RewardResponse rewardResponses = 2; //奖励
+}
+
+//通用的奖励对象
+message RewardResponse {
+	optional int32 type = 1; //奖励的类型(1=房卡,7=铜币)
+	optional int32 number = 2; //奖励的数量
+}
+
+//金币场
+message MoneyGameRequest {
+	repeated int64 account_ids = 1; //需要刷新金币的玩家id
+}
+//金币场
+message MoneyGameResponse {
+	repeated int64 account_ids = 1; //
+	repeated int32 moneys = 2; //当前玩家对应的金币
+}
+
+//房卡转卡记录
+message AddGoldCardHistoryResponse {
+	optional string id = 1;
+	optional int64 create_time = 2; //创建时间
+	optional int64 target_account_id = 3; //目标账号id
+	optional int64 give_num = 4; //赠送数量
+	optional string account_ip = 5; //操作ip
+	optional int32 code = 6; //操作状态  0成功
+	optional string target_nick_name = 7; //目标昵称
+}
+//房卡相关总返回
+message GoldCardAllResponse {
+//总返回类型
+//1=转卡确认前查询(target_account_id,target_nick_name)
+//2=历史转卡记录分页的(addGoldCardHistoryResponseList,cur_page,page_size,total_page,total_size,target_account_id[可选值])
+//3=修改密码成功
+//4=转卡成功
+//5=代理商城列表(storeGoodResponseList)
+//6=购买返回(payBuyResponse)
+//7=修改推荐代理人成功(target_account_id[推荐人id])
+//8=填写推广员id成功
+//9=购买返回(payBuyResponse--砖石购买)
+	optional int32 type = 1;
+	optional int64 target_account_id = 2; //目标账号id
+	optional string target_nick_name = 3; //目标昵称
+	repeated AddGoldCardHistoryResponse addGoldCardHistoryResponseList = 4; //历史记录集合
+	optional int32 cur_page = 5; //当前页
+	optional int32 page_size = 6; //每页条数
+	optional int32 total_page = 7; //总页数
+	optional int32 total_size = 8; //总记录数
+	repeated StoreGoodResponse storeGoodResponseList = 9; //代理商品列表
+	optional PayBuyResponse payBuyResponse = 10; //代理商城购买返回
+	optional int32 get_prize = 11; //是否领取填写推荐人奖励，0未领取，1领取
+	repeated GoldCardTransResponse goldCardTransList = 12;	//闲逸豆交易流水
+}
+
+//=================================================================================
+//用户叫庄
+message CallBanker {
+	optional int32 call_banker = 1; //叫庄的用户
+	optional int32 seat_index = 2; //下注用户
+}
+//用户叫庄信息
+message CallBankerInfo {
+	repeated int32 Call_banker_info = 1; //叫庄数据
+}
+//确认庄家游戏开始
+message GameStart {
+	repeated Int32ArrayResponse jetton_cell = 1; //下注筹码
+	optional int32 select_banker = 2; //庄家ID
+	optional int32 cur_banker = 3; //当前庄家
+}
+//用户下注
+message AddJetton {
+	optional int32 jetton_score = 1; //下注分数
+	optional int32 seat_index = 2; //下注用户
+}
+
+//发牌数据包
+message SendCard {
+	repeated Int32ArrayResponse send_card = 1; //牌数据包
+}
+//用户摊牌
+message OpenCard {
+	optional int32 seat_index = 1; //摊牌用户
+	optional bool open = 2; //是否摊牌
+}
+
+message CardType {
+	optional int32 card_type = 1; //牌类型
+	optional int32 time = 2; //倍数
+}
+//游戏结束
+message GameEnd {
+	repeated int32 card_date = 1; //牌数据
+	optional int32 game_score = 2; //用户分数
+}
+
+message Timer_OX {
+	optional int32 display_time = 1; //显示时间
+}
+
+message TableResponseOX {
+//游戏变量
+	optional int32 cell_score = 1; //单元积分
+	optional int32 banker_player = 2; //庄家用户
+	optional int32 current_player = 3; //当前用户
+	optional int32 scene_info = 4;
+	//下注信息
+	repeated int32 add_jetter = 5; //下注信息
+	//状态变量
+	repeated bool trustee = 6; //是否托管
+	repeated int32 winner_order = 7;
+	//扑克数据
+	repeated int32 card_count = 8; //扑克数目
+	repeated Int32ArrayResponse cards_data = 9; //扑克列表
+	repeated bool open_card = 10; //摊牌
+	//结算
+	optional int32 ox_card = 11; //牛值
+	optional int32 end_score = 12; //用户分数
+	//叫庄
+	repeated int32 call_banker_info = 13; //叫庄信息
+	optional bool player_status = 14; // 是否在游戏
+	repeated int32 card_type = 15; //牌的类型
+	repeated int32 game_time = 16; //牌倍数
+	optional int32 trustee_type = 17; //托管的内容
+}
+
+//房间总返回
+message RoomResponse_OX {
+	optional TableResponseOX table_response_ox = 3; // 场景数据
+	optional CallBanker call_banker = 4; //用户叫庄
+	optional GameStart game_start = 5; //游戏开始
+	optional AddJetton add_jetton = 6; //用户下注
+	optional SendCard send_card = 7; //发牌
+	optional OpenCard open_card = 8; //摊牌
+	optional GameEnd game_end = 9; //游戏结束
+	optional int32 room_id = 16; //房间ID
+	optional CallBankerInfo call_banker_info = 17; //叫庄信息
+	optional Timer_OX display_time = 18; //显示时间
+	optional CardType card_type = 19; //牌值
+}
+///////////////////////////////////////21点///////////////////////////////////////
+message GameStart_HJK {
+	repeated Int32ArrayResponse jetton_cell = 1; //下注筹码
+	optional int32 cur_banker = 3; //当前庄家
+}
+
+//发牌数据包
+message SendCard_HJK {
+	repeated Int32ArrayResponse send_card = 1; //牌数据包
+	repeated Int32ArrayResponse card_value = 2; //牌的点数
+	repeated int32 card_type = 3; //牌类型
+	repeated float score = 4; //用户分数
+	repeated bool open_card = 5; //开牌标志
+}
+
+//通知弹按钮
+message ButtonPop_HJK {
+	repeated int32 actions = 1; //通知按键
+	repeated int32 seat_index = 2; //坐位ID
+}
+//要牌操作
+message YaoCard_HJK {
+	optional int32 seat_index = 1; //坐位ID
+	optional int32 send_card = 2; //发送牌
+}
+//牌值
+message CardValue_HJK {
+	repeated Int32ArrayResponse card_value = 1; //牌值
+}
+//用户叫庄
+message CallBanker_HJK {
+	optional int32 call_banker = 1; //叫庄的用户
+	optional int32 seat_index = 2; //下注用户
+}
+//用户叫庄信息
+message CallBankerInfo_HJK {
+	repeated int32 Call_banker_info = 1; //叫庄数据
+}
+//用户下注
+message AddJetton_HJK {
+	optional int32 jetton_score = 1; //下注分数
+	optional int32 seat_index = 2; //下注用户
+}
+//用户摊牌
+message OpenCard_HJK {
+	optional int32 seat_index = 1; //摊牌用户
+	optional bool open = 2; //是否全开
+	optional float banker_score = 3; //开牌用户分数
+	optional float idle_score = 4; //闲家分数
+	optional int32 card_type = 5; //牌类型
+}
+//用户是否投降
+message TouXiang_HJK {
+	optional int32 seat_index = 1;
+	optional int32 is_tou_xiang = 2; //是否投降   1投降，2不投降
+}
+
+message TableResponse_HJK {
+//游戏变量
+	optional int32 cell_score = 1; //单元积分
+	optional int32 banker_player = 2; //庄家用户
+	optional int32 current_player = 3; //当前用户
+	optional int32 scene_info = 4;
+	//下注信息
+	repeated int32 add_jetter = 5; //下注信息
+	//状态变量
+	repeated bool trustee = 6; //是否托管
+	repeated int32 winner_order = 7;
+	//扑克数据
+	repeated int32 card_count = 8; //扑克数目
+	repeated Int32ArrayResponse cards_data = 9; //扑克列表
+	repeated bool open_card = 10; //爆牌
+	//结算
+	repeated Int32ArrayResponse card_value = 11; //
+
+	//叫庄
+	repeated int32 call_banker_info = 13; //叫庄信息
+	optional bool player_status = 14; // 是否在游戏
+	optional int32 actions = 15; // 操作命令
+	repeated int32 card_type = 16; //牌类型
+	repeated int32 is_tou_xiang = 17; //是否投降   1投降，2不投降
+	repeated int32 player_score = 18; //用户分数
+	repeated int32 wait_seat_index = 19; //等待用户  1等待0 是不等待
+}
+///////////////////////////////////////跑得快///////////////////////////////////////
+//刷新用户扑克
+message RefreshCards {
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+}
+//用户出牌
+message OutCardData {
+	optional int32 out_card_player = 1; //出牌玩家
+	repeated int32 cards_data = 2; //出牌数据
+	repeated int32 change_cards_data = 3; //变换之后的数据
+	optional int32 cards_count = 4; //出牌数量
+	optional int32 card_type = 5; //出牌类型
+	optional int32 cur_player = 6; //当前玩家
+	repeated int32 pr_cards_data = 7; //上一玩家出牌数据
+	repeated int32 pr_change_cards_data = 8; //变换之后的数据
+	optional int32 pr_cards_count = 9; //上一玩家出牌数量
+	optional int32 pr_out_card_type = 10; //出牌类型
+	optional bool is_first_out = 11; //是否首出
+	optional int32 display_time = 12; //显示时间
+}
+
+message TableResponse_PDK {
+//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5; //本轮出牌数据
+	repeated Int32ArrayResponse change_cards_data = 6; //变换之后的数据
+	repeated int32 out_cards_count = 7; //本轮牌数量
+	repeated int32 player_pass = 8; //本轮不出数据
+	repeated int32 card_type = 9; //出牌类型
+	optional int32 pr_out_card_player = 10; //上一出牌玩家
+	repeated int32 pr_change_cards_data = 11; //变换之后的数据
+	repeated int32 pr_cards_data = 12; //上一玩家出牌数据
+	optional int32 pr_cards_count = 13; //上一玩家出牌数量
+	optional int32 pr_out_card_type = 14; //出牌类型
+	optional int32 magic_card = 15; //癞子牌
+	optional int32 is_first_out = 16; //是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 17; //显示时间
+	repeated int32 card_count = 18; //扑克数目
+	repeated Int32ArrayResponse cards_data = 19; //扑克列表
+}
+
+message GameStart_PDK {
+	optional int32 cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 magic_card = 4; //癞子牌
+	optional int32 display_time = 12; //显示时间
+}
+
+message PukeGameEnd {
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 boom_card_num = 6; //炸弹数量
+	repeated int32 end_score = 7; //结算分数
+	optional int32 player_num = 8; //游戏人数
+	optional int32 banker_player = 9; //庄家
+	optional int32 reason = 10; //结束类型
+	optional int32 hong_tao_player = 11; //红桃玩家
+	optional int32 fan_di_player = 12; //反的玩家
+	repeated int32 chun_tian_player = 13; //春天玩家
+	optional int32 bao_pei_player = 14; //包赔玩家
+	optional int32 tao_pao_player = 15; //逃跑玩家
+
+	//总结算
+	repeated int32 all_boom_card_num = 16; //总炸弹数量
+	repeated int32 all_end_score = 17; //结算总积分
+	repeated int32 end_score_max = 18; //单句最高得分
+	repeated int32 win_num = 19; //赢句数
+	repeated int32 lose_num = 20; //输句数
+}
+//房间总返回
+message RoomResponse_PDK {
+	optional TableResponse_PDK table_response = 1; // 场景数据
+	optional RefreshCards refresh_cards = 2; //刷新手牌
+	optional OutCardData out_card = 3; //用户出牌
+	optional GameStart_PDK game_start = 4; //游戏开始
+	optional PukeGameEnd game_end = 5;
+}
+////////////////////////////////////////////////////////////////////
+//房间总返回
+message RoomResponse_HJK {
+	optional TableResponse_HJK table_response = 3; // 场景数据
+	optional CallBanker_HJK call_banker = 4; //用户叫庄
+	optional GameStart_HJK game_start = 5; //游戏开始
+	optional AddJetton_HJK add_jetton = 6; //用户下注
+	optional SendCard_HJK send_card = 7; //发牌
+	optional OpenCard_HJK open_card = 8; //是否全开
+	optional int32 room_id = 16; //房间ID
+	optional CallBankerInfo_HJK call_banker_info = 17; //叫庄信息
+	optional ButtonPop_HJK button_pop = 18; //弹按钮
+	optional YaoCard_HJK yao_card = 19; //要牌
+	optional CardValue_HJK card_value = 20; //牌值
+	optional TouXiang_HJK tou_xiang = 21; //投降
+	optional int32 wait_seat_index = 22; //等待用户
+}
+//////////////////////////////////////////////////////////////////
+//排行榜
+message RankRequest {
+	required int32 type = 1; //1gold,2money
+}
+
+message RankInfoProto {
+	required int32 rank = 1; //排名
+	optional string head = 2; //头像
+	optional string nickName = 3; //昵称
+	optional int64 accountId = 4; //帐号ID
+	optional string signature = 5; //签名
+	optional int64 value = 6; //数值
+}
+
+message RankResponse {
+	required int32 type = 1; //排行榜类型
+	repeated RankInfoProto ranks = 2; //排行榜数据
+}
+
+//签名设置
+message SignatureRequest {
+	required string text = 1; //签名
+}
+
+message Enter_Back_Request {
+	optional int32 is_back = 1; //0:没有进入后台 1：进入后台
+}
+
+//通用返回
+message CommonResponse {
+	optional int32 status = 1; //
+}
+
+//查看其他玩家信息
+message PlayerViewRequest {
+	required int64 accountId = 1; //帐号ID
+}
+
+//玩家镜像,查看信息
+message PlayerViewResponse {
+	required int64 accountId = 1; //账号id
+	optional string nickName = 2; //角色名
+	optional string head = 3; //玩家头像
+	optional int64 gold = 4; //闲逸豆
+	optional int64 money = 5; //金币
+	optional string signature = 6; //签名
+	optional int32 sex = 7; //性别1男2女
+	optional int32 vipLv = 8; //vip等级
+	optional bool isAgent = 9; //是否代理
+	optional bool isRecomment = 10; //是否推广员
+}
+
+//获取系统参数信息
+message AccountPropertyRequest {
+	required int32 gameId = 1; //游戏ID 0 大厅
+}
+
+//系统参数信息返回
+message SyPropertyResponse {
+	repeated AccountPropertyResponse accountProperty = 1;
+	optional int32 gameId = 2; //遊戲類型 0表示厅
+	optional int32 category = 3; //反馈类型，0或者Nil表示请求获得，1表示服务器主动推
+}
+
+//服务器间通信通用消息包
+message S2SCommonProto {
+	required int32 cmd = 1; //协议号
+	optional bytes byte = 2; //协议包流
+}
+
+//客户端与服务器通信通用消息包
+message CommonProto {
+	required int32 cmd = 1; //协议号
+	optional bytes byte = 2; //协议包流
+}
+
+//总返回
+message Response {
+	extensions 100 to max;
+	enum ResponseType {
+		HEAR = 1; //心跳
+		LOING = 2; //登录(loginRequest)
+		REGISTER = 3; //注册()
+		ROOM = 4; //房间总返回(roomResponse)
+		MSG = 5; //提示(MsgAllResponse)
+		PROPERTY = 6; //通用属性值(accountPropertyListResponse)
+		GAME_NOTICE = 7; //游戏公告(gameNoticeAllResponse)
+		MY_TEST = 8; //我的压力测试(myTestResponse)
+		OTHER_SYS = 9; //其它系统(otherSystemResponse)
+		Store = 10; //商城(storeAllResponse)
+		GOLD_CARD = 11; //房卡相关
+		MONEY_GAME = 12; //金币场(MoneyGameResponse)
+		ACTIVITY = 13; //精彩活动(ActivityResponse)
+		PROXY_ROOM = 14; //代理开房间(proxyRoomAllResponse)
+		SUBAPP_UPDATE = 15; //子游戏请求更新差异包返回 ( SubAppUpdateResponse )
+		SUBAPP_ITEM_UPDATE = 16; //子游戏更新 （ UpdateSubAppItemResponse ）
+		RANK = 17; //排行榜返回
+		PLAYER_VIEW = 18; //查看玩家镜像
+		SY_PROPERTY = 19; //系统参数信息返回(syPropertyResponse)
+		S2S = 20; //服务器用
+		S2C = 21; //客户端与服务器通信，拆包(公用CommonProto)
+		CLUB = 22; //俱乐部
+		/////////////////////////////////////////不在这里继续加协议了，可以参考RoomInfoHandler///////////////////////////////
+	}
+
+	required ResponseType responseType = 1; //返回类型
+}
+
+extend Response {
+	optional HeartResponse heartResponse = 100;
+	optional LoginResponse loginResponse = 101;
+	optional RoomResponse roomResponse = 102;
+	optional MsgAllResponse msgAllResponse = 103;
+	optional AccountPropertyListResponse accountPropertyListResponse = 104;
+	optional GameNoticeAllResponse gameNoticeAllResponse = 105;
+	optional MyTestResponse myTestResponse = 106;
+	optional OtherSystemResponse otherSystemResponse = 107;
+	optional StoreAllResponse storeAllResponse = 108;
+	optional GoldCardAllResponse goldCardAllResponse = 109;
+	optional MoneyGameResponse moneyGameResponse = 110;
+	optional ActivityResponse activityResponse = 111;
+	optional SubAppUpdateResponse subAppUpdateResponse = 112;
+	optional UpdateSubAppItemResponse updateSubAppItemResponse = 113;
+	optional RankResponse rankRsponse = 114;
+	optional PlayerViewResponse playerViewResponse = 115;
+	optional SyPropertyResponse syPropertyResponse = 116;
+	optional S2SCommonProto s2sResponse = 117;
+	optional CommonProto s2cResponse = 118; //公用CommonProto
+	optional ClubResponse clubResponse = 119;
+}
+
+//总请求
+message Request {
+	extensions 100 to max;
+	enum RequestType {
+		HEAR = 1;
+		LOING = 2; //登录(loginRequest)
+		REGISTER = 3; //注册()
+		PROXY = 4; //逻辑到转发的总请求(response)
+		ROOM = 5; //房间请求(roomRequest)
+		LOGIC_ROOM = 6; //逻辑服房间请求
+		MY_TEST = 7; //我的压力测试(myTestRequest)
+		OTHER_SYS = 8; //其它系统功能(otherSystemRequest)
+		STORE = 9; //商城(storeRequest)
+		GOLD_CARD = 10; //房卡相关(goldCardRequest)
+		MONEY_GAME = 11; //金币场(MoneyGameRequest)
+		ACTIVITY = 12; //精彩活动(ActivityRequest)
+		SUBAPP_UPDATE = 13; //子游戏更新请求 ( SubAppUpdateRequest )
+		RANK = 14; //排行榜(RankRequest)
+		SIGNATURE = 15; //签名设置(SignatureRequest)
+		PLAYER_VIEW = 16; //查看其他玩家信息
+		PROPERTY = 17; //通用属性值请求(AccountPropertyRequest)
+		S2S = 18; //服务器用
+		CLUB = 19; //俱乐部
+		C2S = 20; //客户端与服务器通信，拆包(公用CommonProto)
+		/////////////////////////////////////////不在这里继续加协议了，可以参考RoomInfoHandler///////////////////////////////
+	}
+
+	required RequestType requestType = 1; //请求类型
+	optional string md5 = 2;
+	optional int32 seq = 3;
+	optional int64 session_id = 4;
+	optional int32 logic_id = 5; //逻辑服id标识,逻辑服与转发服通信
+	optional int32 prox_id = 6; //转发服id标识,转发与逻辑服通信
+	optional int64 prox_seesion_id = 7; //在代理服的session_id
+	optional int32 game_id = 8; //游戏类型
+	optional int64 proxy_account_id = 9; //玩家账号id
+	repeated int64 accountIds = 10; //考虑给网关服用，
+	optional int64 systemTime = 11;//
+}
+
+extend Request {
+	optional HeartRequest heartRequest = 100;
+	optional LoginRequest loginRequest = 101;
+	optional Response response = 102;
+	optional RoomRequest roomRequest = 103;
+	optional LogicRoomRequest logicRoomRequest = 104;
+	optional MyTestRequest myTestRequest = 105;
+	optional OtherSystemRequest otherSystemRequest = 106;
+	optional StoreRequest storeRequest = 107;
+	optional GoldCardRequest goldCardRequest = 108;
+	optional MoneyGameRequest moneyGameRequest = 109;
+	optional ActivityRequest activityRequest = 110;
+	optional SubAppUpdateRequest subAppUpdateRequest = 111;
+	optional RankRequest rankRequest = 112;
+	optional SignatureRequest signatureRequest = 113;
+	optional PlayerViewRequest playerViewRequest = 114;
+	optional AccountPropertyRequest accountPropertyRequest = 115;
+	optional S2SCommonProto s2sRequest = 116;
+	optional ClubRequest clubRequest = 117;
+	optional CommonProto c2sRequest = 118;
+}

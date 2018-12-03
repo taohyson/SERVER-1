@@ -1,0 +1,124 @@
+package coin;
+
+option java_package = "protobuf.clazz.coin";
+option java_outer_classname = "CoinServerProtocol";
+
+import "coin/CoinProtocol.proto";
+import "basic/common.proto";
+/**
+ * 金币场服务端相关协议编写
+ */
+
+ message S2SGameMatchRequest{
+	optional int64 accountId = 1;
+	optional GameMatchRequest matchReq = 2;
+ }
+
+ message S2SCoineRequest{
+	optional int64 accountId = 1;
+ }
+
+ message S2SMatchSuccessRequest{
+	repeated CoinPlayerProto accounts = 1; // 成员列表
+	optional int32 gameId = 2;
+	optional int32 detailId = 3;
+	optional int32 coinIndex = 4;
+ }
+
+ message S2SGameEnterRequest{
+ 	optional int64 accountId = 1;
+ 	optional int32 proxyId = 2;
+ }
+
+ message S2SGameExitRequest{
+ 	optional int64 accountId = 1;
+ }
+
+ message S2SGameReliefRequest{
+ 	optional int64 accountId = 1;
+ 	optional int32 gameId = 2;
+	optional int32 detailId = 3;
+ }
+
+ message S2SCoinMsgStat{
+ 	optional int32 gameId = 1;
+ 	optional int32 detailId = 2;
+ 	repeated CoinPlayerMsg msgs = 4;
+ 	optional int32 playTime = 5;
+ }
+
+ message CoinPlayerMsg{
+ 	optional int64 accountId = 1;
+ 	optional bool isRobot = 2;
+ 	optional int32 winCoin = 3;
+ 	optional bool isBankrupt = 4;
+ 	optional int32 baseCoin = 5;
+ 	optional int64 playTime = 6; //金币场时间
+ 	optional int64 createTime = 7; //注册时间
+ 	optional int64 nowTime = 8;
+
+	//聚宝盆
+	optional bool cornucopia = 9;//是否参与聚宝盆
+	optional int32 recycleCoin = 10;//回收的金币数
+	optional int32 cornucopiaCost = 11; //参与消耗
+	repeated CommonLI cardTypeValue = 12; //触发的牌型值
+ }
+
+
+message S2SCoinStoreStat{
+	optional int64 accountId = 1;
+	optional int32 opType = 2;
+	optional int32 gold = 3; //闲逸豆
+	optional int32 coin = 4; //金币
+	optional int32 uiType = 5;
+	optional int32 subUiType = 6;
+	optional int32 opId = 7; //操作ID
+}
+
+
+message CornucopiaAwardProto{
+	required int64 accountId = 1;
+	optional int32 gameTypeIndex = 2;
+	optional int32 roundLevel = 3;
+	repeated int32 exciteIds = 4; //达成条件id列表
+	optional int32 optimalOutput = 5; //最优倍数
+	optional string categoryName = 6; //最优奖励的牌型名称
+	optional int32 roomId = 7; //房间id
+	optional int64 optimalCategoryId = 8; //最优奖励的牌型Id
+	optional int32 detailId = 9;//场次id
+	optional int32 outputType = 10; //产出数值类型1百分比2实际数值
+}
+
+//入库数据
+message CornucopiaScoreDBProto{
+	optional int32 gameTypeIndex = 1;
+	repeated PlayerScoreDBEntry entrys = 2;
+}
+
+
+message PlayerScoreDBEntry{
+	required int64 accountId = 1;
+	optional int32 money = 2; //分数
+	optional int32 date = 3;  //大概最近的日期
+}
+
+message CoinPlayerProto{
+	required int64 accountId = 1;
+	optional string nickName = 2;
+	optional string headImg = 3;
+	optional int32 sex = 4;
+	optional bool cornucopia = 5;//参与聚宝盆？
+}
+
+//聚宝盆回收金币数量
+message CornucopiaRecycleCoinProto{
+	optional int32 gameTypeIndex = 1;
+	repeated CommonLI accrual = 2; //k:accountId,v:数量　利息费用
+	repeated CommonLI expenses = 3; //k:accountId,v:数量 报名费
+}
+
+//金币场宝箱
+message CoinBoxRewardScoreProto{
+	optional int32 gameTypeIndex = 1;
+	repeated CommonLI originalWinCoin = 2; //k:accountId,v:数量 宝箱奖分
+}

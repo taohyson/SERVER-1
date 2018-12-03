@@ -1,0 +1,51 @@
+package com.cai.common.constant.game;
+
+public class Constants_HuangZhou {
+    public static final int GAME_RULE_DI_FEN_1 = 1; // 封顶10，底分1
+    public static final int GAME_RULE_DI_FEN_2 = 2; // 封顶20，底分2
+    public static final int GAME_RULE_DI_FEN_5 = 3; // 封顶50，底分5
+    public static final int GAME_RULE_DI_FEN_10 = 4; // 封顶100，底分10
+    
+    public static final int GAME_RULE_QIANG_GANG_HU = 5; // 抢杠胡
+    
+    public static final int CHR_ZI_MO = 0x0001; // 自摸胡
+    public static final int CHR_JIE_PAO = 0x0002; // 接炮胡
+    public static final int CHR_FANG_PAO = 0x0004; // 放炮
+    public static final int CHR_QIANG_GANG = 0x0008; // 抢杠胡
+    public static final int CHR_GANG_KAI = 0x0010; // 杠上花
+    public static final int CHR_YING_HU = 0x0020; // 硬胡
+    public static final int CHR_RUAN_HU = 0x0040; // 软胡
+    
+    public static final int CHR_PI_HU = 0x0080; // 屁胡
+    public static final int CHR_PENG_PENG_HU = 0x0100; // 碰碰胡 
+    public static final int CHR_QING_YI_SE = 0x0200; // 清一色
+    public static final int CHR_QI_DUI = 0x0400; // 七对
+    public static final int CHR_HAO_HUA_QI_DUI = 0x0800; // 豪华七对
+    public static final int CHR_MEN_QIAN_QING = 0x1000; // 门前清
+    
+    public static final int LIANG_LAI_ZI = 1234; // 亮癞子动作
+    
+    public static final int HU_CARD_TYPE_ZI_MO = 1; // 自摸
+    public static final int HU_CARD_TYPE_JIE_PAO = 2; // 接炮
+    public static final int HU_CARD_TYPE_QIANG_GANG = 3; // 抢杠
+    public static final int HU_CARD_TYPE_GANG_KAI = 4; // 杠开
+    public static final int HU_CARD_TYPE_GANG_PAO = 5; // 杠上炮
+    
+    public static final int CARD_DATA_HUANG_ZHOU[] = new int[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, // 万子
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, // 万子
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, // 万子
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, // 万子
+            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, // 索子
+            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, // 索子
+            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, // 索子
+            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, // 索子
+            0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, // 同子
+            0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, // 同子
+            0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, // 同子
+            0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, // 同子
+
+            0x35, 0x35, 0x35, 0x35, // 红中
+            0x36, 0x36, 0x36, 0x36, // 绿发
+            0x37, 0x37, 0x37, 0x37, // 白板
+    };
+}

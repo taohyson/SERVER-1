@@ -1,0 +1,27 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "KwxProto";
+import "basic/protocol.proto";
+
+// 亮牌
+message KWXLiangCard {
+	optional int32 operate_card = 1; //亮张叫口牌
+	optional int32 operate_code = 2; //操作指令  WIK_LIANG = 0x400
+	repeated int32 kou_cards = 3; // 亮扣的牌
+	optional int32 kou_count = 4; //扣牌数量
+}
+
+message DZMessage {
+	repeated Int32ArrayResponse card = 1; // 已选择的子
+	optional int32 end_chu_zi = 2;// 出子借宿
+}
+
+message PlayerDZMessage {
+	optional int32 status = 1; // 出子状态。0：未出子，1：已出子
+	repeated int32 view_card = 2; // 面板上的子
+	repeated int32 can_card = 3; // 已选择的子
+	required int32 type = 4; // 1: 请求出子, 2：获取已出子信息
+	optional DZMessage dzMessage = 5; // 已出子信息
+}
+
+

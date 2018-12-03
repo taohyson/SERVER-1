@@ -1,0 +1,140 @@
+package czbg;
+
+option java_package = "protobuf.clazz.czbg";
+option java_outer_classname = "CZBGRsp";
+import "basic/protocol.proto";
+
+//房间的玩家
+message RoomPlayerResponseCZBG {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+	optional int32 you = 15; // 游数
+}
+
+//结算
+message PukeGameEndCZBG {
+	optional RoomInfo room_info = 8; // 房间信息
+	repeated int32 win_counts = 9; // 赢局数
+	repeated int32 lose_counts = 10; //输局数
+	repeated int32 score_max = 11; // 赢的最大分数
+	repeated float score = 12; // 当前轮分数
+	repeated float end_score = 13; // 当前总分数
+	repeated OpenCard_CZBG open_card = 14; // 开牌
+	optional int32 reason = 15; // 结束原因
+	repeated int32 first_score = 16;
+	repeated int32 second_score = 17;
+	repeated int32 three_score = 18;
+}
+
+message TableResponse_CZBG {
+	optional int32 cell_score = 1; //单元积分
+	optional int32 banker_player = 2; //庄家用户 -1: 表示这一局没有庄家
+	optional int32 current_player = 3; //当前用户
+	optional int32 scene_info = 4;
+	// 下注信息
+	repeated int32 add_jetter = 5; //下注信息
+	// 状态变量
+	repeated bool trustee = 6; //是否托管
+	repeated int32 winner_order = 7;
+	// 扑克数据
+	repeated int32 card_count = 8; //扑克数目
+	repeated Int32ArrayResponse cards_data = 9; //扑克列表
+	repeated bool open_card = 10; // 是否开牌
+	repeated int32 end_score = 12; //用户分数
+	// 叫庄
+	repeated int32 call_banker_info = 13; //所有叫庄信息
+	optional bool player_status = 14; // 是否在游戏
+	repeated int32 card_type = 15; //牌的类型
+	repeated int32 game_time = 16; //牌倍数
+	repeated float point = 24;
+	optional int32 trustee_type = 17; //托管的内容
+	optional RoomInfo room_info = 20;
+	repeated RoomPlayerResponseCZBG players = 21;
+	optional int32 display_time = 18; // 当前操作的播放时间
+	optional CardType_CZBG send_card = 19; // 发牌 (开牌阶段)
+	optional CallBankerInfo_CZBG call_banker_info_czbg = 22; // 用户叫庄信息（如果有 里有有玩家的叫分数据）（叫庄阶段）
+	repeated float score = 23; // 当前局分数
+	optional AddJetton_CZBG add_jetton_info = 25; // 下注信息
+	repeated int32 beishu = 26;// 倍数信息
+	repeated int32 fenshu = 27;// 分数信息
+	optional bool can_bao_dao = 28; // 能否报道
+}
+
+// 用户叫庄信息
+message CallBankerInfo_CZBG {
+	repeated int32 call_banker_info = 1; //叫庄数据
+	optional int32 display_time = 2; //显示时间
+	optional int32 cur_player = 3;
+	repeated int32 call_button = 4; // 叫庄按钮数据
+}
+
+message AddJetton_CZBG{
+	optional int32 min_value = 1; // 最低叫分
+	optional int32 max_value = 2; // 最高叫分
+	optional int32 cur_player = 3; // 当前操作玩家
+	repeated int32 add_jettion_info = 4;// 下注信息
+	optional CallBankerInfo_CZBG callBanker = 5; // 抢庄动画播放
+	optional int32 cur_banker = 6; // 当前庄家
+}
+
+// 确认庄家游戏开始
+message GameStart_CZBG {
+	repeated Int32ArrayResponse jetton_cell = 1; // 下注筹码
+	optional int32 cur_banker = 3; // 当前庄家 -1表示没有庄家
+	optional int32 display_time = 4; // 显示时间
+	optional SendCard_CZBG send_card = 5; // 卡牌信息
+	optional CallBankerInfo_CZBG call_banker_info = 6; // 用户叫庄信息
+	optional RoomInfo room_info = 7;
+	optional bool is_fifth = 8; // 看四张时是否第五张
+	optional bool can_bao_dao = 9; // 能否报道
+}
+
+// 发牌数据包
+message SendCard_CZBG {
+	repeated Int32ArrayResponse send_card = 1; //牌数据包
+	optional int32 display_time = 2; //显示时间
+}
+
+// 用户摊牌
+message OpenCard_CZBG {
+	optional int32 seat_index = 1; // 摊牌用户
+	optional bool open = 2; // 是否摊牌
+	repeated int32 cards = 3; // 牌数据
+	optional CardType_CZBG card_type = 4; // 牌类型
+	optional int32 rate = 5; // 倍数
+	optional float point = 6;
+	repeated int32 score = 7; // 每一道的分数
+	optional int32 call_banker = 8; // -1 不抢，0未操作，1-3倍数，4抢庄
+	optional int32 add_jetton = 9; // 下注分数
+}
+
+message CardType_CZBG {
+	repeated int32 card_type = 1; // 牌类型[头道、中道、尾道]
+	optional int32 time = 2; // 倍数
+}
+
+message OpenCardRequest_CZBG {
+	repeated int32 cards_data = 1; // 扑克列表 [1-2: 头道 3-5: 中道 6-8: 尾道] 如果是小王则在第三位上加值 如小王变成黑桃A的值为0x131, 大王变成黑桃A的值为0x231, 非癞子转换的保留原值0x31
+	optional int32 card_count = 2; // 扑克数目
+	optional int32 call_banker = 3; // -1 不抢，0未操作，1-3倍数，4抢庄
+	optional int32 add_jetton = 4; // 下注分数
+	optional int32 type = 5; // 1010下注、1011下分
+}
+
+message Prompt_CZBG {
+	optional int32 point = 1; // 点数
+	optional int32 seat_index = 2; // 座位号
+	repeated int32 card_datas = 3; // 卡牌数据
+}

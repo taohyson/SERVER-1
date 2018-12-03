@@ -1,0 +1,119 @@
+package fkn;
+option java_package = "protobuf.clazz.sg";
+option java_outer_classname = "sgRsp";
+import "basic/protocol.proto";
+
+//房间的玩家
+message RoomPlayerResponseSg{
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+}
+//用户结束
+message PlayerResultSg{
+	 repeated   int32   player_score = 6;    //总成绩
+}
+//结算
+message PukeGameEndSg{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	repeated int32 card_type  = 5; //牛牛牌型
+	repeated int32 end_score = 6;//结算分数
+	optional int32 player_num = 7;//游戏人数
+	optional int32 reason = 8;//结束类型
+	repeated RoomPlayerResponseSg players = 9;
+	//总结算
+	optional PlayerResultSg player_result = 10;
+
+	optional int32 winner = 11;//赢家s
+	repeated string str_sg_value = 12;//类型描述
+	optional int32 display = 13; //准备时间
+}
+
+message TableResponseSg {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional RoomInfo room_info = 2;
+	repeated RoomPlayerResponseSg players = 3;
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	repeated int32 jetton_button = 5; // 下注按钮
+	repeated int32 jetton_score = 6;//玩家下注
+	repeated bool open_card = 7;//玩家 完成
+	repeated bool liang_card = 8;//玩家亮牌
+	optional int32 scene_status = 9;  //场景状态
+	optional int32 display_time = 10; //显示时间
+	repeated int32 sg_value = 11;  //类型
+	repeated int32 times = 12;  //三公倍数
+	repeated int32 player_score = 13; //用户分数
+	repeated int32 call_button =14;//叫庄按钮
+	repeated int32 jh_value = 15; //金花类型
+	repeated bool player_status = 16;//玩家状态
+	repeated int32 jh_times = 17; // 金花倍数
+}
+
+message ButtonOperateSg{
+    optional int32 opreate_type = 1;//按钮显示类型 --0是抢庄 1是下注
+	repeated int32 button = 2;//玩家按钮
+	optional int32 display_time = 3; //下注时间
+}
+message GameStartSg{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponseSg players = 3;
+}
+
+message JettonResultSg{
+	optional int32 jetton_seat = 1; // 下注用户的位置
+	optional int32 jetton_score = 2; //下注用户的分数
+}
+
+message SelectdBankerSg{
+	optional int32 banker_seat = 1; // 抢庄用户的位置
+	optional int32 banker_score = 2; //抢庄用户的倍数
+}
+
+message SelectdBankerResultSg{
+	optional int32 banker_seat = 1; // 抢庄用户的位置
+	optional int32 banker_score = 2; //抢庄用户的倍数
+}
+
+message SendCardSg{
+    optional int32 opreate_type = 1;//0:抢庄前 1:抢庄后
+	repeated Int32ArrayResponse send_card = 2; // 发牌
+	optional int32 display_time = 3;  // 显示牌
+}
+message OpenCardSg{
+	optional bool open_card = 1;
+	optional int32 seat_index = 2;
+	repeated int32 cards  = 3;
+	optional int32 sg_value = 4;  //类型
+	optional int32 times = 5;  //倍数
+	optional int32 jh_value = 6; //金花类型
+}
+//亮牌结算
+message LiangCardSg{
+	optional int32 seat_index = 1; //玩家ID
+	repeated int32  cards = 2;       //牌值
+	optional int32 sg_value = 3;  //类型
+	optional int32 times  = 4;  //三公倍数
+	optional int32 jh_value = 5; //金花类型
+	optional int32 jh_times = 6; //金花倍数
+
+}
+//请求
+message Opreate_Sg_Request{
+	optional int32  opreate_type = 1;//1:r抢庄 2：下注  3：开牌
+	optional int32 sub_index = 2;//加注筹码数量 //下注下标 叫庄也用这个下标
+}

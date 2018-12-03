@@ -1,0 +1,170 @@
+package deh;
+option java_package = "protobuf.clazz.deh";
+option java_outer_classname = "DehRsp";
+import "basic/protocol.proto";
+
+
+
+
+//玩家状态
+message RefreshPlayerStatus{
+	optional int32 player_index = 1;
+	optional int32 status = 2;//玩家状态 0free 1ready 2playing 3.留座离桌 4断线
+}
+//游戏状态
+message RefreshGameStatus{
+	optional int32 status = 1;//0:啥也不处理，游戏状态 1:等待设置簸簸 2:等待扯牌 3.等待玩家扯牌 4:比头牌 5:比尾牌 6:流局 7:隐藏
+	optional int32 displaytime = 2;
+}
+message Refresh_Colock{
+	optional int32 displaytime = 1;
+	optional int32 type = 2;//1显示，2：隐藏
+}
+
+//结算
+message PukeGameEndDeh{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	repeated int32 end_score = 6;//结算分数
+	optional int32 player_num = 7;//游戏人数
+	optional int32 reason = 8;//结束类型
+	repeated RoomPlayerResponse players = 9;
+	repeated int32 win_sort = 10;//赢家椅子号
+	repeated int32 back_score_chair = 11;//返还分数的椅子号
+	repeated int32 back_score = 12;//返还分数
+	repeated int32 winner = 13;//赢家
+	repeated Int32ArrayResponse card_type = 14;//牌型
+	repeated int32 win_mang_chi_index = 15;//赢芒池玩家
+	repeated int32 win_mang_chi_score = 21;//赢芒池分数
+	repeated int32 mang_pi_score = 16;//芒皮输赢
+	repeated int32 end_score_extra_mang_pi = 17;//输赢,没算芒皮的输赢
+	repeated int32 xian_qian_score = 22;//喜钱分
+	//总结算
+	repeated int32 all_end_score = 18;//总输赢
+	optional int64 start_time = 19;//开始时间
+	optional int64 end_time = 20;//结束时间
+}
+message TableResponseDEH {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+
+	optional RoomInfo room_info = 4;
+	repeated RoomPlayerResponse players = 5;
+	repeated bool is_give_up = 6;//放弃
+	repeated int32 jetton_score = 7;//玩家下注
+	optional int32 display_time = 8; //显示时间
+	optional int32 deh_game_status = 10;//游戏状态
+	repeated bool is_bobo = 9;//已经设置簸簸
+	optional int32 max_bobo_score = 11;//最大簸簸数
+	optional int32 min_bobo_score = 12;//最大簸簸数
+	repeated Int32ArrayResponse cards_data = 13; //扑克列表
+	repeated bool is_open_card = 14;//是否开牌
+	repeated Int32ArrayResponse card_type = 15;//牌型
+	optional int32 mang_chi_score = 16;//芒池分数
+	optional int32 mang_pi = 17;//芒皮
+}
+message GameStartDEH{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+	optional int32 max_bobo_score= 3;
+	optional int32 min_bobo_score= 4;
+	optional int32 display_time= 5;
+}
+message Make_Sure_Banker{
+	optional int32 banker_index = 1;//庄家位置
+}
+
+message Refresh_Table_message{
+	optional int32 current_player = 1;//当前游戏人数
+	optional int32 mang_chi_score = 2;//芒池分数
+	optional int32 xiu_mang_cur_round = 3;//休芒当前轮数
+	optional int32 xiu_mang_total_round = 4;//休芒总轮数
+	optional int32 mang_pi = 5;//芒皮
+	optional int32 shou_mang_cur_round = 6;//休芒当前轮数
+	optional int32 shou_mang_total_round = 7;//休芒总轮数
+}
+message Send_card_Deh{
+	repeated Int32ArrayResponse cards_data = 1; //扑克列表
+	repeated int32 card_count = 2; //扑克数目
+	optional int32 display_time = 3; //显示时间
+	optional int32 current_player = 4;//当前玩家
+	repeated Int32ArrayResponse hand_cards_data = 5; //扑克列表
+	repeated int32 hand_card_count = 6; //扑克数目
+}
+//玩家可操作
+message User_Can_Opreate{
+	optional int32 give_up = 1;//丢 0:表示不能用
+	optional int32 gen_zhu = 2;//跟注  0:表示不能用，大于0表示跟注分数
+	optional int32 add_operate = 3;//大  0:表示不能用,大于0表示能加注
+	optional int32 shuo_hand = 4;//敲 0:表示不能用,大于0表示敲分数
+	optional int32 pass = 5;//休 0:表示不能用
+	optional int32 add_score_min = 6;
+	optional int32 add_score_max = 7;
+	optional int32 current_player = 8;//当前玩家
+	optional int32 displaytime = 9;//操作时间
+}
+//下注结果
+message Score_Result{
+	optional int32 opreate_player = 1;//操作玩家
+	optional int32 jetton_score = 2;//玩家下注
+	optional int32 current_player = 3;//当前玩家
+	optional int32 jetton_total_score = 4;//总下注
+	optional int32 display_time = 5; //显示时间
+	optional int32 jetton_type = 6;//1:跟注，2：下注，3：加注，4：比牌下注,5:加注最大
+	optional int32 user_score = 7;//玩家分数
+}
+message Make_BoBo_Result{
+	repeated RoomPlayerResponse players = 1;
+	optional int32 total_bobo = 2;//簸簸总分
+	optional int32 opreate_player = 3;//操作玩家
+}
+//操作结果
+message Opreate_Result{
+	optional int32 opreate_player = 1;//操作玩家
+	optional int32 opreate_type = 2;//操作类型 1：丢 2:休 3：敲 4：大 5：跟
+	optional int32 current_player = 3;//当前玩家
+	optional int32 display_time = 4; //显示时间
+}
+message Che_Pai_Begin{
+	repeated Int32ArrayResponse cards_data = 1; //扑克列表
+	repeated Int32ArrayResponse type = 2;//牌型
+	optional int32 score = 3; //下注总额
+}
+message Che_Pai_End{
+	repeated Int32ArrayResponse cards_data = 1; //扑克列表
+	repeated int32 card_count = 2; //扑克数目
+	repeated int32 type = 3;//牌型
+	optional int32 opreate_type = 4;//操作类型，1：比头牌2：比尾牌
+}
+message Open_Card_Result{
+	optional int32 opreate_player = 1;//操作玩家
+	repeated int32 cards_data = 2; //扑克列表
+	repeated int32 cards_type = 3; //牌型
+}
+//特殊牌型提示
+message Special_Remin{
+	optional string remin_message = 1;//提示信息
+}
+message Zi_Chan_Score{
+	optional int32 zi_chan_score = 1;//资产分数
+	optional int32 bu_score_min = 2;//补分限制
+	optional int32 bu_score_use_gold = 3;//补分消耗
+	optional int64 gold = 4;//玩家闲逸豆
+	optional int32 is_bu_score = 5;//能否补分
+}
+
+//请求
+message Opreate_Request_DEH{
+	optional int32 opreate_type = 1;//1：丢 2:休 3：敲 4：大 5：跟 6:叫簸簸数，7：特牌取消,8:补分请求，9：补分确定
+	optional int32 jetton_score = 2;//下注筹码数量
+}
+message Opreate_open_card{
+	repeated int32 cards_data = 1; //扑克列表
+	optional int32 card_count = 2; //扑克数目
+}
+

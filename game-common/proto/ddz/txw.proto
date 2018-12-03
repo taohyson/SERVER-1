@@ -1,0 +1,140 @@
+package txw;
+option java_package = "protobuf.clazz.txw";
+option java_outer_classname = "TxwRsp";
+import "basic/protocol.proto";
+
+
+//1001
+message GameStart_Txw{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+}
+
+
+
+//用户出牌 1003
+message OutCardData_Txw{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated int32 user_get_score = 11;//玩家抓分
+	repeated int32 hand_card_count = 12; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 13; //扑克列表
+	optional bool is_current_first_out = 14;//当前操作玩家是否首出
+	optional int32 is_can_ya = 15;//是否能压
+}
+
+
+//结算 1004
+message PukeGameEnd_Txw{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated Int32ArrayResponse card_count = 4; //扑克数目
+	repeated Card_Arrary_Txw cards_data = 5; //扑克列表
+	repeated Int32ArrayResponse end_score = 6;//总分
+	optional int32 player_num = 7;//游戏人数
+	optional int32 banker_player = 8;//庄家
+	optional int32 reason = 9;//结束类型
+	optional int32 di_pai_count = 15;
+	repeated int32 di_pai_card_data = 16;
+
+	//总结算
+	repeated int32 all_end_score = 10;//结算总积分
+	repeated RoomPlayerResponse players = 11;
+	repeated int32 lose_num = 12;
+	repeated int32 win_num = 13;
+	repeated int32 end_score_max = 14;
+	repeated float all_game_score = 17;//结算总积分
+	optional float times = 18;//倍率
+}
+//1002
+message TableResponse_Txw {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  player_pass = 7;			//本轮不出数据
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目 -1不显示数目 -2 显示小于15张 0即为打完了
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	optional bool is_can_ya = 19;//是否能压
+	optional int32 round = 20;
+}
+//二维数组
+message Card_Arrary_Txw{
+	repeated Int32ArrayResponse card_data = 1;
+}
+
+
+//1005
+message RefreshCardData_Txw{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+}
+//1006
+message SendCardTxw{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	optional int32 round = 3;//当前回合
+}
+//1007
+message round_end_Txw{
+	repeated int32 end_score = 1;//
+	repeated Int32ArrayResponse card_data = 3;//牌
+	optional int32 end_type = 4;//0：流局 1：正常
+}
+//1008
+//用户操作
+message PlayerControl_Txw{
+	optional int32 prv_type = 1;//上一个操作类型 1：不叫 2:叫 3：不踢 4：提  5：加提 6：回提
+	optional int32 call_player = 2;//上一个操作玩家
+	optional int32 call_action = 3;//具体操作  0都为否
+	optional int32 current_player = 4;//当前玩家
+	repeated int32 all_call_action = 5;//所有的玩家操作 -1：未操作 1：不叫 2:叫 3：不踢 4：提  5：加提 6：回提 7:跟踢
+	repeated int32 current_player_call_action = 6;//当前玩家操作按钮 1：不叫 2:叫 3：不踢 4：提  5：加提 6：回提 7:跟踢
+	optional int32 display_time = 7; //显示时间
+}
+//叫庄结果 1009
+message CallBankerResult_Txw {
+	optional int32 banker_player = 1; //庄家玩家
+	repeated int32 out_player = 2;//出局玩家
+	repeated int32 is_ti = 3;//踢玩家
+}
+
+//玩家倍数 1010
+message PlyarTimes{
+	repeated int32 times = 1;//
+}
+//投降开始 1011
+
+//投降结果 1012
+message Give_Up_Result{
+	repeated int32 is_give_up = 1;//认输
+	optional int32 operate_player = 2;//操作玩家
+	optional int32 cur_opreate = 3;//当前操作
+}
+//请求 1083
+message Opreate_RequestWsk_Txw{
+	optional int32 opreate_type = 1;//1：不叫 2:叫 3：不踢 4：提  5：加提 6：回提 7:跟踢 8：认输 9:不认输
+}

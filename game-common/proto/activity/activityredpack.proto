@@ -1,0 +1,75 @@
+package redpacket;
+option java_package = "protobuf.clazz.activity";
+option java_outer_classname = "ActivityRedPackProto";
+
+//cmd: 25红包雨数据请求
+message ActivityRedPackReq{
+	//数据类型  1: 排行榜数据  2： 我的红包获得 3:我的红包领取   4:活动规则 5:获取分享链接   6:分享成功通知
+	required int32 paramType = 1;
+
+}
+
+//cmd： 29 红包雨排行榜数据
+message RankListRedPackResp{
+	repeated RankData rankData = 1;
+	optional double notReceiveMoney = 2; //未领取金额
+	optional double allMoney = 3; //全部金额
+}
+
+//排行榜数据
+message RankData{
+	optional int32 ranking = 1;   //名次
+	optional string headImgUrl = 2; //头像
+	optional string nickName = 3; //昵称
+	optional double redPackMoney = 4; //金额
+}
+
+//cmd： 30 我的红包获得
+message GetRedPackResp{
+	repeated GetRedPackData getData = 1;
+}
+//我的红包获数据
+message GetRedPackData{
+	optional int64 getTime = 1;   //时间
+	optional string activityName = 2; //活动类型
+	optional double redPackMoney = 3; //金额
+}
+
+
+//cmd： 31 个人红包领取数
+message ReceiveRedPackResp{
+	repeated ReceiveRedPackData receiveData = 1;
+}
+
+//个人红包领取数据
+message ReceiveRedPackData{
+	optional int64 receiveTime = 1;   //时间(时间戳)
+	optional double redPackMoney = 2; //金额
+}
+
+//cmd： 32 活动规则
+message ActivityRuleResp{
+	repeated RedPackRuleData rules = 1; // 活动规则
+}
+
+//活动规则
+message RedPackRuleData{
+	optional string title = 1;   //标题
+	optional string content = 2;  //文本内容
+}
+
+//cmd： 33 获取红包雨分享链接
+message ActivityShareResp{
+	optional string share = 1; // 分享链接
+}
+
+//cmd:34 发送红包
+message RedPackSendResp{
+	required int32  activityType = 1; //红包类型
+	repeated int32 	seatIndex = 2;    //座位号
+	//required double red_money = 2;
+}
+
+
+
+

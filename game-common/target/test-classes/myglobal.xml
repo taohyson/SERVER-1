@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<global>
+    <redis>
+        <hostNode>xxxxxxxxxxx</hostNode>
+        <maxActive>23</maxActive>
+        <maxIdle>434</maxIdle>
+        <maxWait>5434</maxWait>
+        <passwd>233333333333</passwd>
+        <testOnBorrow>true</testOnBorrow>
+    </redis>
+</global>

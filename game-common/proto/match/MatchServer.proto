@@ -1,0 +1,128 @@
+package matchHeader;
+option java_package = "protobuf.clazz.match";
+option java_outer_classname = "MatchRsp";
+import "s2s/baseServer.proto";
+import "match/MatchClientHeader.proto";
+
+message MatchS2SRequest{
+	optional MatchS2SCmd cmd = 1;
+	optional MatchServerStartProto matchStart = 2;
+	optional MatchServerOverProto matchOver = 3;
+	optional MatchClientRequestWrap clientRequest = 4;
+	optional MatchBaseRequest base = 5;
+	optional MatchServerOutProto playerOut = 6;
+	optional MatchServerTopOverProto matchTopOver = 7;
+	optional MatchServerTopStatusProto matchTopStatus = 8;
+}
+
+message MatchBaseRequest{
+	optional int64 accountId = 1;
+}
+
+message MatchServerStartProto{
+	optional int32 id = 1; //每场比赛的唯一Id
+	repeated int64 accountIds = 2; // 成员列表
+	optional int32 matchId = 3; //
+	optional int64 startTime = 4;//
+	optional int32 logicIndex = 5;
+	optional int32 failType = 6;
+	repeated int64 matchAdminIds = 7; //比赛管理员ID
+	optional bool isStop = 8; //是否停止(关闭)比赛
+	repeated int32 costTypes = 9; // 成员列表报名消费方式
+	optional int32 randNum = 10; //随机添加的机器人数量
+	repeated int32 accountTimes = 11; //成员列表冲榜倍数
+	optional bool isTop = 12; // 是否冲榜赛
+	optional int32 gamerNum = 13; //当前报名人数
+}
+
+message MatchClientRequestWrap{
+	optional int64 accountId = 1;
+	optional MatchClientRequest request = 2;
+	optional int32 proxyIndex = 3;
+	optional int32 id = 4; //比赛Id
+}
+
+enum MatchS2SCmd{
+	S2S_MATCH_START = 0; // 比赛开始
+	S2S_MATCH_OVER = 1; // 比赛结束
+	S2S_MATCH_CLIENT = 2; //客户端协议转发
+	S2S_MATCH_START_FAIL = 3; // 開局失敗或異常，返回門票
+	S2S_MATCH_PLAYER_OUT = 4; // 玩家被淘汰
+	S2S_MATCH_PLAYER_TIMEOUT = 5; // 玩家超时
+	S2S_MATCH_PLAYER_LEAVE = 6; // 退赛
+	S2S_MATCH_TOP_OVER = 7; // 冲榜赛比赛结束
+	S2S_MATCH_TOP_STATUS = 8; // 冲榜赛比赛状态
+}
+
+message MatchServerTopStatusProto{
+	optional int32 id = 1; // 每场比赛的唯一Id
+}
+
+message MatchServerTopOverProto{
+	optional int32 matchId = 1; // 比赛Id
+	optional int32 id = 2; // 每场比赛的唯一Id
+	repeated int64 accountIds = 3; // 玩家ID
+	repeated int32 winScore = 4; //赢得的积分
+	repeated bool isPayAccounts = 5; //
+	repeated bool isNewAccounts = 6; //
+	repeated int32 times = 7; //倍数
+	optional int64 startTime = 8;//
+	repeated int32 winNum = 9; //上游次数
+	repeated int32 singleNum = 10; //报听次数
+}
+
+message MatchServerOverProto{
+	optional int32 id = 1; // 每场比赛的唯一Id
+	optional int32 matchId = 2; // 比赛Id
+	repeated int64 accountIds = 3; // 玩家排名
+	repeated int32 ranks = 4; // 排行
+	optional int32 playTime = 5; //游戏时长
+	optional int32 robotNum = 6;//机器人数量
+	repeated bool isPayAccounts = 7; //
+	repeated bool isNewAccounts = 8; //
+	optional int32 playerCount = 9; //当前比赛人数
+	repeated int32 roundNums = 10; //胜局数
+}
+
+//玩家出局了 获取比赛排名
+message MatchServerOutProto{
+	optional int32 id = 1; // 每场比赛的唯一Id
+	optional int32 matchId = 2; // 比赛Id
+	optional int64 accountId = 3;
+	optional int32 rank = 4; //排名
+	repeated int64 accountIds = 5;
+	optional bool isPayAccount = 6;
+	optional bool isNewAccount = 7;
+	optional int32 playerCount = 9; //当前比赛人数
+	repeated int32 roundNums = 10; //胜局数
+}
+
+message MatchServerDataProto{
+	optional int32 id = 2;
+	repeated MatchServerPlayerProto players = 1;
+}
+
+message MatchServerPlayerProto{
+	optional int64 nextRefreshTime = 1;
+	repeated MatchServerPlayerMatchDataProto datas = 2;
+
+	optional int64 accountId = 3;
+	message MatchServerPlayerMatchDataProto{
+		optional int32 matchId = 1;
+		optional int32 freeCount = 2;
+		optional int32 shareCount = 3;
+	}
+}
+
+message MatchBaseServerProto{
+	optional int32 matchId = 1; // matchId
+	repeated MatchBasePlayerServerProto playerList = 2;
+
+	message MatchBasePlayerServerProto{
+		optional int64 accountId = 1;
+		optional int32 costType = 2;
+		optional int32 status = 3;
+		optional string applyTime = 4;
+		optional int32 opType = 5;
+	}
+}

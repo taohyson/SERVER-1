@@ -1,0 +1,18 @@
+package mj;
+option java_package =  "protobuf.clazz.mj";
+option java_outer_classname = "GdtdhPro";
+
+import "basic/protocol.proto";
+
+message GDTDHGameEndResponse {
+	repeated Int32ArrayResponse an_gang_card = 1; // 暗杠的牌
+	repeated Int32ArrayResponse ming_gang_card = 2; // 明杠的牌
+	repeated Int32ArrayResponse jie_gang_card = 3; // 接杠的牌
+	repeated Int32ArrayResponse dian_gang_card = 4; // 点杠的牌 ，与接杠对应
+	repeated string hu_des = 5; // 牌描述
+
+	repeated int32 banker_count = 6; //坐庄次数
+	repeated int32 hu_count = 7; // 胡牌次数
+	repeated int32 win_score_count = 8; // 赢分次数
+	repeated int32 gang_count = 9; // 杠次数
+}

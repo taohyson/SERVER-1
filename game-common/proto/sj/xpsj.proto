@@ -1,0 +1,170 @@
+package Xpsj;
+option java_package = "protobuf.clazz.Xpsj";
+option java_outer_classname = "XpsjRsp";
+import "basic/protocol.proto";
+
+//用户出牌 1003
+message OutCardDataXpsj{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional int32 display_time = 9; //显示时间
+	repeated Int32ArrayResponse hand_card_data = 10;//手牌数据
+	repeated int32 hand_card_count = 11;//手牌数目
+	optional int32 max_value_seat = 12;//最大牌位置
+	repeated int32 user_can_out_data = 13;//可出牌数据
+	optional int32 user_can_out_count = 14;//可出牌数目
+	optional int32 is_current_first_out = 15;//是否首出
+	optional bool isround = 16;//一圈出完
+	repeated int32 card_data_failure = 17;//数据
+	optional bool is_score_must = 18;//有分必管
+	optional bool is_must_A = 19;//必出A
+	repeated int32 turn_cards_data = 20;  //最大牌数据
+	optional int32 turn_cards_count = 21;//最大牌数据
+	optional int32 turn_out_card_type = 22;//最大牌数据
+}
+
+//结算 1004
+message PukeGameEndXpsj{
+	optional RoomInfo room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	repeated int32 card_count = 4; //扑克数目
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	optional int32 player_num = 6;//游戏人数
+	optional int32 banker_player = 7;//庄家
+	optional int32 reason = 8;//结束类型
+	repeated int32 game_score = 9;//积分
+	repeated int32 init_di_pai = 10;//初始底牌
+	repeated int32 banker_mai_pai = 11;//庄家埋牌
+	repeated int32 zhua_fen = 12;//抓分
+	repeated Int32ArrayResponse score_card = 13;//分牌数据
+
+	repeated int32 all_end_score = 14;//结算总积分
+	repeated RoomPlayerResponse players = 15;
+}
+//1002
+message TableResponse_Xpsj {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5;  //本轮出牌数据
+	repeated int32  out_cards_count = 6;			//本轮牌数量
+	repeated int32  out_cards_type = 7;			//本轮出牌类型
+	repeated int32 card_type = 8;	//出牌类型
+	optional int32 pr_out_card_player=9;//上一出牌玩家
+	repeated int32 pr_cards_data = 10;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 11;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 12;//出牌类型
+	optional int32 is_first_out = 13;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 14; //显示时间
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional RoomInfo room_info = 17;
+	repeated RoomPlayerResponse players = 18;
+	repeated int32 user_can_out_data = 19;//可出牌数据
+	optional int32 user_can_out_count = 20;//可出牌数目
+	optional int32 zhu_type = 21;//主牌类型
+	optional int32 max_card_seat = 22;//最大牌位置
+	repeated int32 turn_cards_data = 23;  //最大牌数据
+	optional int32 turn_cards_count = 24;//最大牌数据
+	optional int32 turn_out_card_type = 25;//最大牌数据
+		optional bool is_score_must = 26;//有分必管
+	optional bool is_must_A = 27;//必出A
+}
+//1001
+message GameStart_Xpsj{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+}
+//1005
+message SendCard_Xpsj{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+	repeated int32 hand_card_count = 3; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 4; //扑克列表
+}
+//1013
+message RefreshCardData_Xpsj{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+}
+//叫庄结果 1006
+message CallBankerResponse_Xpsj{
+	optional int32 seat_index = 1;//
+	repeated int32 cards_data = 2;//牌数据
+	optional int32 type = 3;//叫主类型 1:亮 2：反主
+}
+//1010
+message Zhu_Count_Xpsj{
+	optional int32 type = 1;//1 叫主 2反主
+	repeated bool is_liang = 2;//是否亮
+}
+//1007
+message MaiDiBegin_Xpsj{
+	optional int32 seat_index = 1;//
+	optional int32 display_time = 2;//
+}
+//1008
+message MaiDiOpreate_Xpsj{
+	repeated int32 opreate = 1;//1投降 2：拿底牌 3：埋底牌
+}
+//1011
+message SendCardEnd_Xpsj{
+	optional int32 card_count = 1;//底牌数目
+	optional int32 is_animal = 2;//是否动画 1:需要动画 0：直接显示数据
+}
+
+//1012
+message DiPaiCard_Xpsj{
+	repeated int32 card_data = 1;//底牌数据
+}
+//1014
+message effect_type_xpsj{
+	optional int32 seat_index = 2;
+	optional int32 type = 1;//1:隐藏叫主面板 2：毙了
+	optional int32 data = 3;//被毙玩家
+}
+//1015
+message Zhu_card_Data_xpsj{
+	repeated int32 card_data = 1;//主牌数据
+	optional int32 zhu_type = 2;//主牌类型
+	optional int32 banker_seat = 3;//庄家位置
+}
+
+//1009
+message TableScore_Xpsj{
+	repeated int32 get_score = 1;
+	optional int32 table_score = 2;
+	optional int32 is_delay = 3;//0:不需要 1：需要
+}
+//二维数组
+message Card_Arrary_xpsj{
+	repeated Int32ArrayResponse card_data = 1;
+}
+//1016
+message LiShiCard_xpsj{
+	repeated Card_Arrary_xpsj card_data = 1;//历史数据
+	optional int32 banker_player = 2;//庄家位置
+}
+//1017
+message PaiFenData_xpsj{
+	repeated Int32ArrayResponse cards_data = 1;  //牌分数据
+	repeated int32 cards_count = 2;//牌分数量
+	optional int32 yu_score = 3;//余分
+}
+//请求
+message Opreate_RequestWsk_Xpsj{
+	optional int32 opreate_type = 1;//1:叫主
+	optional int32 select_type = 2;//0123456:方梅红黑小王大王不叫
+	repeated int32 cards_data = 4; //埋底扑克列表
+}

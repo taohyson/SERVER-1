@@ -1,0 +1,160 @@
+package xykl;
+option java_package = "protobuf.clazz.xykl";
+option java_outer_classname = "xyklRsp";
+import "basic/protocol.proto";
+import "basic/common.proto";
+
+//房间信息
+message RoomInfoXykl {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional string game_rule_des = 3; //玩法说明
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 _banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+	optional CommonGameRulesProto new_rules = 13; // 新rules
+}
+//房间的玩家
+message RoomPlayerResponseXykl {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+}
+//刷新用户扑克
+message RefreshCardsXykl{
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+}
+//结算
+message PukeGameEndXykl{
+	optional RoomInfoXykl room_info = 1;
+	optional int32 cur_round = 2; //当前圈数
+	optional int32 game_round = 3; //游戏圈数
+	optional int32 player_num = 4;//游戏人数
+	optional int32 reason = 5;//结束类型
+	repeated int32 end_score = 11;//结束分数
+	repeated int32 game_cell = 12;//底注
+	repeated int32 user_jetton_score = 13;//玩家下注
+	repeated int32 user_is_call_banker = 14;//玩家是否抢买
+	repeated int32 card_count = 15; //扑克数目
+	repeated Int32ArrayResponse cards_data = 16; //扑克列表
+	optional int32 total_jetton_score = 19;//奖池分数
+	optional int32 display_time = 20; //显示时间
+	//总结算
+	repeated int32 all_end_score = 6;//结算总积分
+	repeated int32 end_score_max = 7;//单句最高得分
+	repeated int32 win_num = 8;//赢句数
+	repeated int32 lose_num = 9;//输句数
+	repeated RoomPlayerResponseXykl players = 10;
+	optional int64 start_time = 17;//开始时间
+	optional int64 end_time = 18;//结束时间
+	repeated int32 di_chi_score = 21;//底池分数
+}
+message TableResponse_Xykl {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	optional int32 total_jetton_score = 8;//奖池分数
+	repeated int32 user_jetton_score = 9;//玩家下注分数
+	repeated int32 user_win_lose_score = 17;//玩家输赢分数
+	repeated int32 card_count = 10; //扑克数目
+	repeated Int32ArrayResponse cards_data = 11; //扑克列表
+	repeated int32 is_call_banekr = 12;//是否抢买
+	repeated int32 is_open_card = 13;//是否开牌
+	optional int32 is_can_cuo_pai = 14;//能否搓牌 1能搓牌，0不能搓牌
+	repeated int32 is_cuo_pai = 15;//玩家搓牌状态
+	repeated int32 user_status = 16;//玩家当前状态 0:抢庄状态，1：下注，2：开牌，3：搓牌，4：开牌结束
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	optional int32 display_time = 5; //显示时间
+	optional RoomInfoXykl room_info = 6;
+	repeated RoomPlayerResponseXykl players = 7;
+}
+message GameStart_Xykl{
+	optional RoomInfoXykl room_info = 1;
+	repeated RoomPlayerResponseXykl players = 2;
+	repeated int32 card_count = 3; //扑克数目
+	optional int32 game_cell = 4;
+	repeated Int32ArrayResponse cards_data = 5; //扑克列表
+	optional int32 display_time = 6; //显示时间
+	optional int32 jetton_total_score = 7; //奖池分数
+	optional int32 is_jetton = 8;//0:不需要，1：需要
+}
+//叫庄
+message CallBankerResult{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	optional int32 is_call_banekr = 2;//是否叫庄
+	optional int32 banker_seat_index = 3;//庄家位置
+	repeated int32 seat_index_sis_call= 4;//该位置是否叫庄
+}
+
+//下注范围
+message JettonArea{
+	optional int32 jetton_score_min = 1;//下注最少分数
+	optional int32 jetton_score_max = 2;//下注最大分数
+	optional int32 jetton_seat_index = 3;//当前可下注玩家
+	optional int32 display_time = 4; //显示时间
+}
+//下注
+message JettonResult{
+	optional int32 opreate_seat_index = 1;//操作玩家
+	optional int32 jetton_score = 2;//下注分数
+	optional int32 is_all_in = 3;//是否梭哈
+	optional int32 total_jetton_score = 4;//奖池分数
+}
+//开牌
+message OpenCardResult{
+	optional int32 card_count = 1; //扑克数目
+	repeated int32 cards_data = 2; //扑克列表
+	optional int32 opreate_seat_index = 3;//操作玩家
+	optional int32 total_jetton_score = 4;//奖池分数
+	optional int32 win_or_lose = 5;//输赢
+	optional int32 banker_seat_index = 6;//庄家位置
+	optional int32 current_player = 7;//当前玩家
+	optional int32 user_jetton_score = 8;//开牌玩家下注
+	optional int32 display_time = 9; //显示时间
+	optional int32 score = 10;//积分
+}
+
+//发牌
+message SendCardsXykl{
+	optional int32 card_count = 1; //扑克数目
+	repeated int32 cards_data = 2; //扑克列表
+	optional int32 send_card_player=3;//发牌玩家
+	optional int32 display_time = 4; //显示时间
+	optional int32 is_can_cuo_pai = 5;//能否搓牌 1能搓牌，0不能搓牌
+	optional int32 hand_card_count = 6; //扑克数目
+	repeated int32 hand_cards_data = 7; //扑克列表
+}
+//坐下确认
+message EnterRoomConfirm{
+	optional string desc = 1;//坐下提示
+	optional int32 display_time = 2; //显示时间
+}
+
+//请求
+message Opreate_Request_Xykl{
+	optional int32 opreate_type = 1;//1：抢买，2：下注,3:亮牌,4:搓牌
+	optional int32 is_qiang_mai = 2;//是否抢买,1:抢，-1:弃
+	optional int32 add_jetton_score = 3;//加注筹码数量
+	optional int32 is_join = 4;//是否加入
+}

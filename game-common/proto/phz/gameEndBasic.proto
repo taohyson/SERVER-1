@@ -1,0 +1,11 @@
+package phz;
+option java_package = "protobuf.clazz.phz";
+option java_outer_classname = "GameEndBasic";
+import "basic/protocol.proto";
+
+message Game_End_Basic {
+    repeated int32 score_player_1 = 1; // 玩家1的所有小局的分
+    repeated int32 score_player_2 = 2; // 玩家2的所有小局的分
+    repeated int32 score_player_3 = 3; // 玩家3的所有小局的分
+    repeated int32 score_player_4 = 4; // 玩家4的所有小局的分
+}

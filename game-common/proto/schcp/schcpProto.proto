@@ -1,0 +1,17 @@
+package schcp;
+option java_package = "protobuf.clazz.schcp";
+option java_outer_classname = "schcpRsp";
+import "basic/protocol.proto";
+
+
+//用户结束
+message PlayerResultSchcp{
+	 repeated   int32   player_score = 1;    //总成绩
+	 repeated   Int32ArrayResponse  score = 2;    //每局用户的成绩
+}
+
+message PukeGameEndSchcp{
+	 repeated   Int32ArrayResponse   zhao_card = 1;    //召过的牌
+	 optional 	PlayerResultSchcp player_result = 2;         //总结算数据
+}
+

@@ -1,0 +1,165 @@
+package pdk;
+
+option java_package = "protobuf.clazz.yyqf";
+option java_outer_classname = "YYQFRsp";
+import "basic/protocol.proto";
+
+//房间信息
+message RoomInfoYYQF {
+	optional int32 room_id = 1; //房间号
+	optional int32 game_type_index = 4; //玩法
+	optional int32 game_rule_index = 2; //玩法
+	repeated int32 game_rule_index_ex = 12; //附加玩法
+	optional string game_rule_des = 3; //玩法说明
+	optional int32 game_round = 5;
+	optional int32 cur_round = 6;
+	optional int32 game_status = 7;
+	optional int64 create_player_id = 8;
+	optional int32 begin_left_card = 9;
+	optional int32 _banker_player = 10; //当前庄家
+	optional string create_name = 11; //创建者姓名
+}
+//房间的玩家
+message RoomPlayerResponseYYQF {
+	optional int64 account_id = 1; //账号id
+	optional string user_name = 2; //角色名
+	optional string head_img_url = 3; //玩家头像
+	optional int32 seat_index = 4; //玩家位置索引
+	optional string ip = 5; //玩家IP
+	optional int32 online = 6; //1在线0断线
+	optional int32 sex = 7;
+	optional float score = 8;
+	optional int32 ready = 9; //0没准备,1准备
+	optional string ip_addr = 10; //物理地址
+	optional LocationInfor locationInfor = 11;
+	optional bool is_trustee = 12; //true托管 false 取消
+	optional int64 money = 13; //金币
+	optional int64 gold = 14; //闲逸豆
+	optional int32 you = 15; // 游数
+}
+//刷新用户扑克
+message RefreshCardsYYQF {
+	repeated int32 card_count = 1; //扑克数目
+	repeated Int32ArrayResponse cards_data = 2; //扑克列表
+}
+//用户出牌
+message OutCardDataYYQF {
+	optional int32 out_card_player = 1; //出牌玩家
+	repeated int32 cards_data = 2; //出牌数据
+	repeated int32 change_cards_data = 3; //变换之后的数据
+	optional int32 cards_count = 4; //出牌数量
+	optional int32 card_type = 5; //出牌类型
+	optional int32 cur_player = 6; //当前玩家
+	repeated int32 pr_cards_data = 7; //上一玩家出牌数据
+	repeated int32 pr_change_cards_data = 8; //变换之后的数据
+	optional int32 pr_cards_count = 9; //上一玩家出牌数量
+	optional int32 pr_out_card_type = 10; //出牌类型
+	optional bool is_first_out = 11; //是否首出
+	optional int32 display_time = 12; //显示时间
+	optional int32 you = 13; //默认为0 。大于1代表出牌完了。 xx游
+	optional bool isNewTurn = 14; // 是不是新的一轮
+	repeated int32 score_card = 15; //本轮的分数牌 新一轮回清掉
+	optional int32 score_turn = 16; //本轮得分，没人出牌，开启新一轮的时候 会下发这个数据
+	repeated int32 player_scores = 17; //每个玩家的分数 持续更新
+	repeated int32 round_scores = 18; //当局得分
+	repeated int32 total_scores = 19; //总得分
+	repeated int32 round_boom_scores = 20; //当局炸弹分数 持续更新
+	repeated int32 total_boom_scores = 21; //每个玩家的总炸弹分数
+}
+//结算
+message PukeGameEndYYQF {
+	optional RoomInfoYYQF room_info = 1;
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	repeated int32 boom_card_num = 4; //炸弹数量
+	optional int32 player_num = 5; //游戏人数
+	optional int32 reason = 6; //结束类型
+	repeated int32 you = 7; //游
+	repeated int32 score = 26; // 本局积分
+	repeated int32 end_score = 8; // 本局最终积分(累计积分)
+	repeated int32 round_extra_score = 9; // 本局额外得分(奖分)
+	repeated int32 boom_score = 10; // 本局炸弹得分(喜分、累计喜分)
+
+	//总结算
+	repeated int32 all_boom_score = 15; //总喜分 (喜)
+	repeated int32 all_extra_score = 27; //总奖分(奖分)
+	repeated int32 all_score = 28; //积分
+	repeated int32 all_boom_card_num = 16; //总炸弹数量
+	repeated int32 all_end_score = 17; //结算总积分(总积分)
+	repeated int32 end_score_max = 18; //单句最高得分
+	repeated int32 win_num = 19; //赢句数
+	repeated int32 lose_num = 20; //输句数
+	repeated RoomPlayerResponseYYQF players = 21;
+	repeated int32 final_score = 22; // 最终得分 = 总喜分 +总积分
+	repeated int32 rounding_score = 23; // 四舍五入后得分
+	repeated int32 rest_datas = 24; // 剩余卡牌数据
+	optional int32 rest_count = 25; // 剩余卡牌数量
+	repeated int32 sys_score = 29; // 系统计算
+	optional int64 create_player_id = 30; // 创建者ID
+}
+
+message TableResponseYYQF {
+//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//状态变量
+	repeated bool trustee = 4; //是否托管
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 5; //本轮出牌数据
+	repeated Int32ArrayResponse change_cards_data = 6; //变换之后的数据
+	repeated int32 out_cards_count = 7; //本轮牌数量
+	repeated int32 player_pass = 8; //本轮不出数据
+	repeated int32 card_type = 9; //出牌类型
+	optional int32 pr_out_card_player = 10; //上一出牌玩家
+	repeated int32 pr_change_cards_data = 11; //变换之后的数据
+	repeated int32 pr_cards_data = 12; //上一玩家出牌数据
+	optional int32 pr_cards_count = 13; //上一玩家出牌数量
+	optional int32 pr_out_card_type = 14; //出牌类型
+	optional int32 magic_card = 15; //癞子牌
+	optional int32 is_first_out = 16; //是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 17; //显示时间
+	repeated int32 card_count = 18; //扑克数目
+	repeated Int32ArrayResponse cards_data = 19; //扑克列表
+	optional RoomInfoYYQF room_info = 20;
+	repeated RoomPlayerResponseYYQF players = 21;
+	repeated int32 player_you = 22;
+	repeated int32 score_card = 24; //本轮的分数牌
+	repeated int32 player_scores = 25; //每个玩家的总分数 持续更新
+	optional int64 out_card_time = 26; // 如果轮到自己出牌，会下发自己的出牌时间戳
+	repeated int32 round_scores = 27; //每个玩家当前局的分数 持续更新
+	repeated int32 boom_scores = 28; //每个玩家的炸弹分数 持续更新
+	repeated int32 round_boom_scores = 29; //每个玩家当前局的炸弹分数 持续更新
+	optional int32 base_cards_count = 30; // 底牌数量
+	repeated int32 base_cards_data = 31; // 底牌列表
+	optional bool is_end = 32; // 是否需要结算(false:正常打牌 true:一局结算开始展示底牌)
+}
+
+message GameStartYYQF {
+	optional RoomInfoYYQF room_info = 5;
+	repeated RoomPlayerResponseYYQF players = 7;
+	optional int32 cur_banker = 1; //庄家用户，也是出首牌的用户
+	repeated int32 card_count = 2; //扑克数目
+	repeated Int32ArrayResponse cards_data = 3; //扑克列表
+	optional int32 display_time = 6; //显示时间
+	optional int32 base_cards_count = 8; // 底牌数量
+	repeated int32 base_cards_data = 9; // 底牌列表
+}
+
+message CutCard {
+	optional int32 cut_card_player = 1; // 切牌玩家
+	optional int32 cut_card_data = 2; // 切牌数据
+	optional int32 display_time = 3; // 显示时间
+}
+
+message ShowLastCard {
+	optional int32 rank_first_player = 1; // 一游玩家
+	optional int32 base_cards_count = 2; // 底牌数量
+	repeated int32 base_cards_data = 3; // 底牌列表
+	optional int32 base_cards_score = 4; // 底牌分数
+	optional int32 display_time = 5; // 显示时间
+	optional int32 round_scores = 7; // 一游玩家当局积分
+	optional int32 total_scores = 8; // 一游玩家总积分
+	optional int32 round_boom_scores = 9; // 一游玩家当局喜分
+	optional int32 total_boom_scores = 10; // 一游玩家总喜分
+}

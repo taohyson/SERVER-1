@@ -1,0 +1,188 @@
+package s2s;
+import "basic/protocol.proto";
+import "basic/club.proto";
+option java_package = "protobuf.clazz.s2s";
+option java_outer_classname = "S2SProto";
+message LoginReq {
+	required int32 serverType = 1; //服务器类型
+	required int32 serverIndex = 2; //服务器编号
+	optional string safeCode = 3; //安全码
+}
+
+message LoginRsp {
+	required int32 status = 1; //0成功，其他失败
+	optional int32 serverType = 2; //服务器类型
+	optional int32 serverIndex = 3; //服务器编号
+}
+
+message Ping {
+}
+
+message Pong {
+}
+
+message ClubServerErrorMsg {
+	required int64 clientAccountId = 1; // 用户Id
+	required string msg = 2;
+}
+
+//
+message PlayerStatusProto {
+	required int64 accountId = 1; //帐号id
+	required int32 status = 2; //1上线，2下线
+	optional int64 login_time = 3; // 用于验证这代理服的玩家数据是不是最新一次的数据
+}
+
+//转发协议
+message TransmitProto{
+	required int64 accountId = 1; //玩家
+	required int32 serverIndex = 2; //转发消息
+	optional CommonProto commonProto = 3; //源消息包
+}
+
+//转发协议
+message S2STransmitProto{
+	required int64 accountId = 1; //玩家
+	optional Request request = 2; //源消息包
+}
+
+
+//发送邮件广播,不推送有邮件实体，只进行红点广播
+message SendEmailProto{
+	 required int32 type = 1;   // 0全部玩家  1 安卓 玩家2 ios 3 指定玩家
+	 required int32 userType = 2;  //发送类型 1 所有玩家 2所有在线玩家 3 指定玩家
+	 repeated int64 accounts = 3;  //指定玩家列表
+}
+
+
+//代开房房间变化
+message ProxyRoomUpdateProto{
+	required int64 accountId = 1;
+	optional int32 changeType = 2; //改变类型
+}
+
+message RoomWealthProto{
+	required int64 accountId = 1; //目标帐号
+	required int32 category = 2; //财富类别 @see EWealthCategory
+	required int64 value = 3; //财富值，正增 负减
+	optional int32 changeType = 4; //改变类型
+}
+
+message RoomWealthUpdateProto{
+	required int64 accountId = 1;
+	optional int64 gold = 2;
+	optional int64 money = 3;
+	optional int32 roomId = 4;
+}
+
+//俱乐部解散
+message ClubDisbandSendMailProto {
+    repeated int64 accounts = 1;  //指定玩家列表
+    optional string nickName = 2;  // 创建人
+    optional string clubName = 3; //俱乐部名
+}
+
+//线程池信息
+message ThreadPoolProto{
+	optional int64 activeCount = 1;
+	optional int64 complementtaskCount = 2;
+	optional int64 taskCount = 3;
+	optional int64 queueSize = 4;
+	optional int32 poolSize = 5;
+	optional string threadName = 6;
+}
+
+//逻辑服移出本地房间缓存时发送
+message DelRoomNotifyProto{
+	required int32 roomId = 1; //房间id
+	optional int32 serverIndex = 2; //逻辑服id
+}
+
+//专属豆信息
+message ExclusiveGoldPB{
+	required int32 gameId = 1;
+	optional int64 value = 2;
+	optional int32 expireB = 3; //有效期开始
+	optional int32 expireE = 4; //有效期结束
+	optional int32 settings = 5; //设置 @see com.cai.common.define.ExclusiveSettingStatus
+}
+
+//服务器内部通信，更新任务
+message S2SActivityMissionUpdateProto {
+	optional int64 accountId = 1;
+	optional int32 missionTypeEnum = 2;	//指定任务枚举类型
+	optional int32 condition = 3;	//当前传入的条件
+	optional int32 currentCount = 4;	//当前的次数，如充值任务，条件为当前充了40元，1次
+	optional int32 value2 = 5;	//值2，可以指定游戏，或者指定其他参数，在活动类型中一般为int值
+	optional int64 beRecommendId = 6;	//被推荐的人ID
+	optional int64 createTime = 7;	//被推荐人的创角时间
+}
+
+//任务批量更新
+message S2SActivityMissionBatchUpdate {
+	repeated S2SActivityMissionUpdateProto missionUpdateProto = 1;
+}
+
+//往比赛服中发送背包增加道具消息
+message MatchServerAddItemProto {
+	optional int64 accountId = 1;
+	optional int32 itemId = 2;
+	optional int32 itemCount = 3;
+}
+message PushReq{
+	//EPushType
+	required int32 type = 1;//推送类型 1签到推送2分享推送3俱乐部推送4赛事推送5自定义推送6绑定手机推送7比赛开始推送8闲逸豆不足推送
+	optional PushObject pushObject = 2;//推送对象
+	optional int32 matchId = 3;//比赛id,非比赛推送不用填
+	optional int32 pushId = 4;//推送model的id，后台调用的时候带过来
+}
+
+message PushObject{
+	//EAccountType
+	required int32  type = 1; //0所有用户，1新用户，2所有代理，3所有推广员，4白银推广员，5黄金推广员6钻石推广员7普通代理8普通玩家9指定ID
+	repeated int64 	accountId = 2;
+}
+message PushResp{
+
+}
+
+//亲友圈自建赛开赛失败发邮件
+message ClubMatchStartFailSendMailProto {
+    repeated int64 managerIds = 1;  //管理员列表
+    repeated int64 playerIds = 2;  //普通参赛玩家列表
+    optional string matchName = 3;  // 比赛名
+    optional string clubName = 4; //俱乐部名
+    optional int32 type = 5; //1-开赛失败 2-删除比赛
+}
+
+//亲友圈合伙人邀请加入邮件
+message ClubPartnerInviteJoinMailProto {
+	repeated int64 playerIds = 1;  //玩家列表
+	optional int32 clubId = 2;
+	optional string clubName = 3;
+	optional int64 invitorId = 4; //邀请人Id
+	optional string invitorName = 5; //邀请人昵称
+	optional string creatorName = 6; //创建人昵称
+	optional int32 memberCount = 7; //亲友圈人数
+}
+
+message RoomWealthGroupProto{
+	repeated RoomWealthProto wealths = 1;
+}
+
+//亲友圈福卡抽奖奖励
+message ClubWelfareLotteryRewardProto {
+	optional int64 accountId = 1;
+	repeated LotteryReward rewards = 2;
+}
+
+message LotteryReward {
+	optional int32 itemId = 1;
+	optional int32 itemNum = 2;
+}
+
+// 客户端更新包奖励
+message ClientUpdatePackageRewardProto {
+	optional int64 accountId = 1;
+	optional string reward = 2;
+}

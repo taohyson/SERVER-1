@@ -1,0 +1,17 @@
+package mj;
+option java_package = "protobuf.clazz.mj";
+option java_outer_classname = "Klds";
+import "basic/protocol.proto";
+
+//窟窿带神跑呛扩展
+message KLDS_PAO_QIAN_EXT {
+    optional int32 zi_ba = 1; //自拔
+	optional int32 duan_men = 2; //断门
+}
+
+//定神操作
+message DingSheng{
+	optional bool has_sheng = 1;  //是否有神,
+}
+
+

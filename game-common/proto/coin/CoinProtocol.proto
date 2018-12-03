@@ -1,0 +1,340 @@
+package coin;
+
+option java_package = "protobuf.clazz.coin";
+option java_outer_classname = "CoinProtocol";
+import "basic/common.proto";
+/**
+ * 金币场相关协议编写
+ */
+
+//类型列表请求   cmd=2000
+message GameTypeListRequest {
+}
+
+//类型列表返回   cmd=2000
+message GameTypeListResponse {
+    repeated GameTypeMsg msgs = 1;
+}
+
+//子游戏列表请求   cmd=2001
+message GameListRequest {
+    optional int32 gameTypeId = 1;
+}
+
+//子游戏列表返回   cmd=2001
+message GameListResponse {
+    repeated GameMsg msgs = 1;
+}
+
+//子游戏详细信息请求   cmd=2002
+message GameDetailRequest {
+    optional int32 gameId = 1;
+}
+
+//子游戏详细信息返回   cmd=2002
+message GameDetailResponse {
+    repeated GameDetailMsg msgs = 1;
+}
+
+//匹配请求   cmd=2003
+message GameMatchRequest {
+    optional int32 gameId = 1; //子游戏ID
+    optional int32 opType = 3; //操作类型  0正常匹配  1继续游戏   2快速开始
+    optional int32 detailId = 2; //场次ID
+    optional bool isExit = 4; //是否退出
+    optional bool cornucopia = 5; //是否参与聚宝盆
+
+}
+
+//匹配返回   cmd=2003
+message GameMatchResponse {
+    //-1匹配失败  1匹配成功 2有未完成游戏  3低于准入  4高于准入  5低于游戏准入  6高于房间准入 7匹配退出成功 8匹配退出失败
+    optional MessageTip tip = 1;
+    optional int32 gameId = 2; //游戏ID
+    optional int32 detailId = 3; //场次ID
+}
+
+//救济金   cmd=2004
+message GameReliefRequest {
+    optional int32 gameId = 1;
+    optional int32 detailId = 2;
+}
+
+//救济金返回   cmd=2004
+message GameReliefResponse {
+    optional GameReliefMsg msg = 1;
+}
+
+//领取救济金请求   cmd=2005
+message ReliefReceiveRequest {
+    optional int32 gameId = 1;
+    optional int32 detailId = 2;
+}
+
+//领取救济金返回   cmd=2005
+message ReliefReceiveResponse {
+    optional MessageTip tip = 1;
+}
+
+//匹配成功,等待开始  cmd=2006
+message GameStartResponse {
+    optional int32 gameId = 1;
+    optional int32 detailId = 2;
+}
+
+//游戏结束  cmd=2007
+message GameOverResponse {
+    optional int32 gameId = 1;
+    optional int32 detailId = 2;
+    repeated GamePlayerMsg playerMsg = 3;
+}
+
+//匹配成功,进入游戏请求  cmd=2008
+message GameEnterRequest {
+}
+
+//匹配成功,进入游戏返回  cmd=2008
+message GameEnterResponse {
+    optional MessageTip tip = 1;
+}
+
+//匹配成功,离开游戏请求  cmd=2009
+message GameExitRequest {
+}
+
+//匹配成功,离开游戏返回  cmd=2009
+message GameExitResponse {
+    optional MessageTip tip = 1;
+}
+
+//游戏开始失败  cmd=2010
+message GameStartFailResponse {
+    optional MessageTip tip = 1;
+}
+
+//重连 cmd=2011
+message GameConnectResponse {
+    optional int32 baseScore = 1; // 底分倍率
+    optional int32 base = 2; // 底分
+    optional int32 times = 3; // 倍数
+}
+
+//金币场配置刷新  cmd=2012
+message ConfigRefreshResponse {
+}
+
+//子游戏详细信息请求   cmd=2013
+message OneGameDetailRequest {
+    optional int32 gameId = 1;
+    optional int32 detailId = 2;
+}
+
+//子游戏详细信息返回   cmd=2013
+message OneGameDetailResponse {
+    optional GameDetailMsg msg = 1;
+}
+
+//子游戏玩法描述请求   cmd=2014
+message GameDescRequest {
+    optional int32 gameId = 1; //游戏ID
+}
+
+//子游戏玩法描述返回   cmd=2014
+message GameDescResponse {
+    optional int32 gameId = 1; //游戏ID
+    optional string gameDesc = 2; //玩法描述
+}
+
+//子游戏玩法请求   cmd=2017
+message OneGameRuleRequest {
+    optional int32 gameId = 1;
+    optional int32 detailId = 2;
+}
+
+//子游戏玩法返回   cmd=2017
+message OneGameRuleResponse {
+    repeated GameRuleMsg ruleMsgs = 1;
+}
+
+message GameRuleMsg {
+    optional int32 ruleId = 1; //规则id
+    optional int32 value = 2; //规则值
+}
+
+//玩家信息
+message GamePlayerMsg {
+    optional int64 accountId = 1;
+    optional string nickname = 2;
+    optional int32 roundScore = 3; //本局分数(输赢金币数)
+    optional int32 seatId = 4; //座位号
+    optional int32 winOrder = 5; //输赢   0为赢  1为输 2为平
+    optional bool isBankruptcy = 6; //是否破产
+    optional int64 ownCoin = 7; //拥有金币数
+    optional int32 exciteMultiple = 8; //刺激场产出的倍数
+    repeated CardCategoryProto cardCategorys = 9; //特殊玩法中打出的牌型集合
+    optional CardArrayProto startCards = 10; //起手牌
+    optional CardArrayProto overCards = 11; //结束牌
+    optional int32 recycleCoin = 12; //金币场聚宝盆回收金币数量
+}
+
+//游戏救济金信息
+message GameReliefMsg {
+    optional int32 rewardCoin = 1; //奖励金币数
+    optional int32 curNum = 2; //当前次数
+    optional int32 allNum = 3; //总次数
+}
+
+//子游戏详情信息
+message GameDetailMsg {
+    optional int32 detailId = 1; //场次唯一ID
+    optional int32 gameId = 2;
+    optional string name = 3; //名称
+    optional int32 level = 4; //场次(1初级场2中级场3高级场4刺激场)
+    optional int32 sortIndex = 5; //排序值
+    optional int32 baseAntes = 6; //底注
+    optional int32 baseCoin = 7; //台费
+    optional int32 minCoin = 8; //最低入场
+    optional int32 maxCoin = 9; //最高入场
+    optional int32 minGameCoin = 10; //玩牌下限
+    optional int32 maxGameCoin = 11; //玩牌上限
+    optional int32 payCoin = 12; //补充金币数
+    optional int32 status = 13; //状态  (1开启2关闭)
+    optional string icon = 14; //图标
+    optional int32 convertCoin = 15; //兑换金币
+    optional int32 convertMoney = 16; //兑换金钱
+    optional int32 matchCountDown = 17; //匹配倒计时时间
+    optional ExciteConditionGroupProto exciteProto = 18; //刺激(特殊玩法)条件配置相关
+    optional string superscriptIcon = 19; //角标
+    optional bool hasCornucopia = 20; //是否有聚宝盆玩法
+    optional int32 cornucopiaCost = 21; // 聚宝盆消耗金币数量
+
+}
+
+//子游戏信息
+message GameMsg {
+    optional int32 gameTypeId = 1; //id
+    optional int32 gameId = 2; //子游戏ID
+    optional string name = 3;
+    optional int32 status = 4; //状态  (1开启2关闭)
+    optional int32 sortIndex = 5; //排序值
+    optional int32 appId = 6; //appId
+}
+
+//游戏类型信息
+message GameTypeMsg {
+    optional int32 gameTypeId = 1; //类型值1麻将2扑克3字牌4其他
+    optional string name = 2;
+    optional int32 status = 4; //状态  (1开启2关闭)
+    optional int32 sortIndex = 5; //排序值
+}
+
+//信息提示
+message MessageTip {
+    optional int32 value = 1; //
+    optional string tip = 2; //失败信息提示
+}
+
+//牌型
+message CardCategoryProto {
+    optional string category = 1; // 游戏Id:游戏牌型值(余牌: 0:0)
+    optional int32 value = 2; //余牌数量 or 牌型触发次数
+}
+
+message ExciteConditionProto {
+    required int32 id = 1; //条件id
+    optional int32 type = 2; //1余牌，2牌型
+    optional int32 var1 = 3; //可变参数，当type=1:表示余牌最小区间，否则牌型触发的最小区间
+    optional int32 var2 = 4; //可变参数，当type=1:表示余牌最大区间  否则牌型触发的最大区间
+    optional int32 output = 5; //产出倍数
+}
+
+message ExciteConditionGroupProto {
+    repeated ExciteConditionProto cdtGroup = 1;
+}
+
+//牌值，通用
+message CardArrayProto {
+    repeated int32 item = 1;
+}
+
+//活动排行榜信息[返回]
+message CoinCornucopiaRankProto {
+    required int32 gameTypeIndex = 1;
+    repeated CommonRankInfoProto rankInfo = 2;
+    optional int32 selfAwardMoney = 3; //请求者的金币数
+}
+
+//请求子游戏聚宝盆排行榜
+message CoinCornucopiaCommReq {
+    optional int32 gameTypeIndex = 1;
+}
+
+//聚宝盆配置
+message CoinCornucopiaAwardCfgProto {
+    required int32 gameTypeIndex = 1;
+    repeated CornucopiaAwardEntry entrys = 2;
+
+    message CornucopiaAwardEntry {
+        required int32 roundLevel = 1; //场别，1初级场...
+        optional string category = 2; // 游戏Id:游戏牌型值(余牌: 0:0)
+        optional int32 output = 3; //产出，总奖池的%比
+        optional string description = 4; //描述,对应牌型描述
+        optional int32 sort = 5; //排序值
+        optional int32 outputType = 6; // 产出类型 1百分比 2实际值
+    }
+}
+
+//奖池
+message CoinCornucopiaRemainderProto {
+    optional int32 gameTypeIndex = 1;
+    optional int64 remainder = 2;
+}
+
+
+message CoinGameMiniInfoProto {
+    required int32 gameTypeIndex = 1;
+    repeated GameMiniEntryProto entrys = 2;
+
+    message GameMiniEntryProto {
+        optional int32 roundLevel = 1;
+        optional string roundName = 2;
+        optional int32 roundSort = 3;
+    }
+}
+
+//宝箱通用
+message CoinBoxCommReq {
+    optional int32 gameTypeIndex = 1;
+    optional int32 boxType = 2;
+}
+
+//宝箱配置
+message CoinBoxAwardCfgProto {
+    required int32 gameTypeIndex = 1;
+    optional int32 gameCount = 2; //局数
+    optional int32 goldRewardScore = 3; //金所需分数
+    optional int32 silverRewardScore = 4; //银所需分数
+    optional int32 copperRewardScore = 5; //铜所需分数
+    repeated CoinBoxAwardEntry entrys = 6;
+    optional string ruleDesc = 7; //玩法描述
+    message CoinBoxAwardEntry {
+        required int32 id = 1; //id
+        optional int32 category = 2; // 类型，1金2银3铜
+        optional int32 amount = 3; //金币数量
+        optional string description = 4; //描述
+        optional int32 sort = 5; //排序值
+        optional int32 isSpecial = 6; // 是否最小奖
+        optional string icon = 7; //图标
+    }
+}
+
+//宝箱个人信息
+message CoinBoxAccountInfoProto {
+    required int64 accountId = 1;
+    optional int32 gameTypeIndex = 2;
+    optional int32 rewardScore = 3;
+    optional int32 gameCount = 4;
+    optional string goldSpecialBoxIds = 5; //金,已经中的奖励id，id1,id2 ...
+    optional string silverSpecialBoxIds = 6; //银
+    optional string copperSpecialBoxIds = 7; //铜
+}

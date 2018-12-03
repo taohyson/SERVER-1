@@ -1,0 +1,127 @@
+package hts;
+option java_package = "protobuf.clazz.hts";
+option java_outer_classname = "htsRsp";
+import "basic/protocol.proto";
+
+//1001
+message GameStart_hts{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+	repeated int32 card_count = 3; //扑克数目
+	repeated Int32ArrayResponse cards_data = 4; //扑克列表
+	optional int32 current_seat = 5;
+}
+
+//1002
+message TableResponse_hts {
+	//游戏变量
+	optional int32 banker_player = 1; //庄家玩家
+	optional int32 current_player = 2; //当前玩家
+	optional int32 prev_player = 3; //上一玩家
+	//扑克数据
+	repeated Int32ArrayResponse out_cards_data = 4;  //本轮出牌数据
+	repeated int32  out_card_count = 5;			//本轮牌数量
+	repeated int32  out_card_type = 6;			//本轮不出数据
+	optional int32 is_first_out = 7;//是否首出 //0不是首出 1已经出过牌的首出 2还未出牌的首出
+	optional int32 display_time = 8; //显示时间
+	repeated int32 card_count = 9; //扑克数目
+	repeated Int32ArrayResponse cards_data = 10; //扑克列表
+	optional RoomInfo room_info = 11;
+	repeated RoomPlayerResponse players = 12;
+	repeated int32 opreate_type = 13;//-1还没操作，0不承包，1承包
+	optional int32 hts_player = 14; //黑桃三玩家，显示角标
+	optional bool  zuo_fei = 15;//黑桃三是否作废
+	optional int32 lipai_type = 16;//理牌类型，1理牌，分数在前，2，取消分数在前
+}
+
+//用户出牌 1003
+message OutCardData_hts{
+	optional int32 out_card_player=1;//出牌玩家
+	repeated int32 cards_data = 2;  //出牌数据
+	optional int32 cards_count = 3;//出牌数量
+	optional int32 card_type = 4;	//出牌类型
+	optional int32 cur_player = 5;//当前玩家
+	repeated int32 pr_cards_data = 6;  //上一玩家出牌数据
+	optional int32 pr_cards_count = 7;//上一玩家出牌数量
+	optional int32 pr_out_card_type = 8;//出牌类型
+	optional bool  is_first_out = 9;//出牌玩家是否首出
+	optional int32 display_time = 10; //显示时间
+	repeated Int32ArrayResponse user_can_out_data = 11;  //出牌数据
+	repeated int32 user_can_out_count = 12;//出牌数量
+	repeated int32 user_get_score = 13;//玩家抓分
+	repeated int32 hand_card_count = 14; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 15; //扑克列表
+	repeated int32 win_order = 16;//输赢排序
+	optional int32 table_score = 17;//桌面分
+	optional int32 plane_count = 18;//飞机长度
+}
+
+
+//结算 1004
+message PukeGameEnd_hts{
+	optional RoomInfo room_info = 1;
+	repeated RoomPlayerResponse players = 2;
+	optional int32 cur_round = 3; //当前圈数
+	optional int32 game_round = 4; //游戏圈数
+	repeated Int32ArrayResponse hand_card_data = 5; //剩余手牌
+	repeated int32 hand_card_count = 6;//手牌数量
+	repeated int32 win_order = 7;//一、二、三游标志
+	repeated int32 get_score = 8;//抓分
+	repeated int32 end_score = 9;//小局得分
+	optional int32 end_reason = 14;//结束标志
+	optional int32 chengbao_player = 15;//承包者
+	//总结算
+	repeated int32 total_end_score = 10;//总积分
+	repeated int32 hts_num = 11;//黑桃三次数
+	repeated int32 call_banker_num = 12;//承包次数
+	repeated int32 win_num = 13;//胜利次数
+}
+
+//发送承包  1005 s2c
+message call_banker_response_hts{
+	optional int32 call_seat = 1;//叫庄玩家
+	optional int32 cur_seat = 2;
+	optional int32 call_action = 3;//0：不叫 1叫
+	optional int32 display_time = 4; //显示时间
+	optional bool  zuo_fei = 5;//黑桃三是否作废
+
+}
+
+//特效 1007  s2c
+message effect_type_hts{
+	optional int32 type = 1;//1:黑桃三
+	optional int32 data = 2;//数据
+	optional int32 seat_index = 3;//玩家位置
+}
+
+//叫庄（承包）请求  c2s   1069
+message call_banker_request_hts{
+	optional int32 opreate_type = 1;//0,不承包，1.承包
+	repeated int32 data = 2;//
+}
+
+//捡分  s2c   1008
+message get_score_hts{
+	repeated int32 get_score = 1;//玩家捡的分
+	repeated Int32ArrayResponse score_card = 2;//玩家对应的分牌
+	repeated int32 shuang_fang_fen = 3;//0位表示庄家得分，1位表示对方得分
+}
+
+//发送朋友  s2c   1009
+message send_friend_hts{
+	optional int32  type = 1;//1承包， 2 明3,   3暗3
+	optional int32 banker_player = 2;//庄家（承包者或黑桃三者）
+}
+
+//刷新手牌   s2c 1010
+message RefreshCardData_hts{
+	repeated int32 hand_card_count = 1; //扑克数目
+	repeated Int32ArrayResponse hand_cards_data = 2; //扑克列表
+}
+
+//理牌请求   c2s    1074
+message lipai_request_hts{
+	optional int32  type = 1;//1理牌，分数在前，2，取消分数在前
+}
+
+

@@ -1,0 +1,15 @@
+package ossSts;
+option java_package = "protobuf.clazz.ossSts";
+option java_outer_classname = "OssStsRsp";
+
+message OssStsClientRequest{
+	
+}
+
+message OssStsClientResponse{
+	optional string accessKeyId = 1; //临时认证id
+	optional string accesKeySecret = 2;//临时密钥
+	optional string securityToken = 3;
+	
+}
+
